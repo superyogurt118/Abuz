@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>💩 КАКАШКИ КЛИКЕР: БЕЗУМИЕ V0.7.11 💩</title>
-  <!-- Кривой шрифт Bangers + запасной Comic Sans -->
+  <title>💩 КАКАШКИ КЛИКЕР (и не только какашек) V0.7.12 💩</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/bangers@5.0.0/index.min.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -36,7 +35,6 @@
     .play-btn:hover { animation: playHover 0.2s ease-in-out infinite; }
     @keyframes playHover { 0%, 100% { transform: scale(1.1) rotate(-3deg); } 50% { transform: scale(1.1) rotate(3deg); } }
 
-    /* Игровой экран */
     #gameScreen { display: none; width: 100%; height: 100vh; position: relative; overflow: hidden; }
     .game-bg { position: absolute; width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); animation: bgHue 10s linear infinite; will-change: filter; transition: background 0.5s ease; }
     @keyframes bgHue { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
@@ -95,7 +93,6 @@
     .upgrade-btn.buy-max:hover { background: #e68900; transform: scale(1.05); }
     .upgrade-item.cant-afford .upgrade-btn { cursor: not-allowed; opacity: 0.6; }
 
-    /* Красивые карточки для выпавших предметов */
     .chest-result-title { font-size: 48px; color: #FFD700; text-align: center; margin-bottom: 25px; text-shadow: 3px 3px 0 #000; animation: titleBounce 1s ease-in-out infinite; }
     .chest-result-grid { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
     .chest-result-item { background: rgba(20,0,30,0.8); border-radius: 20px; padding: 20px; width: 160px; text-align: center; backdrop-filter: blur(10px); transition: transform 0.3s, box-shadow 0.3s; position: relative; overflow: hidden; box-shadow: 0 8px 20px rgba(0,0,0,0.5); }
@@ -175,66 +172,20 @@
     .achievement-name { font-size: 28px; color: #FFD700; text-shadow: 2px 2px 0 #000; margin-bottom: 4px; }
     .achievement-desc { font-size: 16px; color: #ccc; line-height: 1.3; }
 
-    /* Статистика в меню */
     .stat-item { margin-bottom: 12px; color: #fff; display: flex; justify-content: space-between; }
     .stat-label { color: #FFD700; }
 
-    /* Адаптивность */
-    @media (max-width: 1024px) {
-      .poop { font-size: 180px; }
-      .score-value { font-size: 60px; }
-      .upgrade-panel { width: 280px; }
-      .fever-bar { width: 300px; }
-      .boss-poop { font-size: 300px; }
-      .boss-hp-bar { width: 400px; }
-    }
-    @media (max-width: 768px) {
-      .menu-title { font-size: 60px; }
-      .menu-subtitle { font-size: 28px; }
-      .nav-btn { font-size: 20px; padding: 8px 15px; min-width: 130px; }
-      .play-btn { font-size: 36px; padding: 20px 50px; }
-      .score-value { font-size: 50px; }
-      .poop { font-size: 140px; }
-      .combo-display { font-size: 28px; top: 140px; }
-      .fever-bar { width: 260px; top: 190px; }
-      .upgrade-panel { width: 250px; right: 5px; padding: 10px; }
-      .boss-poop { font-size: 220px; }
-      .boss-hp-bar { width: 90%; max-width: 350px; }
-      .boss-title { font-size: 32px; top: 80px; }
-      .event-banner { font-size: 60px; }
-    }
-    @media (max-width: 480px) {
-      .menu-container { padding: 15px; }
-      .menu-nav { gap: 8px; }
-      .nav-btn { font-size: 16px; padding: 8px 10px; min-width: 100px; }
-      .play-btn { font-size: 28px; padding: 15px 40px; }
-      .score-value { font-size: 40px; }
-      .poop { font-size: 110px; }
-      .combo-display { font-size: 22px; top: 110px; }
-      .fever-bar { width: 200px; top: 150px; height: 20px; }
-      .upgrade-panel { width: 200px; padding: 8px; }
-      .upgrade-title { font-size: 24px; }
-      .chest-btn { font-size: 18px; padding: 10px; }
-      .action-btn { font-size: 16px; padding: 8px; }
-      .boss-poop { font-size: 160px; }
-      .boss-hp-bar { width: 90%; max-width: 280px; height: 30px; }
-      .boss-title { font-size: 24px; top: 60px; }
-      .event-banner { font-size: 40px; }
-    }
-    @media (max-width: 850px) and (orientation: landscape) {
-      .poop { font-size: 100px; }
-      .upgrade-panel { width: 220px; max-height: 70vh; }
-      .score-value { font-size: 45px; }
-      .combo-display { font-size: 24px; top: 120px; }
-      .fever-bar { width: 220px; top: 160px; }
-    }
+    @media (max-width: 1024px) { .poop { font-size: 180px; } .score-value { font-size: 60px; } .upgrade-panel { width: 280px; } .fever-bar { width: 300px; } .boss-poop { font-size: 300px; } .boss-hp-bar { width: 400px; } }
+    @media (max-width: 768px) { .menu-title { font-size: 60px; } .menu-subtitle { font-size: 28px; } .nav-btn { font-size: 20px; padding: 8px 15px; min-width: 130px; } .play-btn { font-size: 36px; padding: 20px 50px; } .score-value { font-size: 50px; } .poop { font-size: 140px; } .combo-display { font-size: 28px; top: 140px; } .fever-bar { width: 260px; top: 190px; } .upgrade-panel { width: 250px; right: 5px; padding: 10px; } .boss-poop { font-size: 220px; } .boss-hp-bar { width: 90%; max-width: 350px; } .boss-title { font-size: 32px; top: 80px; } .event-banner { font-size: 60px; } }
+    @media (max-width: 480px) { .menu-container { padding: 15px; } .menu-nav { gap: 8px; } .nav-btn { font-size: 16px; padding: 8px 10px; min-width: 100px; } .play-btn { font-size: 28px; padding: 15px 40px; } .score-value { font-size: 40px; } .poop { font-size: 110px; } .combo-display { font-size: 22px; top: 110px; } .fever-bar { width: 200px; top: 150px; height: 20px; } .upgrade-panel { width: 200px; padding: 8px; } .upgrade-title { font-size: 24px; } .chest-btn { font-size: 18px; padding: 10px; } .action-btn { font-size: 16px; padding: 8px; } .boss-poop { font-size: 160px; } .boss-hp-bar { width: 90%; max-width: 280px; height: 30px; } .boss-title { font-size: 24px; top: 60px; } .event-banner { font-size: 40px; } }
+    @media (max-width: 850px) and (orientation: landscape) { .poop { font-size: 100px; } .upgrade-panel { width: 220px; max-height: 70vh; } .score-value { font-size: 45px; } .combo-display { font-size: 24px; top: 120px; } .fever-bar { width: 220px; top: 160px; } }
   </style>
 </head>
 <body>
 <div id="mainMenu">
   <div class="menu-bg"></div>
-  <div class="version" onclick="openVersionModal()">V0.7.11</div>
-  <div class="menu-header"><div class="menu-title">💩 КАКАШКИ КЛИКЕР 💩</div><div class="menu-subtitle">БЕЗУМНОЕ ИЗДАНИЕ</div></div>
+  <div class="version" onclick="openVersionModal()">V0.7.12</div>
+  <div class="menu-header"><div class="menu-title">💩 КАКАШКИ КЛИКЕР (и не только какашек) 💩</div><div class="menu-subtitle">БЕЗУМНОЕ ИЗДАНИЕ</div></div>
   <div class="menu-container">
     <div class="menu-nav">
       <button class="nav-btn active" onclick="showMenuTab('play', event)">🎮 ИГРАТЬ</button>
@@ -268,7 +219,7 @@
   <div class="game-bg" id="gameBg"></div>
   <div class="game-bg-pattern"></div>
   <canvas id="canvas"></canvas>
-  <div class="score-display"><div class="score-label">💩 КАКАШКИ 💩</div><div class="score-value" id="score">0</div></div>
+  <div class="score-display"><div class="score-label" id="scoreLabel">💩 КАКАШКИ</div><div class="score-value" id="score">0</div></div>
   <div class="combo-display" id="comboDisplay">🔥 КОМБО x<span id="comboValue">0</span> 🔥</div>
   <div class="fever-bar" id="feverBar"><div class="fever-fill" id="feverFill" style="width: 0%"></div></div>
   <div class="fever-text" id="feverText">🔥 РЕЖИМ ЛИХОРАДКИ 🔥</div>
@@ -277,7 +228,7 @@
     <div class="upgrade-title">⚡ МАГАЗИН ⚡</div>
     <button class="chest-btn" id="chestBtn1" onclick="openChest(1)">📦 СУНДУК (10K)</button>
     <button class="chest-btn chest-btn-10" id="chestBtn10" onclick="openChest(10)">📦 СУНДУКИ x10</button>
-    <button class="chest-btn chest-btn-all" id="chestBtnAll" onclick="buyChestsAll()">💰 ВСЁ</button>
+    <button class="chest-btn chest-btn-all" id="chestBtnAll" onclick="buyChestsAll()">💰 ВСЁ (макс 99)</button>
     <button class="action-btn customize-btn" onclick="openCustomization()" style="margin-bottom:5px;">🎨 КАСТОМИЗАЦИЯ</button>
     <button class="action-btn menu-return-btn-inline" onclick="returnToMenu()">🏠 В МЕНЮ</button>
     <div id="upgradeList"></div>
@@ -292,13 +243,12 @@
 <div id="versionModal" class="modal-overlay">
   <div class="modal-content">
     <button class="modal-close" onclick="closeVersionModal()">×</button>
-    <div class="panel-title" style="font-size:40px; text-align:center;">ВЕРСИЯ V0.7.11</div>
+    <div class="panel-title" style="font-size:40px; text-align:center;">ВЕРСИЯ V0.7.12</div>
     <div class="changelog-list" style="margin-top:25px;">
-      <div class="changelog-item">Красивые карточки для выпавших из сундуков предметов.</div>
-      <div class="changelog-item">Основной шрифт стал ещё кривее (Bangers + запасной Comic Sans).</div>
-      <div class="changelog-item">Какашечный босс полностью проходим — побеждайте и получайте награду!</div>
-      <div class="changelog-item">Если вся косметика собрана, сундуки больше не открываются.</div>
-      <div class="changelog-item">Максимальное количество улучшений — 999 штук каждого.</div>
+      <div class="changelog-item">Лимит улучшений снижен до 99.</div>
+      <div class="changelog-item">Иконка валюты, название и анимации заменяются на выбранный скин.</div>
+      <div class="changelog-item">В название игры добавлено «(и не только какашек)».</div>
+      <div class="changelog-item">Максимум 99 сундуков за раз.</div>
     </div>
   </div>
 </div>
@@ -378,11 +328,9 @@
     randomEventTimer: 45
   };
 
-  // Проверка, все ли предметы собраны
   function areAllCosmeticsUnlocked() {
-    const allSkins = Object.keys(skinDatabase).every(id => gameState.unlockedItems.includes(id));
-    const allBgs = Object.keys(bgDatabase).every(id => gameState.unlockedItems.includes(id));
-    return allSkins && allBgs;
+    return Object.keys(skinDatabase).every(id => gameState.unlockedItems.includes(id)) &&
+           Object.keys(bgDatabase).every(id => gameState.unlockedItems.includes(id));
   }
 
   function updateChestButtons() {
@@ -390,11 +338,6 @@
     document.getElementById('chestBtn1').disabled = allUnlocked;
     document.getElementById('chestBtn10').disabled = allUnlocked;
     document.getElementById('chestBtnAll').disabled = allUnlocked;
-    if (allUnlocked) {
-      document.getElementById('chestBtn1').title = "Вся косметика собрана!";
-      document.getElementById('chestBtn10').title = "Вся косметика собрана!";
-      document.getElementById('chestBtnAll').title = "Вся косметика собрана!";
-    }
   }
 
   function saveGame() { localStorage.setItem('poopClickerSave', JSON.stringify(gameState)); }
@@ -543,12 +486,12 @@
       p.vx=Math.cos(angle)*speed; p.vy=Math.sin(angle)*speed;
       p.life=1; p.decay=opts.decay??0.02; p.size=opts.size??(Math.random()*20+15);
       p.rotation=Math.random()*Math.PI*2; p.rotationSpeed=(Math.random()-0.5)*0.3;
-      p.emoji=opts.emoji??'💩'; p.gravity=opts.gravity??0.4; p.type=opts.type??'normal'; p.color=opts.color??'#FFD700';
+      p.emoji=opts.emoji??gameState.equippedSkin; p.gravity=opts.gravity??0.4; p.type=opts.type??'normal'; p.color=opts.color??'#FFD700';
       return;
     }
   }
   function createExplosion(x,y,count=15,type='normal'){
-    const e=['💩','💥','⭐','✨','🔥','💫'];
+    const e=[gameState.equippedSkin,'💥','⭐','✨','🔥','💫'];
     for(let i=0;i<count;i++) spawnParticle(x,y,{emoji:e[Math.floor(Math.random()*e.length)],speed:Math.random()*15+5,size:Math.random()*20+10});
     if(type==='critical'||type==='golden'||type==='mythic'||type==='ultra_mythic_plus')
       for(let i=0;i<20;i++) spawnParticle(x,y,{type:'spark',color:['#FF1493','#FFD700','#00FFFF'][Math.floor(Math.random()*3)],speed:Math.random()*20+10,size:Math.random()*15+5,gravity:0.2,decay:0.03});
@@ -590,6 +533,10 @@
     document.getElementById('poop').textContent=gameState.equippedSkin;
     const bg=bgDatabase[gameState.equippedBg];
     if(bg) document.getElementById('gameBg').style.background=bg.css;
+    const skinData = skinDatabase[gameState.equippedSkin];
+    if (skinData) {
+      document.getElementById('scoreLabel').innerHTML = skinData.icon + ' ' + skinData.name.toUpperCase();
+    }
   }
 
   function startGame(){
@@ -609,7 +556,7 @@
     const list=document.getElementById('upgradeList'); list.innerHTML='';
     Object.entries(gameState.upgrades).forEach(([key,up])=>{
       const div=document.createElement('div'); div.className='upgrade-item'; div.dataset.upgradeKey=key;
-      div.innerHTML=`<div class="upgrade-name">${up.name} [<span class="count">0</span>/999]</div><div class="upgrade-info">${up.desc} | +${formatNumber(up.basePerSec)}/сек</div><div class="upgrade-cost">💰 ${formatNumber(up.cost)}</div><div class="upgrade-actions"><button class="upgrade-btn buy-1">КУПИТЬ 1</button><button class="upgrade-btn buy-max">МАКС</button></div>`;
+      div.innerHTML=`<div class="upgrade-name">${up.name} [<span class="count">0</span>/99]</div><div class="upgrade-info">${up.desc} | +${formatNumber(up.basePerSec)}/сек</div><div class="upgrade-cost">💰 ${formatNumber(up.cost)}</div><div class="upgrade-actions"><button class="upgrade-btn buy-1">КУПИТЬ 1</button><button class="upgrade-btn buy-max">МАКС</button></div>`;
       const buy1=div.querySelector('.buy-1'), buyMax=div.querySelector('.buy-max');
       buy1.onclick=()=>buyUpgrade(key,1); buyMax.onclick=()=>buyUpgrade(key,'max');
       list.appendChild(div);
@@ -622,17 +569,17 @@
       const els=upgradeElements[key]; if(!els) return;
       els.nameSpan.textContent=up.count;
       els.costSpan.textContent=`💰 ${formatNumber(up.cost)}`;
-      const canAfford = gameState.score>=up.cost && up.count<999;
+      const canAfford = gameState.score>=up.cost && up.count<99;
       els.container.classList.toggle('cant-afford', !canAfford);
-      els.buy1.disabled = up.count>=999;
-      els.buyMax.disabled = up.count>=999;
+      els.buy1.disabled = up.count>=99;
+      els.buyMax.disabled = up.count>=99;
     });
   }
 
   function buyUpgrade(key,amount){
     if(!gameState.isRunning) return;
     const up=gameState.upgrades[key];
-    const maxAffordable = 999 - up.count;
+    const maxAffordable = 99 - up.count;
     if (maxAffordable <= 0) return;
     if(amount===1){
       if(gameState.score<up.cost) return;
@@ -641,7 +588,7 @@
       soundBank.upgrade();
     }else if(amount==='max'){
       let count=0,cost=up.cost;
-      while(gameState.score>=cost && up.count+count<999){
+      while(gameState.score>=cost && up.count+count<99){
         gameState.score-=cost; count++; cost=Math.floor(cost*1.4);
       }
       if(count>0){
@@ -771,7 +718,7 @@
       showFloatingText(window.innerWidth/2, window.innerHeight/2, 'ВСЯ КОСМЕТИКА СОБРАНА!', 'critical');
       return;
     }
-    const count=Math.floor(gameState.score/10000);
+    const count = Math.min(Math.floor(gameState.score / 10000), 99);
     if(count>0) openChest(count);
     else showFloatingText(window.innerWidth/2,window.innerHeight/2,'НЕ ХВАТАЕТ!','critical');
   }
@@ -894,7 +841,7 @@
   }
 
   function createPoopRain(count){
-    for(let i=0;i<count;i++) spawnParticle(Math.random()*canvas.width,-50,{emoji:'💩',speed:5,angle:Math.PI/2,gravity:0.5,decay:0.005});
+    for(let i=0;i<count;i++) spawnParticle(Math.random()*canvas.width,-50,{emoji:gameState.equippedSkin,speed:5,angle:Math.PI/2,gravity:0.5,decay:0.005});
   }
 
   function openVersionModal(){ document.getElementById('versionModal').classList.add('active'); }
