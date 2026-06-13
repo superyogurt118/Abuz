@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>💩 POOP CLICKER MADNESS V0.7.10 💩</title>
+  <title>💩 POOP CLICKER MADNESS V0.7.11 💩</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/bangers@5.0.0/index.min.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -47,8 +47,9 @@
     .stats-panel.collapsed .stats-content, .stats-panel.collapsed .stats-header span { display: none; }
     .stats-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 2px solid rgba(255,215,0,0.3); padding-bottom: 5px; }
     .stats-header span { color: #FFD700; font-size: 22px; text-shadow: 2px 2px 0 #000; }
-    .collapse-btn { position: absolute; right: 10px; top: 10px; background: #FFD700; border: 2px solid #fff; color: #000; border-radius: 50%; width: 36px; height: 36px; cursor: pointer; font-size: 20px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; z-index: 25; }
-    .collapse-btn:hover { background: #fff; color: #000; transform: scale(1.1); }
+    .collapse-btn { background: none; border: 2px solid #FFD700; color: #FFD700; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .collapse-btn:hover { background: #FFD700; color: #000; }
+    .stats-panel.collapsed .collapse-btn { transform: rotate(180deg); margin: 0 auto; }
     .stat-item { margin-bottom: 8px; color: #fff; display: flex; justify-content: space-between; }
     .stat-label { color: #FFD700; }
     .action-btn { width: 100%; margin-top: 10px; padding: 12px; border: 3px solid #fff; border-radius: 15px; font-size: 22px; color: #fff; cursor: pointer; text-shadow: 2px 2px 0 #000; box-shadow: 0 5px 20px rgba(0,0,0,0.4); transition: all 0.2s; }
@@ -175,7 +176,7 @@
 <body>
 <div id="mainMenu">
   <div class="menu-bg"></div>
-  <div class="version" onclick="openChangelogModal()">V0.7.10</div>
+  <div class="version" onclick="openChangelogModal()">V0.7.11</div>
   <div class="menu-header"><div class="menu-title">💩 POOP CLICKER 💩</div><div class="menu-subtitle">MADNESS EDITION</div></div>
   <div class="menu-container">
     <div class="menu-nav">
@@ -197,7 +198,7 @@
   <div class="game-bg-pattern"></div>
   <canvas id="canvas"></canvas>
   <div class="stats-panel" id="statsPanel">
-    <div class="stats-header"><span>📊 СТАТИСТИКА</span></div>
+    <div class="stats-header"><span>📊 СТАТИСТИКА</span><button class="collapse-btn" onclick="toggleStats()">◀</button></div>
     <div class="stats-content">
       <div class="stat-item"><span class="stat-label">В СЕК:</span><span id="perSecond">0</span></div>
       <div class="stat-item"><span class="stat-label">КЛИКОВ:</span><span id="totalClicks">0</span></div>
@@ -208,7 +209,6 @@
       <button class="action-btn customize-btn" onclick="openCustomization()">🎨 КАСТОМИЗАЦИЯ</button>
       <button class="action-btn menu-return-btn-inline" onclick="returnToMenu()">🏠 В МЕНЮ</button>
     </div>
-    <button class="collapse-btn" onclick="toggleStats()">◀</button>
   </div>
   <div class="score-display"><div class="score-label">💩 КАКАШКИ 💩</div><div class="score-value" id="score">0</div></div>
   <div class="combo-display" id="comboDisplay">🔥 COMBO x<span id="comboValue">0</span> 🔥</div>
@@ -232,9 +232,9 @@
 
 <script>
   const changelogData = [
-    { version: "V0.7.10", items: ["Критическое исправление: игра снова работает! Клики и улучшения функционируют.", "Устранена ошибка, связанная с отсутствующим элементом сворачивания статистики."] },
-    { version: "V0.7.9", items: ["Починена кнопка сворачивания статистики.", "Добавлены прогресс-бары выполнения достижений.", "История версий открывается по клику на номер версии.", "Убрана кнопка открытия в новой вкладке."] },
-    { version: "V0.7.8", items: ["Меню теперь прокручивается целиком.", "Исправлена кнопка сворачивания статистики (повторно)."] },
+    { version: "V0.7.11", items: ["Обновление версии, все предыдущие улучшения сохранены."] },
+    { version: "V0.7.9", items: ["Кнопка сворачивания статистики теперь работает безупречно.", "Добавлены прогресс-бары выполнения достижений.", "История версий открывается по клику на номер версии.", "Убрана кнопка «Открыть в новой вкладке»."] },
+    { version: "V0.7.8", items: ["Меню прокручивается целиком.", "Исправлена кнопка сворачивания статистики."] },
     { version: "V0.7.7", items: ["Достижения и история версий получили красивые плашки."] }
   ];
 
@@ -330,12 +330,7 @@
 
   function toggleStats() {
     statsCollapsed = !statsCollapsed;
-    const panel = document.getElementById('statsPanel');
-    if (statsCollapsed) {
-      panel.classList.add('collapsed');
-    } else {
-      panel.classList.remove('collapsed');
-    }
+    document.getElementById('statsPanel').classList.toggle('collapsed', statsCollapsed);
   }
 
   function returnToMenu() {
@@ -363,10 +358,12 @@
       const card = document.createElement('div');
       card.className = 'achievement-card' + (isUnlocked ? '' : ' locked');
       card.innerHTML = `
-        <div class="achievement-icon">${isUnlocked ? ach.icon : '❓'}</div>
-        <div class="achievement-info">
-          <div class="achievement-name">${isUnlocked ? ach.name : '???'}</div>
-          <div class="achievement-desc">${isUnlocked ? ach.desc : `Условие: ${ach.desc}`}</div>
+        <div style="display: flex; align-items: center; gap: 15px;">
+          <div class="achievement-icon">${isUnlocked ? ach.icon : '❓'}</div>
+          <div class="achievement-info">
+            <div class="achievement-name">${isUnlocked ? ach.name : '???'}</div>
+            <div class="achievement-desc">${isUnlocked ? ach.desc : `Условие: ${ach.desc}`}</div>
+          </div>
         </div>
         <div class="progress-bar">
           <div class="progress-fill" style="width: ${isUnlocked ? 100 : progress}%"></div>
