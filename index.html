@@ -3,22 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>💩 POOP CLICKER MADNESS V0.7.11 💩</title>
+  <title>💩 POOP CLICKER MADNESS V0.7.8 💩</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/bangers@5.0.0/index.min.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Bangers', cursive; overflow: hidden; background: #000; color: #fff; user-select: none; -webkit-user-select: none; letter-spacing: 1px; touch-action: manipulation; }
-    #mainMenu { position: fixed; width: 100%; height: 100%; overflow-y: auto; background: linear-gradient(135deg, #1a0033 0%, #4a0080 50%, #ff006e 100%); z-index: 1000; padding-top: 30px; }
-    .menu-bg { position: fixed; width: 100%; height: 100%; background-image: url('https://image.qwenlm.ai/public_source/40df7e34-f90f-4d54-8713-262422be0295/10e850247-e3bf-9525-9dca-96bda72023d3.png'); background-size: cover; background-position: center; opacity: 0.4; animation: bgPulse 2s ease-in-out infinite, bgSpin 60s linear infinite; pointer-events: none; }
+    #mainMenu { position: fixed; width: 100%; height: 100%; overflow-y: auto; background: linear-gradient(135deg, #1a0033 0%, #4a0080 50%, #ff006e 100%); z-index: 1000; padding-top: 30px; box-sizing: border-box; }
+    .menu-bg { position: fixed; width: 100%; height: 100%; background-image: url('https://image.qwenlm.ai/public_source/40df7e34-f90f-4d54-8713-262422be0295/10e850247-e3bf-9525-9dca-96bda72023d3.png'); background-size: cover; background-position: center; opacity: 0.4; animation: bgPulse 2s ease-in-out infinite, bgSpin 60s linear infinite; will-change: opacity, transform, filter; pointer-events: none; }
     @keyframes bgPulse { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.6; transform: scale(1.1); } }
     @keyframes bgSpin { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
     .version { position: absolute; top: 20px; left: 20px; font-size: 24px; color: #00ff00; text-shadow: 0 0 10px #00ff00, 2px 2px 4px rgba(0,0,0,0.8); z-index: 10; animation: versionGlitch 5s infinite; cursor: pointer; }
     @keyframes versionGlitch { 0%, 90%, 100% { transform: translate(0, 0); opacity: 1; } 91% { transform: translate(-2px, 1px); opacity: 0.8; } 92% { transform: translate(2px, -1px); opacity: 0.9; } 93% { transform: translate(-1px, -1px); opacity: 0.7; color: #ff00ff; } }
     .menu-header { text-align: center; margin-bottom: 20px; z-index: 10; }
-    .menu-title { font-size: 90px; background: linear-gradient(45deg, #ff0000, #ff8800, #ffff00, #00ff00, #00ffff, #0088ff, #ff00ff); background-size: 400% 400%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: rainbowShift 3s ease infinite, titleBounce 1s ease-in-out infinite; filter: drop-shadow(4px 4px 0 #000) drop-shadow(8px 8px 20px rgba(0,0,0,0.8)); line-height: 1.1; }
+    .menu-title { font-size: 90px; background: linear-gradient(45deg, #ff0000, #ff8800, #ffff00, #00ff00, #00ffff, #0088ff, #ff00ff); background-size: 400% 400%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: rainbowShift 3s ease infinite, titleBounce 1s ease-in-out infinite; filter: drop-shadow(4px 4px 0 #000) drop-shadow(8px 8px 20px rgba(0,0,0,0.8)); will-change: transform, background-position; line-height: 1.1; }
     @keyframes rainbowShift { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
     @keyframes titleBounce { 0%, 100% { transform: translateY(0) rotate(-2deg) scale(1); } 50% { transform: translateY(-15px) rotate(2deg) scale(1.05); } }
-    .menu-subtitle { font-size: 42px; color: #FFD700; text-shadow: 3px 3px 0 #ff0000, 6px 6px 0 #000; animation: subtitleCrazy 0.5s ease-in-out infinite; letter-spacing: 8px; margin-top: 5px; }
+    .menu-subtitle { font-size: 42px; color: #FFD700; text-shadow: 3px 3px 0 #ff0000, 6px 6px 0 #000; animation: subtitleCrazy 0.5s ease-in-out infinite; letter-spacing: 8px; will-change: transform; margin-top: 5px; }
     @keyframes subtitleCrazy { 0%, 100% { transform: scale(1) skewX(0deg); } 25% { transform: scale(1.05) skewX(-3deg); } 75% { transform: scale(1.05) skewX(3deg); } }
     .menu-container { position: relative; z-index: 10; width: 90%; max-width: 900px; margin: 0 auto; background: rgba(10, 0, 20, 0.85); border: 4px solid #FFD700; border-radius: 25px; padding: 30px; backdrop-filter: blur(10px); box-shadow: 0 0 50px rgba(255, 215, 0, 0.3), inset 0 0 30px rgba(0,0,0,0.5); display: flex; flex-direction: column; align-items: center; }
     .menu-nav { display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; justify-content: center; width: 100%; }
@@ -29,16 +29,18 @@
     #tab-play { display: none; justify-content: center; align-items: center; min-height: 200px; flex-direction: column; gap: 20px; }
     #tab-play.active { display: flex; }
     @keyframes panelFadeIn { from { opacity: 0; transform: translateY(20px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
-    .play-btn { font-size: 60px; padding: 25px 80px; background: linear-gradient(135deg, #ff006e, #ff8800, #ffbe0b); background-size: 200% 200%; border: 6px solid #fff; border-radius: 25px; color: #fff; cursor: pointer; text-shadow: 4px 4px 8px rgba(0,0,0,0.8); box-shadow: 0 15px 50px rgba(255,0,110,0.6), inset 0 0 30px rgba(255,255,255,0.3); animation: playPulse 0.8s ease-in-out infinite, rainbowBtn 2s linear infinite; letter-spacing: 5px; }
+    .play-btn { font-size: 60px; padding: 25px 80px; background: linear-gradient(135deg, #ff006e, #ff8800, #ffbe0b); background-size: 200% 200%; border: 6px solid #fff; border-radius: 25px; color: #fff; cursor: pointer; text-shadow: 4px 4px 8px rgba(0,0,0,0.8); box-shadow: 0 15px 50px rgba(255,0,110,0.6), inset 0 0 30px rgba(255,255,255,0.3); animation: playPulse 0.8s ease-in-out infinite, rainbowBtn 2s linear infinite; letter-spacing: 5px; will-change: transform, background-position; }
     @keyframes rainbowBtn { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
     @keyframes playPulse { 0%, 100% { transform: scale(1) rotate(-2deg); } 50% { transform: scale(1.05) rotate(2deg); } }
     .play-btn:hover { animation: playHover 0.2s ease-in-out infinite; }
     @keyframes playHover { 0%, 100% { transform: scale(1.1) rotate(-3deg); } 50% { transform: scale(1.1) rotate(3deg); } }
+    .new-tab-btn { font-size: 28px; padding: 15px 40px; background: linear-gradient(135deg, #00bcd4, #009688); border: 4px solid #fff; border-radius: 20px; color: #fff; cursor: pointer; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); box-shadow: 0 10px 30px rgba(0, 188, 212, 0.5); transition: all 0.3s; letter-spacing: 2px; }
+    .new-tab-btn:hover { transform: scale(1.1) rotate(-2deg); box-shadow: 0 15px 40px rgba(0, 188, 212, 0.8); }
 
     #gameScreen { display: none; width: 100%; height: 100vh; position: relative; overflow: hidden; }
-    .game-bg { position: absolute; width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); animation: bgHue 10s linear infinite; transition: background 0.5s ease; }
+    .game-bg { position: absolute; width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); animation: bgHue 10s linear infinite; will-change: filter; transition: background 0.5s ease; }
     @keyframes bgHue { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
-    .game-bg-pattern { position: absolute; width: 200%; height: 200%; top: -50%; left: -50%; background: repeating-conic-gradient(from 0deg, rgba(255,255,255,0.1) 0deg 10deg, transparent 10deg 20deg), radial-gradient(circle at center, rgba(255,215,0,0.2), transparent 70%); animation: patternSpin 30s linear infinite; }
+    .game-bg-pattern { position: absolute; width: 200%; height: 200%; top: -50%; left: -50%; background: repeating-conic-gradient(from 0deg, rgba(255,255,255,0.1) 0deg 10deg, transparent 10deg 20deg), radial-gradient(circle at center, rgba(255,215,0,0.2), transparent 70%); animation: patternSpin 30s linear infinite; will-change: transform; }
     @keyframes patternSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     #canvas { position: absolute; top: 0; left: 0; pointer-events: none; z-index: 15; }
 
@@ -56,26 +58,28 @@
     .action-btn:hover { transform: scale(1.05); }
     .customize-btn { background: linear-gradient(135deg, #9C27B0, #E91E63); }
     .menu-return-btn-inline { background: linear-gradient(135deg, #f44336, #d32f2f); margin-top: 10px; }
+    .stats-expand-btn { position: absolute; left: 15px; top: 20px; z-index: 10; background: linear-gradient(135deg, rgba(20,0,40,0.95), rgba(60,0,80,0.95)); border: 3px solid #FFD700; border-radius: 50%; width: 50px; height: 50px; font-size: 24px; color: #FFD700; cursor: pointer; display: none; align-items: center; justify-content: center; box-shadow: 0 0 20px rgba(255,215,0,0.4); transition: all 0.2s; }
+    .stats-expand-btn:hover { transform: scale(1.1); background: #FFD700; color: #000; }
 
     .score-display { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); text-align: center; z-index: 10; }
-    .score-label { font-size: 24px; color: #FFD700; text-shadow: 2px 2px 0 #000; }
-    .score-value { font-size: 80px; background: linear-gradient(45deg, #FFD700, #FFA500, #FF1493); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(4px 4px 0 #000); }
+    .score-label { font-size: 24px; color: #FFD700; text-shadow: 2px 2px 0 #000; letter-spacing: 3px; }
+    .score-value { font-size: 80px; background: linear-gradient(45deg, #FFD700, #FFA500, #FF1493); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(4px 4px 0 #000); will-change: transform; }
     @keyframes scoreBounce { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
-    .combo-display { position: absolute; top: 180px; left: 50%; transform: translateX(-50%); font-size: 40px; color: #FF1493; text-shadow: 3px 3px 0 #000, 0 0 20px #FF1493; z-index: 10; opacity: 0; transition: opacity 0.3s; }
+    .combo-display { position: absolute; top: 180px; left: 50%; transform: translateX(-50%); font-size: 40px; color: #FF1493; text-shadow: 3px 3px 0 #000, 0 0 20px #FF1493; z-index: 10; opacity: 0; transition: opacity 0.3s; will-change: transform; }
     .combo-display.active { opacity: 1; animation: comboCrazy 0.2s ease-in-out infinite; }
     @keyframes comboCrazy { 0%, 100% { transform: translateX(-50%) rotate(-5deg) scale(1); } 50% { transform: translateX(-50%) rotate(5deg) scale(1.2); } }
     .fever-bar { position: absolute; top: 230px; left: 50%; transform: translateX(-50%); width: 400px; height: 30px; background: rgba(0,0,0,0.6); border: 3px solid #fff; border-radius: 15px; overflow: hidden; z-index: 10; display: none; }
     .fever-bar.active { display: block; animation: feverShake 0.1s ease-in-out infinite; }
     @keyframes feverShake { 0%, 100% { transform: translateX(-50%) rotate(-1deg); } 50% { transform: translateX(-50%) rotate(1deg); } }
-    .fever-fill { height: 100%; background: linear-gradient(90deg, #ff0000, #ff8800, #ffff00, #00ff00, #00ffff, #0088ff, #ff00ff); background-size: 400% 100%; animation: feverFill 1s linear infinite; transition: width 0.2s; box-shadow: 0 0 20px #fff; }
+    .fever-fill { height: 100%; background: linear-gradient(90deg, #ff0000, #ff8800, #ffff00, #00ff00, #00ffff, #0088ff, #ff00ff); background-size: 400% 100%; animation: feverFill 1s linear infinite; transition: width 0.2s; box-shadow: 0 0 20px #fff; will-change: width, background-position; }
     @keyframes feverFill { 0% { background-position: 0% 50%; } 100% { background-position: 400% 50%; } }
     .fever-mode .game-bg { animation: feverBg 0.5s linear infinite !important; filter: saturate(3) contrast(1.5); }
     @keyframes feverBg { 0% { filter: hue-rotate(0deg) saturate(3) contrast(1.5); } 100% { filter: hue-rotate(360deg) saturate(3) contrast(1.5); } }
-    .fever-text { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 200px; color: #FF1493; text-shadow: 0 0 30px #FF1493, 0 0 60px #FFD700, 8px 8px 0 #000; pointer-events: none; z-index: 999; animation: feverFlash 0.3s ease-in-out infinite; display: none; }
+    .fever-text { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 200px; color: #FF1493; text-shadow: 0 0 30px #FF1493, 0 0 60px #FFD700, 8px 8px 0 #000; pointer-events: none; z-index: 999; animation: feverFlash 0.3s ease-in-out infinite; display: none; will-change: transform, opacity; }
     .fever-text.active { display: block; }
     @keyframes feverFlash { 0%, 100% { transform: translate(-50%, -50%) scale(1) rotate(-5deg); opacity: 1; } 50% { transform: translate(-50%, -50%) scale(1.1) rotate(5deg); opacity: 0.8; } }
     .poop-container { position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%); z-index: 10; }
-    .poop { font-size: 240px; cursor: pointer; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.6)) drop-shadow(0 0 30px rgba(139,69,19,0.8)); animation: poopFloat 2s ease-in-out infinite; }
+    .poop { font-size: 240px; cursor: pointer; user-select: none; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.6)) drop-shadow(0 0 30px rgba(139,69,19,0.8)); animation: poopFloat 2s ease-in-out infinite; will-change: transform, filter; }
     @keyframes poopFloat { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-15px) rotate(3deg); } }
     .poop:hover { filter: drop-shadow(0 20px 40px rgba(0,0,0,0.8)) drop-shadow(0 0 50px #FFD700) brightness(1.3); }
     .poop.clicked { animation: poopClick 0.15s ease-out; }
@@ -83,8 +87,8 @@
     .poop.fever-poop { animation: feverPoop 0.2s ease-in-out infinite; filter: drop-shadow(0 0 80px #FF1493) brightness(1.5) saturate(2); }
     @keyframes feverPoop { 0%, 100% { transform: scale(1.1) rotate(-10deg); } 50% { transform: scale(1.2) rotate(10deg); } }
 
-    .upgrade-panel { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); width: 340px; max-height: 85vh; overflow-y: auto; background: linear-gradient(135deg, rgba(20,0,40,0.95), rgba(60,0,80,0.95)); border: 4px solid #FFD700; border-radius: 20px; padding: 15px; z-index: 10; box-shadow: 0 0 40px rgba(255,215,0,0.5); }
-    .upgrade-title { font-size: 36px; color: #FFD700; text-align: center; margin-bottom: 15px; text-shadow: 3px 3px 0 #000; }
+    .upgrade-panel { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); width: 340px; max-height: 85vh; overflow-y: auto; background: linear-gradient(135deg, rgba(20,0,40,0.95), rgba(60,0,80,0.95)); border: 4px solid #FFD700; border-radius: 20px; padding: 15px; z-index: 10; box-shadow: 0 0 40px rgba(255,215,0,0.5); contain: layout style paint; }
+    .upgrade-title { font-size: 36px; color: #FFD700; text-align: center; margin-bottom: 15px; text-shadow: 3px 3px 0 #000; letter-spacing: 3px; }
     .chest-btn { width: 100%; padding: 15px; margin-bottom: 10px; background: linear-gradient(135deg, #FFD700, #FF8C00); border: 3px solid #fff; border-radius: 15px; font-size: 28px; color: #000; cursor: pointer; text-shadow: 1px 1px 0 #fff; box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4); transition: all 0.2s; }
     .chest-btn:hover { transform: scale(1.05); box-shadow: 0 8px 30px rgba(255, 215, 0, 0.6); }
     .chest-btn-10 { background: linear-gradient(135deg, #ff006e, #ff8800); color: #fff; text-shadow: 1px 1px 0 #000; }
@@ -103,16 +107,16 @@
     .upgrade-btn.buy-max:hover { background: #e68900; transform: scale(1.05); }
     .upgrade-item.cant-afford .upgrade-btn { cursor: not-allowed; opacity: 0.6; }
 
-    .golden-poop { position: absolute; font-size: 80px; cursor: pointer; z-index: 20; animation: goldenFloat 3s ease-in-out infinite, goldenGlow 1s ease-in-out infinite; filter: drop-shadow(0 0 30px #FFD700) drop-shadow(0 0 60px #FFA500); }
+    .golden-poop { position: absolute; font-size: 80px; cursor: pointer; z-index: 20; animation: goldenFloat 3s ease-in-out infinite, goldenGlow 1s ease-in-out infinite; filter: drop-shadow(0 0 30px #FFD700) drop-shadow(0 0 60px #FFA500); will-change: transform, filter; }
     @keyframes goldenFloat { 0%, 100% { transform: translateY(0) rotate(0deg) scale(1); } 50% { transform: translateY(-30px) rotate(360deg) scale(1.2); } }
     @keyframes goldenGlow { 0%, 100% { filter: drop-shadow(0 0 30px #FFD700) brightness(1); } 50% { filter: drop-shadow(0 0 60px #FFD700) brightness(1.5); } }
-    .boss-poop { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 400px; cursor: pointer; z-index: 500; filter: drop-shadow(0 0 80px #ff0000) drop-shadow(0 0 40px #ff0000); animation: bossShake 0.3s ease-in-out infinite; }
+    .boss-poop { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 400px; cursor: pointer; z-index: 500; filter: drop-shadow(0 0 80px #ff0000) drop-shadow(0 0 40px #ff0000); animation: bossShake 0.3s ease-in-out infinite; will-change: transform; }
     @keyframes bossShake { 0%, 100% { transform: translate(-50%, -50%) rotate(-3deg) scale(1); } 50% { transform: translate(-50%, -50%) rotate(3deg) scale(1.05); } }
     .boss-hp-bar { position: fixed; top: 50px; left: 50%; transform: translateX(-50%); width: 600px; height: 40px; background: rgba(0,0,0,0.8); border: 4px solid #ff0000; border-radius: 20px; z-index: 600; overflow: hidden; }
     .boss-hp-fill { height: 100%; background: linear-gradient(90deg, #ff0000, #ff8800); transition: width 0.2s; }
-    .boss-title { position: fixed; top: 100px; left: 50%; transform: translateX(-50%); font-size: 48px; color: #ff0000; text-shadow: 3px 3px 0 #000, 0 0 30px #ff0000; z-index: 600; animation: bossTitle 0.5s ease-in-out infinite; }
+    .boss-title { position: fixed; top: 100px; left: 50%; transform: translateX(-50%); font-size: 48px; color: #ff0000; text-shadow: 3px 3px 0 #000, 0 0 30px #ff0000; z-index: 600; animation: bossTitle 0.5s ease-in-out infinite; will-change: transform; }
     @keyframes bossTitle { 0%, 100% { transform: translateX(-50%) scale(1); } 50% { transform: translateX(-50%) scale(1.1); } }
-    .floating-text { position: absolute; text-shadow: 3px 3px 0 #000, 0 0 20px currentColor; pointer-events: none; z-index: 20; }
+    .floating-text { position: absolute; text-shadow: 3px 3px 0 #000, 0 0 20px currentColor; pointer-events: none; z-index: 20; will-change: transform, opacity; }
     .floating-text.normal { color: #FFD700; font-size: 36px; }
     .floating-text.critical-text { color: #FF1493; font-size: 64px; text-shadow: 4px 4px 0 #000, 0 0 40px #FF1493; }
     .floating-text.mega-text { color: #00ff00; font-size: 80px; text-shadow: 5px 5px 0 #000, 0 0 50px #00ff00, 0 0 100px #00ffff; }
@@ -124,7 +128,7 @@
     @keyframes glitch { 0%, 100% { transform: translate(0); filter: none; } 20% { transform: translate(-5px, 3px); filter: hue-rotate(90deg); } 40% { transform: translate(5px, -3px); filter: hue-rotate(180deg) invert(1); } 60% { transform: translate(-3px, -5px); filter: hue-rotate(270deg); } 80% { transform: translate(3px, 5px); filter: saturate(3); } }
     .achievement { position: fixed; top: -150px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #FFD700, #FFA500, #FF6B6B); border: 5px solid #fff; border-radius: 25px; padding: 25px 50px; font-size: 32px; color: #000; text-shadow: 2px 2px 0 rgba(255,255,255,0.5); z-index: 1000; box-shadow: 0 10px 40px rgba(0,0,0,0.8), 0 0 60px #FFD700; animation: achievementSlide 4s ease-in-out forwards; }
     @keyframes achievementSlide { 0% { top: -150px; } 15% { top: 80px; transform: translateX(-50%) scale(1.2) rotate(-5deg); } 25% { top: 80px; transform: translateX(-50%) scale(1) rotate(0deg); } 80% { top: 80px; } 100% { top: -150px; } }
-    .event-banner { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 100px; color: #fff; text-shadow: 0 0 30px #FFD700, 0 0 60px #FF1493, 5px 5px 0 #000; z-index: 999; pointer-events: none; animation: eventBanner 2s ease-out forwards; }
+    .event-banner { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 100px; color: #fff; text-shadow: 0 0 30px #FFD700, 0 0 60px #FF1493, 5px 5px 0 #000; z-index: 999; pointer-events: none; animation: eventBanner 2s ease-out forwards; will-change: transform, opacity; }
     @keyframes eventBanner { 0% { opacity: 0; transform: translate(-50%, -50%) scale(0) rotate(-180deg); } 30% { opacity: 1; transform: translate(-50%, -50%) scale(1.5) rotate(10deg); } 70% { opacity: 1; transform: translate(-50%, -50%) scale(1.3) rotate(-5deg); } 100% { opacity: 0; transform: translate(-50%, -50%) scale(0.5) rotate(0deg); } }
     .invert-screen { filter: invert(1) hue-rotate(180deg) !important; }
     .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 2000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
@@ -136,14 +140,14 @@
     .custom-tab { font-size: 28px; padding: 10px 30px; background: rgba(255,255,255,0.1); border: 2px solid #FFD700; border-radius: 15px; color: #FFD700; cursor: pointer; transition: all 0.3s; }
     .custom-tab.active { background: #FFD700; color: #000; }
     .custom-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; }
-    .custom-card { background: rgba(0,0,0,0.5); border: 3px solid #666; border-radius: 15px; padding: 15px; text-align: center; cursor: pointer; transition: all 0.3s; }
+    .custom-card { background: rgba(0,0,0,0.5); border: 3px solid #666; border-radius: 15px; padding: 15px; text-align: center; cursor: pointer; transition: all 0.3s; position: relative; }
     .custom-card:hover { transform: translateY(-5px); }
     .custom-card.locked { opacity: 0.4; cursor: not-allowed; filter: grayscale(1); }
     .custom-card.equipped { border-color: #00ff00; box-shadow: 0 0 20px #00ff00; }
     .custom-icon-wrapper { width: 50px; height: 50px; margin: 0 auto 10px; border-radius: 50%; border: 2px solid #fff; display: flex; align-items: center; justify-content: center; font-size: 30px; overflow: hidden; }
     .bg-preview { width: 100%; height: 100%; }
     .custom-name { font-size: 24px; color: #fff; }
-    .custom-rarity { font-size: 16px; margin-top: 5px; text-transform: uppercase; }
+    .custom-rarity { font-size: 16px; margin-top: 5px; text-transform: uppercase; letter-spacing: 1px; }
     .custom-bonus { font-size: 14px; color: #00ff00; margin-top: 5px; }
     .rarity-common { border-color: #aaa; } .rarity-common .custom-rarity { color: #aaa; }
     .rarity-rare { border-color: #00aaff; box-shadow: 0 0 10px #00aaff; } .rarity-rare .custom-rarity { color: #00aaff; }
@@ -154,8 +158,8 @@
     @keyframes mythicGlow { 0%, 100% { box-shadow: 0 0 25px #ff00ff; } 50% { box-shadow: 0 0 40px #00ffff; } }
     @keyframes ultraGlow { 0%, 100% { box-shadow: 0 0 30px #ff00ff, 0 0 60px #00ffff; } 50% { box-shadow: 0 0 50px #FFD700, 0 0 100px #ff00ff; } }
 
-    .achievements-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 15px; }
-    .achievement-card { background: linear-gradient(135deg, #2a0050, #500080); border: 2px solid #FFD700; border-radius: 20px; padding: 18px 15px; display: flex; flex-direction: column; gap: 8px; transition: all 0.25s; box-shadow: 0 4px 15px rgba(0,0,0,0.4); }
+    .achievements-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; }
+    .achievement-card { background: linear-gradient(135deg, #2a0050, #500080); border: 2px solid #FFD700; border-radius: 20px; padding: 18px 15px; display: flex; align-items: center; gap: 15px; transition: all 0.25s; box-shadow: 0 4px 15px rgba(0,0,0,0.4); }
     .achievement-card:hover { transform: translateY(-4px); box-shadow: 0 8px 25px rgba(255,215,0,0.5); }
     .achievement-card.locked { filter: grayscale(0.8) opacity(0.55); border-color: #555; background: linear-gradient(135deg, #1a1a1a, #2a2a2a); }
     .achievement-card.locked .achievement-name { color: #999; }
@@ -163,12 +167,11 @@
     .achievement-info { flex: 1; }
     .achievement-name { font-size: 28px; color: #FFD700; text-shadow: 2px 2px 0 #000; margin-bottom: 4px; }
     .achievement-desc { font-size: 16px; color: #ccc; line-height: 1.3; }
-    .progress-bar { width: 100%; height: 12px; background: rgba(0,0,0,0.6); border-radius: 6px; overflow: hidden; margin-top: 5px; }
-    .progress-fill { height: 100%; background: linear-gradient(90deg, #FFD700, #FFA500); transition: width 0.3s; }
 
     .changelog-list { display: flex; flex-direction: column; gap: 20px; }
-    .changelog-entry { background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,215,0,0.05)); border-left: 5px solid #FFD700; border-radius: 0 18px 18px 0; padding: 18px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
-    .changelog-version { font-size: 38px; color: #FF1493; text-shadow: 2px 2px 0 #000; margin-bottom: 10px; }
+    .changelog-entry { background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,215,0,0.05)); border-left: 5px solid #FFD700; border-radius: 0 18px 18px 0; padding: 18px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); transition: all 0.2s; }
+    .changelog-entry:hover { background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,215,0,0.1)); transform: translateX(3px); }
+    .changelog-version { font-size: 38px; color: #FF1493; text-shadow: 2px 2px 0 #000; margin-bottom: 10px; letter-spacing: 1px; }
     .changelog-item { font-size: 18px; color: #fff; margin-bottom: 8px; padding-left: 25px; position: relative; line-height: 1.5; }
     .changelog-item::before { content: '💩'; position: absolute; left: 0; top: 2px; font-size: 16px; }
   </style>
@@ -176,19 +179,28 @@
 <body>
 <div id="mainMenu">
   <div class="menu-bg"></div>
-  <div class="version" onclick="openChangelogModal()">V0.7.11</div>
+  <div class="version" onclick="triggerSecret()">V0.7.8</div>
   <div class="menu-header"><div class="menu-title">💩 POOP CLICKER 💩</div><div class="menu-subtitle">MADNESS EDITION</div></div>
   <div class="menu-container">
     <div class="menu-nav">
       <button class="nav-btn active" onclick="showMenuTab('play', event)">🎮 ИГРАТЬ</button>
       <button class="nav-btn" onclick="showMenuTab('achievements', event)">🏆 ДОСТИЖЕНИЯ</button>
+      <button class="nav-btn" onclick="showMenuTab('changelog', event)">📜 ЧТО НОВОГО</button>
     </div>
     <div id="tab-play" class="menu-panel active">
       <button class="play-btn" onclick="startGame()">НАЧАТЬ БЕЗУМИЕ!</button>
+      <button class="new-tab-btn" onclick="openInNewTab()">🔗 ОТКРЫТЬ В НОВОЙ ВКЛАДКЕ</button>
     </div>
     <div id="tab-achievements" class="menu-panel">
       <div class="panel-title" style="font-size:48px; color:#FFD700; text-align:center; margin-bottom:25px;">🏆 ЦЕЛИ И ДОСТИЖЕНИЯ 🏆</div>
       <div class="achievements-grid" id="menuAchievementsGrid"></div>
+    </div>
+    <div id="tab-changelog" class="menu-panel">
+      <div class="panel-title" style="font-size:48px; color:#FFD700; text-align:center; margin-bottom:25px;">📜 ИСТОРИЯ ОБНОВЛЕНИЙ 📜</div>
+      <div class="changelog-list">
+        <div class="changelog-entry"><div class="changelog-version">V0.7.8 - Меню и статистика</div><div class="changelog-item">Главное меню теперь прокручивается целиком, если не влезает в экран.</div><div class="changelog-item">Исправлена кнопка сворачивания панели статистики – теперь работает корректно.</div></div>
+        <div class="changelog-entry"><div class="changelog-version">V0.7.7 - Украшение меню</div><div class="changelog-item">Достижения и история версий получили красивые плашки.</div></div>
+      </div>
     </div>
   </div>
 </div>
@@ -210,6 +222,7 @@
       <button class="action-btn menu-return-btn-inline" onclick="returnToMenu()">🏠 В МЕНЮ</button>
     </div>
   </div>
+  <button class="stats-expand-btn" id="statsExpandBtn" onclick="toggleStats()">📊</button>
   <div class="score-display"><div class="score-label">💩 КАКАШКИ 💩</div><div class="score-value" id="score">0</div></div>
   <div class="combo-display" id="comboDisplay">🔥 COMBO x<span id="comboValue">0</span> 🔥</div>
   <div class="fever-bar" id="feverBar"><div class="fever-fill" id="feverFill" style="width: 0%"></div></div>
@@ -228,27 +241,9 @@
   <div class="modal-content"><button class="modal-close" onclick="closeCustomization()">×</button><div class="panel-title">🎨 КАСТОМИЗАЦИЯ</div><div class="custom-tabs"><button class="custom-tab active" onclick="switchCustomTab('skins', event)">СКИНЫ</button><button class="custom-tab" onclick="switchCustomTab('backgrounds', event)">ФОНЫ</button></div><div class="custom-grid" id="customGrid"></div></div>
 </div>
 <div id="chestResultModal" class="modal-overlay"><div class="modal-content"><div class="chest-result" id="chestResultContent"></div><button class="play-btn" style="font-size:36px; padding:15px 40px; margin-top:30px;" onclick="closeChestResult()">ЗАБРАТЬ</button></div></div>
-<div id="changelogModal" class="modal-overlay"><div class="modal-content"><button class="modal-close" onclick="document.getElementById('changelogModal').classList.remove('active')">×</button><div class="panel-title" style="font-size:48px; color:#FFD700; text-align:center; margin-bottom:25px;">📜 ИСТОРИЯ ОБНОВЛЕНИЙ 📜</div><div class="changelog-list" id="changelogContent"></div></div></div>
 
 <script>
-  const changelogData = [
-    { version: "V0.7.11", items: ["Обновление версии, все предыдущие улучшения сохранены."] },
-    { version: "V0.7.9", items: ["Кнопка сворачивания статистики теперь работает безупречно.", "Добавлены прогресс-бары выполнения достижений.", "История версий открывается по клику на номер версии.", "Убрана кнопка «Открыть в новой вкладке»."] },
-    { version: "V0.7.8", items: ["Меню прокручивается целиком.", "Исправлена кнопка сворачивания статистики."] },
-    { version: "V0.7.7", items: ["Достижения и история версий получили красивые плашки."] }
-  ];
-
-  function openChangelogModal() {
-    const content = document.getElementById('changelogContent');
-    content.innerHTML = changelogData.map(entry => `
-      <div class="changelog-entry">
-        <div class="changelog-version">${entry.version}</div>
-        ${entry.items.map(item => `<div class="changelog-item">${item}</div>`).join('')}
-      </div>
-    `).join('');
-    document.getElementById('changelogModal').classList.add('active');
-  }
-
+  function openInNewTab() { window.open(window.location.href, '_blank'); }
   const skinDatabase = {
     '💩': { name: 'Классика', rarity: 'common', icon: '💩', type: 'skin' },
     '🤎': { name: 'Шоколадка', rarity: 'common', icon: '🤎', type: 'skin' },
@@ -280,24 +275,24 @@
     'bg_divine': { name: 'Божественный', rarity: 'ultra_mythic_plus', css: 'linear-gradient(135deg, #FFD700, #FFA500, #FFD700)', type: 'bg', bonus: 0.15 }
   };
   const allAchievementsList = [
-    { id: 'c10', icon: '🏆', name: '10 КЛИКОВ!', desc: 'Сделать 10 кликов', target: () => gameState.totalClicks, goal: 10 },
-    { id: 'c100', icon: '🏆', name: '100 КЛИКОВ!', desc: 'Сделать 100 кликов', target: () => gameState.totalClicks, goal: 100 },
-    { id: 'c1000', icon: '🏆', name: '1000 КЛИКОВ!', desc: 'Сделать 1000 кликов', target: () => gameState.totalClicks, goal: 1000 },
-    { id: 'c10000', icon: '🏆', name: '10K КЛИКОВ!', desc: 'Сделать 10,000 кликов', target: () => gameState.totalClicks, goal: 10000 },
-    { id: 's1k', icon: '💩', name: '1K КАКАШЕК!', desc: 'Накопить 1,000 какашек', target: () => gameState.score, goal: 1000 },
-    { id: 's10k', icon: '💩', name: '10K КАКАШЕК!', desc: 'Накопить 10,000 какашек', target: () => gameState.score, goal: 10000 },
-    { id: 's100k', icon: '💩', name: '100K!', desc: 'Накопить 100,000 какашек', target: () => gameState.score, goal: 100000 },
-    { id: 's1m', icon: '💰', name: 'МИЛЛИОНЕР!', desc: 'Накопить 1,000,000 какашек', target: () => gameState.score, goal: 1000000 },
-    { id: 's1b', icon: '💎', name: 'МИЛЛИАРДЕР!', desc: 'Накопить 1,000,000,000 какашек', target: () => gameState.score, goal: 1000000000 },
-    { id: 'combo20', icon: '🔥', name: 'COMBO 20!', desc: 'Достичь комбо x20', target: () => gameState.combo, goal: 20 },
-    { id: 'combo50', icon: '🔥', name: 'COMBO 50!', desc: 'Достичь комбо x50', target: () => gameState.combo, goal: 50 },
-    { id: 'combo100', icon: '🔥', name: 'COMBO 100!', desc: 'Достичь комбо x100', target: () => gameState.combo, goal: 100 },
-    { id: 'gold5', icon: '👑', name: '5 ЗОЛОТЫХ!', desc: 'Собрать 5 золотых какашек', target: () => gameState.goldenPoopsCollected, goal: 5 },
-    { id: 'gold20', icon: '👑', name: '20 ЗОЛОТЫХ!', desc: 'Собрать 20 золотых какашек', target: () => gameState.goldenPoopsCollected, goal: 20 },
-    { id: 'fever', icon: '🌋', name: 'FEVER АКТИВИРОВАН!', desc: 'Войти в режим лихорадки', target: () => gameState.feverActive ? 1 : 0, goal: 1 },
-    { id: 'all_skins', icon: '🎨', name: 'ВСЕ СКИНЫ!', desc: 'Собрать все доступные скины', target: () => Object.keys(skinDatabase).filter(id => gameState.unlockedItems.includes(id)).length, goal: Object.keys(skinDatabase).length },
-    { id: 'all_bgs', icon: '🖼️', name: 'ВСЕ ФОНЫ!', desc: 'Собрать все доступные фоны', target: () => Object.keys(bgDatabase).filter(id => gameState.unlockedItems.includes(id)).length, goal: Object.keys(bgDatabase).length },
-    { id: 'game_100', icon: '💯', name: '100% ПРОХОЖДЕНИЕ', desc: 'Получить все достижения', target: () => gameState.achievements.length, goal: allAchievementsList.length - 1 }
+    { id: 'c10', icon: '🏆', name: '10 КЛИКОВ!', desc: 'Сделать 10 кликов' },
+    { id: 'c100', icon: '🏆', name: '100 КЛИКОВ!', desc: 'Сделать 100 кликов' },
+    { id: 'c1000', icon: '🏆', name: '1000 КЛИКОВ!', desc: 'Сделать 1000 кликов' },
+    { id: 'c10000', icon: '🏆', name: '10K КЛИКОВ!', desc: 'Сделать 10,000 кликов' },
+    { id: 's1k', icon: '💩', name: '1K КАКАШЕК!', desc: 'Накопить 1,000 какашек' },
+    { id: 's10k', icon: '💩', name: '10K КАКАШЕК!', desc: 'Накопить 10,000 какашек' },
+    { id: 's100k', icon: '💩', name: '100K!', desc: 'Накопить 100,000 какашек' },
+    { id: 's1m', icon: '💰', name: 'МИЛЛИОНЕР!', desc: 'Накопить 1,000,000 какашек' },
+    { id: 's1b', icon: '💎', name: 'МИЛЛИАРДЕР!', desc: 'Накопить 1,000,000,000 какашек' },
+    { id: 'combo20', icon: '🔥', name: 'COMBO 20!', desc: 'Достичь комбо x20' },
+    { id: 'combo50', icon: '🔥', name: 'COMBO 50!', desc: 'Достичь комбо x50' },
+    { id: 'combo100', icon: '🔥', name: 'COMBO 100!', desc: 'Достичь комбо x100' },
+    { id: 'gold5', icon: '👑', name: '5 ЗОЛОТЫХ!', desc: 'Собрать 5 золотых какашек' },
+    { id: 'gold20', icon: '👑', name: '20 ЗОЛОТЫХ!', desc: 'Собрать 20 золотых какашек' },
+    { id: 'fever', icon: '🌋', name: 'FEVER АКТИВИРОВАН!', desc: 'Войти в режим лихорадки' },
+    { id: 'all_skins', icon: '🎨', name: 'ВСЕ СКИНЫ!', desc: 'Собрать все доступные скины' },
+    { id: 'all_bgs', icon: '🖼️', name: 'ВСЕ ФОНЫ!', desc: 'Собрать все доступные фоны' },
+    { id: 'game_100', icon: '💯', name: '100% ПРОХОЖДЕНИЕ', desc: 'Получить все достижения в игре' }
   ];
   const gameState = {
     score: 0, totalClicks: 0, clickPower: 1, perSecond: 0, multiplier: 1, critChance: 0.01,
@@ -330,7 +325,10 @@
 
   function toggleStats() {
     statsCollapsed = !statsCollapsed;
-    document.getElementById('statsPanel').classList.toggle('collapsed', statsCollapsed);
+    const panel = document.getElementById('statsPanel');
+    const expandBtn = document.getElementById('statsExpandBtn');
+    if (statsCollapsed) { panel.classList.add('collapsed'); expandBtn.style.display = 'flex'; }
+    else { panel.classList.remove('collapsed'); expandBtn.style.display = 'none'; }
   }
 
   function returnToMenu() {
@@ -353,23 +351,9 @@
     grid.innerHTML = '';
     allAchievementsList.forEach(ach => {
       const isUnlocked = gameState.achievements.includes(ach.id);
-      const current = ach.target();
-      const progress = Math.min(100, Math.floor((current / ach.goal) * 100));
       const card = document.createElement('div');
       card.className = 'achievement-card' + (isUnlocked ? '' : ' locked');
-      card.innerHTML = `
-        <div style="display: flex; align-items: center; gap: 15px;">
-          <div class="achievement-icon">${isUnlocked ? ach.icon : '❓'}</div>
-          <div class="achievement-info">
-            <div class="achievement-name">${isUnlocked ? ach.name : '???'}</div>
-            <div class="achievement-desc">${isUnlocked ? ach.desc : `Условие: ${ach.desc}`}</div>
-          </div>
-        </div>
-        <div class="progress-bar">
-          <div class="progress-fill" style="width: ${isUnlocked ? 100 : progress}%"></div>
-        </div>
-        <div style="font-size: 14px; color: #FFD700;">${isUnlocked ? '✅ Выполнено' : progress + '%'}</div>
-      `;
+      card.innerHTML = `<div class="achievement-icon">${isUnlocked ? ach.icon : '❓'}</div><div class="achievement-info"><div class="achievement-name">${isUnlocked ? ach.name : '???'}</div><div class="achievement-desc">${isUnlocked ? ach.desc : `Условие: ${ach.desc}`}</div></div>`;
       grid.appendChild(card);
     });
   }
@@ -780,7 +764,27 @@
     return Math.floor(num).toLocaleString();
   }
 
-  const achievementCheckList = allAchievementsList.map(a => ({ id: a.id, cond: () => a.target() >= a.goal }));
+  const achievementCheckList = [
+    { id: 'c10', cond: () => gameState.totalClicks >= 10 },
+    { id: 'c100', cond: () => gameState.totalClicks >= 100 },
+    { id: 'c1000', cond: () => gameState.totalClicks >= 1000 },
+    { id: 'c10000', cond: () => gameState.totalClicks >= 10000 },
+    { id: 's1k', cond: () => gameState.score >= 1000 },
+    { id: 's10k', cond: () => gameState.score >= 10000 },
+    { id: 's100k', cond: () => gameState.score >= 100000 },
+    { id: 's1m', cond: () => gameState.score >= 1000000 },
+    { id: 's1b', cond: () => gameState.score >= 1000000000 },
+    { id: 'combo20', cond: () => gameState.combo >= 20 },
+    { id: 'combo50', cond: () => gameState.combo >= 50 },
+    { id: 'combo100', cond: () => gameState.combo >= 100 },
+    { id: 'gold5', cond: () => gameState.goldenPoopsCollected >= 5 },
+    { id: 'gold20', cond: () => gameState.goldenPoopsCollected >= 20 },
+    { id: 'fever', cond: () => gameState.feverActive },
+    { id: 'all_skins', cond: () => Object.keys(skinDatabase).every(id => gameState.unlockedItems.includes(id)) },
+    { id: 'all_bgs', cond: () => Object.keys(bgDatabase).every(id => gameState.unlockedItems.includes(id)) },
+    { id: 'game_100', cond: () => allAchievementsList.filter(a => a.id !== 'game_100').every(a => gameState.achievements.includes(a.id)) }
+  ];
+
   function checkAchievements() {
     achievementCheckList.forEach(a => {
       if (!gameState.achievements.includes(a.id) && a.cond()) {
