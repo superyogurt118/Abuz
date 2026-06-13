@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>💩 POOP CLICKER MADNESS V0.7.8 💩</title>
+  <title>💩 POOP CLICKER MADNESS V0.7.9 💩</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/bangers@5.0.0/index.min.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -44,23 +44,6 @@
     @keyframes patternSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     #canvas { position: absolute; top: 0; left: 0; pointer-events: none; z-index: 15; }
 
-    .stats-panel { position: absolute; left: 15px; top: 20px; max-height: calc(100vh - 40px); overflow-y: auto; background: linear-gradient(135deg, rgba(20,0,40,0.95), rgba(60,0,80,0.95)); border: 3px solid #FFD700; border-radius: 15px; padding: 15px; z-index: 10; font-size: 18px; min-width: 220px; box-shadow: 0 0 30px rgba(255,215,0,0.4); transition: all 0.3s ease; }
-    .stats-panel.collapsed { min-width: 50px; padding: 10px 5px; overflow: hidden; }
-    .stats-panel.collapsed .stats-content, .stats-panel.collapsed .stats-header span { display: none; }
-    .stats-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 2px solid rgba(255,215,0,0.3); padding-bottom: 5px; }
-    .stats-header span { color: #FFD700; font-size: 22px; text-shadow: 2px 2px 0 #000; }
-    .collapse-btn { background: none; border: 2px solid #FFD700; color: #FFD700; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
-    .collapse-btn:hover { background: #FFD700; color: #000; }
-    .stats-panel.collapsed .collapse-btn { transform: rotate(180deg); margin: 0 auto; }
-    .stat-item { margin-bottom: 8px; color: #fff; display: flex; justify-content: space-between; }
-    .stat-label { color: #FFD700; }
-    .action-btn { width: 100%; margin-top: 10px; padding: 12px; border: 3px solid #fff; border-radius: 15px; font-size: 22px; color: #fff; cursor: pointer; text-shadow: 2px 2px 0 #000; box-shadow: 0 5px 20px rgba(0,0,0,0.4); transition: all 0.2s; }
-    .action-btn:hover { transform: scale(1.05); }
-    .customize-btn { background: linear-gradient(135deg, #9C27B0, #E91E63); }
-    .menu-return-btn-inline { background: linear-gradient(135deg, #f44336, #d32f2f); margin-top: 10px; }
-    .stats-expand-btn { position: absolute; left: 15px; top: 20px; z-index: 10; background: linear-gradient(135deg, rgba(20,0,40,0.95), rgba(60,0,80,0.95)); border: 3px solid #FFD700; border-radius: 50%; width: 50px; height: 50px; font-size: 24px; color: #FFD700; cursor: pointer; display: none; align-items: center; justify-content: center; box-shadow: 0 0 20px rgba(255,215,0,0.4); transition: all 0.2s; }
-    .stats-expand-btn:hover { transform: scale(1.1); background: #FFD700; color: #000; }
-
     .score-display { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); text-align: center; z-index: 10; }
     .score-label { font-size: 24px; color: #FFD700; text-shadow: 2px 2px 0 #000; letter-spacing: 3px; }
     .score-value { font-size: 80px; background: linear-gradient(45deg, #FFD700, #FFA500, #FF1493); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(4px 4px 0 #000); will-change: transform; }
@@ -93,6 +76,10 @@
     .chest-btn:hover { transform: scale(1.05); box-shadow: 0 8px 30px rgba(255, 215, 0, 0.6); }
     .chest-btn-10 { background: linear-gradient(135deg, #ff006e, #ff8800); color: #fff; text-shadow: 1px 1px 0 #000; }
     .chest-btn-all { background: linear-gradient(135deg, #00c853, #00e676); color: #fff; text-shadow: 1px 1px 0 #000; }
+    .action-btn { width: 100%; margin-top: 10px; padding: 12px; border: 3px solid #fff; border-radius: 15px; font-size: 22px; color: #fff; cursor: pointer; text-shadow: 2px 2px 0 #000; box-shadow: 0 5px 20px rgba(0,0,0,0.4); transition: all 0.2s; }
+    .action-btn:hover { transform: scale(1.05); }
+    .customize-btn { background: linear-gradient(135deg, #9C27B0, #E91E63); }
+    .menu-return-btn-inline { background: linear-gradient(135deg, #f44336, #d32f2f); }
     .upgrade-item { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: 3px solid #fff; border-radius: 15px; padding: 12px; margin-bottom: 10px; transition: all 0.2s; }
     .upgrade-item:hover { transform: scale(1.03) rotate(-1deg); box-shadow: 0 10px 30px rgba(255,215,0,0.6); }
     .upgrade-item.cant-afford { opacity: 0.5; filter: grayscale(0.7); }
@@ -175,9 +162,11 @@
     .changelog-item { font-size: 18px; color: #fff; margin-bottom: 8px; padding-left: 25px; position: relative; line-height: 1.5; }
     .changelog-item::before { content: '💩'; position: absolute; left: 0; top: 2px; font-size: 16px; }
 
-    /* Адаптивность для мобильных */
+    /* Статистика в меню */
+    .stat-item { margin-bottom: 12px; color: #fff; display: flex; justify-content: space-between; }
+    .stat-label { color: #FFD700; }
+
     @media (max-width: 768px) {
-      .stats-panel { left: 5px; top: 10px; min-width: 150px; font-size: 14px; padding: 10px; }
       .score-value { font-size: 50px; }
       .upgrade-panel { width: 260px; right: 5px; padding: 10px; }
       .play-btn { font-size: 36px; padding: 20px 50px; }
@@ -187,12 +176,13 @@
 <body>
 <div id="mainMenu">
   <div class="menu-bg"></div>
-  <div class="version" onclick="triggerSecret()">V0.7.8</div>
+  <div class="version" onclick="triggerSecret()">V0.7.9</div>
   <div class="menu-header"><div class="menu-title">💩 POOP CLICKER 💩</div><div class="menu-subtitle">MADNESS EDITION</div></div>
   <div class="menu-container">
     <div class="menu-nav">
       <button class="nav-btn active" onclick="showMenuTab('play', event)">🎮 ИГРАТЬ</button>
       <button class="nav-btn" onclick="showMenuTab('achievements', event)">🏆 ДОСТИЖЕНИЯ</button>
+      <button class="nav-btn" onclick="showMenuTab('stats', event)">📊 СТАТИСТИКА</button>
       <button class="nav-btn" onclick="showMenuTab('changelog', event)">📜 ЧТО НОВОГО</button>
     </div>
     <div id="tab-play" class="menu-panel active">
@@ -203,9 +193,27 @@
       <div class="panel-title" style="font-size:48px; color:#FFD700; text-align:center; margin-bottom:25px;">🏆 ЦЕЛИ И ДОСТИЖЕНИЯ 🏆</div>
       <div class="achievements-grid" id="menuAchievementsGrid"></div>
     </div>
+    <div id="tab-stats" class="menu-panel">
+      <div class="panel-title" style="font-size:48px; color:#FFD700; text-align:center; margin-bottom:25px;">📊 СТАТИСТИКА 📊</div>
+      <div class="stats-content" style="max-width:500px; margin:0 auto; font-size:24px;">
+        <div class="stat-item"><span class="stat-label">В СЕК:</span><span id="menuPerSecond">0</span></div>
+        <div class="stat-item"><span class="stat-label">КЛИКОВ:</span><span id="menuTotalClicks">0</span></div>
+        <div class="stat-item"><span class="stat-label">МНОЖ.:</span><span id="menuMultiplier">x1</span></div>
+        <div class="stat-item"><span class="stat-label">КРИТ:</span><span id="menuCritChance">1%</span></div>
+        <div class="stat-item"><span class="stat-label">СИЛА:</span><span id="menuClickPower">1</span></div>
+        <div class="stat-item" id="menuUltraBonusStat" style="display:none; color:#00ff00;"><span class="stat-label">УЛЬТРА БОНУС:</span><span id="menuUltraBonusVal">+0%</span></div>
+        <div class="stat-item"><span class="stat-label">ЗОЛОТЫХ:</span><span id="menuGoldenPoops">0</span></div>
+        <div class="stat-item"><span class="stat-label">УЛУЧШЕНИЙ:</span><span id="menuUpgradesCount">0</span></div>
+      </div>
+    </div>
     <div id="tab-changelog" class="menu-panel">
       <div class="panel-title" style="font-size:48px; color:#FFD700; text-align:center; margin-bottom:25px;">📜 ИСТОРИЯ ОБНОВЛЕНИЙ 📜</div>
       <div class="changelog-list">
+        <div class="changelog-entry">
+          <div class="changelog-version">V0.7.9 - Статистика в меню</div>
+          <div class="changelog-item">Панель статистики перенесена в главное меню.</div>
+          <div class="changelog-item">Кнопки кастомизации и возврата в меню добавлены в магазин улучшений.</div>
+        </div>
         <div class="changelog-entry">
           <div class="changelog-version">V0.7.8 - Меню и статистика</div>
           <div class="changelog-item">Главное меню теперь прокручивается целиком, если не влезает в экран.</div>
@@ -224,20 +232,6 @@
   <div class="game-bg" id="gameBg"></div>
   <div class="game-bg-pattern"></div>
   <canvas id="canvas"></canvas>
-  <div class="stats-panel" id="statsPanel">
-    <div class="stats-header"><span>📊 СТАТИСТИКА</span><button class="collapse-btn" onclick="toggleStats()">◀</button></div>
-    <div class="stats-content">
-      <div class="stat-item"><span class="stat-label">В СЕК:</span><span id="perSecond">0</span></div>
-      <div class="stat-item"><span class="stat-label">КЛИКОВ:</span><span id="totalClicks">0</span></div>
-      <div class="stat-item"><span class="stat-label">МНОЖ.:</span><span id="multiplier">x1</span></div>
-      <div class="stat-item"><span class="stat-label">КРИТ:</span><span id="critChance">1%</span></div>
-      <div class="stat-item"><span class="stat-label">СИЛА:</span><span id="clickPower">1</span></div>
-      <div class="stat-item" id="ultraBonusStat" style="display:none; color:#00ff00;"><span class="stat-label">УЛЬТРА БОНУС:</span><span id="ultraBonusVal">+0%</span></div>
-      <button class="action-btn customize-btn" onclick="openCustomization()">🎨 КАСТОМИЗАЦИЯ</button>
-      <button class="action-btn menu-return-btn-inline" onclick="returnToMenu()">🏠 В МЕНЮ</button>
-    </div>
-  </div>
-  <button class="stats-expand-btn" id="statsExpandBtn" onclick="toggleStats()">📊</button>
   <div class="score-display"><div class="score-label">💩 КАКАШКИ 💩</div><div class="score-value" id="score">0</div></div>
   <div class="combo-display" id="comboDisplay">🔥 COMBO x<span id="comboValue">0</span> 🔥</div>
   <div class="fever-bar" id="feverBar"><div class="fever-fill" id="feverFill" style="width: 0%"></div></div>
@@ -248,6 +242,8 @@
     <button class="chest-btn" onclick="openChest(1)">📦 СУНДУК (10K)</button>
     <button class="chest-btn chest-btn-10" onclick="openChest(10)">📦 СУНДУКИ x10</button>
     <button class="chest-btn chest-btn-all" onclick="buyChestsAll()">💰 ВСЁ</button>
+    <button class="action-btn customize-btn" onclick="openCustomization()" style="margin-bottom:5px;">🎨 КАСТОМИЗАЦИЯ</button>
+    <button class="action-btn menu-return-btn-inline" onclick="returnToMenu()">🏠 В МЕНЮ</button>
     <div id="upgradeList"></div>
   </div>
 </div>
@@ -333,7 +329,6 @@
     randomEventTimer: 45
   };
 
-  // Сохранение и загрузка
   function saveGame() {
     localStorage.setItem('poopClickerSave', JSON.stringify(gameState));
   }
@@ -366,22 +361,12 @@
   }
   loadGame();
   initMenuAchievements();
-  // Автосохранение каждые 5 секунд
   setInterval(saveGame, 5000);
 
   let currentCustomTab = 'skins';
-  let statsCollapsed = false;
   let animationFrameId = null;
   let lastTime = 0;
   let scoreAccumulator = 0;
-
-  function toggleStats() {
-    statsCollapsed = !statsCollapsed;
-    const panel = document.getElementById('statsPanel');
-    const expandBtn = document.getElementById('statsExpandBtn');
-    if (statsCollapsed) { panel.classList.add('collapsed'); expandBtn.style.display = 'flex'; }
-    else { panel.classList.remove('collapsed'); expandBtn.style.display = 'none'; }
-  }
 
   function returnToMenu() {
     gameState.isRunning = false;
@@ -389,7 +374,8 @@
     document.getElementById('gameScreen').style.display = 'none';
     document.getElementById('mainMenu').style.display = 'block';
     initMenuAchievements();
-    saveGame(); // сохраняем при выходе в меню
+    updateMenuStats();
+    saveGame();
   }
 
   function showMenuTab(tabName, event) {
@@ -397,6 +383,7 @@
     document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
     document.getElementById('tab-' + tabName).classList.add('active');
     if (event && event.currentTarget) event.currentTarget.classList.add('active');
+    if (tabName === 'stats') updateMenuStats();
   }
 
   function initMenuAchievements() {
@@ -409,6 +396,27 @@
       card.innerHTML = `<div class="achievement-icon">${isUnlocked ? ach.icon : '❓'}</div><div class="achievement-info"><div class="achievement-name">${isUnlocked ? ach.name : '???'}</div><div class="achievement-desc">${isUnlocked ? ach.desc : `Условие: ${ach.desc}`}</div></div>`;
       grid.appendChild(card);
     });
+  }
+
+  function updateMenuStats() {
+    const ultraMult = 1 + getUltraBonus();
+    document.getElementById('menuPerSecond').textContent = formatNumber(gameState.perSecond * ultraMult);
+    document.getElementById('menuTotalClicks').textContent = formatNumber(gameState.totalClicks);
+    document.getElementById('menuMultiplier').textContent = 'x' + (gameState.multiplier * ultraMult).toFixed(2);
+    document.getElementById('menuCritChance').textContent = Math.floor(gameState.critChance * 100) + '%';
+    document.getElementById('menuClickPower').textContent = formatNumber(gameState.clickPower * ultraMult);
+    const ultraBonus = getUltraBonus();
+    const ultraStat = document.getElementById('menuUltraBonusStat');
+    if (ultraBonus > 0) {
+      ultraStat.style.display = 'flex';
+      document.getElementById('menuUltraBonusVal').textContent = '+' + Math.round(ultraBonus * 100) + '%';
+    } else {
+      ultraStat.style.display = 'none';
+    }
+    document.getElementById('menuGoldenPoops').textContent = gameState.goldenPoopsCollected;
+    let totalUpgrades = 0;
+    Object.values(gameState.upgrades).forEach(up => totalUpgrades += up.count);
+    document.getElementById('menuUpgradesCount').textContent = totalUpgrades;
   }
 
   const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
@@ -527,12 +535,6 @@
     document.getElementById('poop').textContent = gameState.equippedSkin;
     const bgData = bgDatabase[gameState.equippedBg];
     if (bgData) document.getElementById('gameBg').style.background = bgData.css;
-    const ultraBonus = getUltraBonus();
-    const ultraStat = document.getElementById('ultraBonusStat');
-    if (ultraBonus > 0) {
-      ultraStat.style.display = 'flex';
-      document.getElementById('ultraBonusVal').textContent = `+${Math.round(ultraBonus * 100)}%`;
-    } else ultraStat.style.display = 'none';
   }
 
   function startGame() {
@@ -547,7 +549,7 @@
     updateVisuals();
     if (animationFrameId) cancelAnimationFrame(animationFrameId);
     animationFrameId = requestAnimationFrame(gameLoop);
-    saveGame(); // сохраняем при входе в игру
+    saveGame();
   }
 
   const upgradeElements = {};
@@ -612,7 +614,7 @@
       } else return;
     }
     updateUpgradeUI();
-    saveGame(); // сохраняем после покупки
+    saveGame();
   }
 
   function clickPoop(event) {
@@ -660,7 +662,7 @@
       soundBank.click();
     }
     checkAchievements();
-    saveGame(); // сохраняем после клика
+    saveGame();
   }
 
   function triggerScreenEffect(type) {
@@ -687,7 +689,7 @@
     document.getElementById('feverText').classList.add('active');
     document.getElementById('poop').classList.add('fever-poop');
     soundBank.fever(); showEventBanner('🔥 FEVER MODE! 🔥');
-    saveGame(); // сохраняем при активации
+    saveGame();
   }
 
   function deactivateFever() {
@@ -726,8 +728,8 @@
     if (gameState.score >= cost) {
       gameState.score -= cost; soundBank.chestOpen();
       const results = []; for (let i = 0; i < count; i++) results.push(rollLoot());
-      showChestResult(results, count); updateDisplay(); checkAchievements();
-      saveGame(); // сохраняем после открытия сундуков
+      showChestResult(results, count); updateUpgradeUI(); checkAchievements();
+      saveGame();
     } else showFloatingText(window.innerWidth / 2, window.innerHeight / 2, 'НЕ ХВАТАЕТ!', 'critical');
   }
 
@@ -852,7 +854,7 @@
         gameState.achievements.push(a.id);
         showAchievement(allAchievementsList.find(ach => ach.id === a.id)?.name || a.id);
         soundBank.achievement();
-        saveGame(); // сохраняем при получении достижения
+        saveGame();
       }
     });
   }
@@ -867,16 +869,6 @@
   }
 
   function triggerSecret() { soundBank.mega(); showEventBanner('🎮 СЕКРЕТНЫЙ РЕЖИМ!'); createPoopRain(100); }
-
-  function updateDisplay() {
-    const ultraMult = 1 + getUltraBonus();
-    document.getElementById('perSecond').textContent = formatNumber(gameState.perSecond * ultraMult);
-    document.getElementById('totalClicks').textContent = formatNumber(gameState.totalClicks);
-    document.getElementById('multiplier').textContent = 'x' + (gameState.multiplier * ultraMult).toFixed(2);
-    document.getElementById('critChance').textContent = Math.floor(gameState.critChance * 100) + '%';
-    document.getElementById('clickPower').textContent = formatNumber(gameState.clickPower * ultraMult);
-    updateUpgradeUI();
-  }
 
   function gameLoop(timestamp) {
     if (!gameState.isRunning) return;
@@ -919,10 +911,10 @@
       document.getElementById('score').style.animation = 'scoreBounce 0.3s ease';
     }
 
-    if (timestamp - (updateDisplay.last || 0) > 500) { updateDisplay(); updateDisplay.last = timestamp; }
+    if (timestamp - (updateUpgradeUI.last || 0) > 500) { updateUpgradeUI(); updateUpgradeUI.last = timestamp; }
     animationFrameId = requestAnimationFrame(gameLoop);
   }
-  updateDisplay.last = 0;
+  updateUpgradeUI.last = 0;
 
   function triggerRandomEvent() {
     const events = [
@@ -934,7 +926,7 @@
     ];
     const event = events[Math.floor(Math.random() * events.length)];
     showEventBanner('🎉 ' + event.name); soundBank.achievement(); event.action();
-    saveGame(); // сохраняем после случайного события
+    saveGame();
   }
 
   window.startGame = startGame;
