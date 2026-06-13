@@ -174,6 +174,14 @@
     .changelog-version { font-size: 38px; color: #FF1493; text-shadow: 2px 2px 0 #000; margin-bottom: 10px; letter-spacing: 1px; }
     .changelog-item { font-size: 18px; color: #fff; margin-bottom: 8px; padding-left: 25px; position: relative; line-height: 1.5; }
     .changelog-item::before { content: '💩'; position: absolute; left: 0; top: 2px; font-size: 16px; }
+
+    /* Адаптивность для мобильных */
+    @media (max-width: 768px) {
+      .stats-panel { left: 5px; top: 10px; min-width: 150px; font-size: 14px; padding: 10px; }
+      .score-value { font-size: 50px; }
+      .upgrade-panel { width: 260px; right: 5px; padding: 10px; }
+      .play-btn { font-size: 36px; padding: 20px 50px; }
+    }
   </style>
 </head>
 <body>
@@ -198,8 +206,15 @@
     <div id="tab-changelog" class="menu-panel">
       <div class="panel-title" style="font-size:48px; color:#FFD700; text-align:center; margin-bottom:25px;">📜 ИСТОРИЯ ОБНОВЛЕНИЙ 📜</div>
       <div class="changelog-list">
-        <div class="changelog-entry"><div class="changelog-version">V0.7.8 - Меню и статистика</div><div class="changelog-item">Главное меню теперь прокручивается целиком, если не влезает в экран.</div><div class="changelog-item">Исправлена кнопка сворачивания панели статистики – теперь работает корректно.</div></div>
-        <div class="changelog-entry"><div class="changelog-version">V0.7.7 - Украшение меню</div><div class="changelog-item">Достижения и история версий получили красивые плашки.</div></div>
+        <div class="changelog-entry">
+          <div class="changelog-version">V0.7.8 - Меню и статистика</div>
+          <div class="changelog-item">Главное меню теперь прокручивается целиком, если не влезает в экран.</div>
+          <div class="changelog-item">Исправлена кнопка сворачивания панели статистики – теперь работает корректно.</div>
+        </div>
+        <div class="changelog-entry">
+          <div class="changelog-version">V0.7.7 - Украшение меню</div>
+          <div class="changelog-item">Достижения и история версий получили красивые плашки.</div>
+        </div>
       </div>
     </div>
   </div>
@@ -317,6 +332,43 @@
     bossSpawnTimer: 120,
     randomEventTimer: 45
   };
+
+  // Сохранение и загрузка
+  function saveGame() {
+    localStorage.setItem('poopClickerSave', JSON.stringify(gameState));
+  }
+
+  function loadGame() {
+    const saved = localStorage.getItem('poopClickerSave');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        gameState.score = parsed.score || 0;
+        gameState.totalClicks = parsed.totalClicks || 0;
+        gameState.clickPower = parsed.clickPower || 1;
+        gameState.perSecond = parsed.perSecond || 0;
+        gameState.multiplier = parsed.multiplier || 1;
+        gameState.critChance = parsed.critChance || 0.01;
+        gameState.goldenPoopsCollected = parsed.goldenPoopsCollected || 0;
+        gameState.unlockedItems = parsed.unlockedItems || ['💩', 'bg_default'];
+        gameState.equippedSkin = parsed.equippedSkin || '💩';
+        gameState.equippedBg = parsed.equippedBg || 'bg_default';
+        gameState.achievements = parsed.achievements || [];
+        if (parsed.upgrades) {
+          Object.keys(gameState.upgrades).forEach(key => {
+            if (parsed.upgrades[key]) gameState.upgrades[key] = parsed.upgrades[key];
+          });
+        }
+      } catch (e) {
+        console.log('Ошибка загрузки сохранения, начинаем с нуля');
+      }
+    }
+  }
+  loadGame();
+  initMenuAchievements();
+  // Автосохранение каждые 5 секунд
+  setInterval(saveGame, 5000);
+
   let currentCustomTab = 'skins';
   let statsCollapsed = false;
   let animationFrameId = null;
@@ -337,6 +389,7 @@
     document.getElementById('gameScreen').style.display = 'none';
     document.getElementById('mainMenu').style.display = 'block';
     initMenuAchievements();
+    saveGame(); // сохраняем при выходе в меню
   }
 
   function showMenuTab(tabName, event) {
@@ -357,7 +410,6 @@
       grid.appendChild(card);
     });
   }
-  initMenuAchievements();
 
   const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
   let noiseBuffer;
@@ -495,6 +547,7 @@
     updateVisuals();
     if (animationFrameId) cancelAnimationFrame(animationFrameId);
     animationFrameId = requestAnimationFrame(gameLoop);
+    saveGame(); // сохраняем при входе в игру
   }
 
   const upgradeElements = {};
@@ -540,6 +593,7 @@
   }
 
   function buyUpgrade(key, amount) {
+    if (!gameState.isRunning) return;
     const up = gameState.upgrades[key];
     if (amount === 1) {
       if (gameState.score < up.cost) return;
@@ -558,10 +612,11 @@
       } else return;
     }
     updateUpgradeUI();
+    saveGame(); // сохраняем после покупки
   }
 
   function clickPoop(event) {
-    if (gameState.bossActive) return;
+    if (!gameState.isRunning || gameState.bossActive) return;
     const now = Date.now(), timeDiff = now - gameState.lastClickTime;
     if (timeDiff < 600) {
       gameState.combo++;
@@ -605,6 +660,7 @@
       soundBank.click();
     }
     checkAchievements();
+    saveGame(); // сохраняем после клика
   }
 
   function triggerScreenEffect(type) {
@@ -631,6 +687,7 @@
     document.getElementById('feverText').classList.add('active');
     document.getElementById('poop').classList.add('fever-poop');
     soundBank.fever(); showEventBanner('🔥 FEVER MODE! 🔥');
+    saveGame(); // сохраняем при активации
   }
 
   function deactivateFever() {
@@ -664,15 +721,18 @@
   }
 
   function openChest(count) {
+    if (!gameState.isRunning) return;
     const cost = 10000 * count;
     if (gameState.score >= cost) {
       gameState.score -= cost; soundBank.chestOpen();
       const results = []; for (let i = 0; i < count; i++) results.push(rollLoot());
       showChestResult(results, count); updateDisplay(); checkAchievements();
+      saveGame(); // сохраняем после открытия сундуков
     } else showFloatingText(window.innerWidth / 2, window.innerHeight / 2, 'НЕ ХВАТАЕТ!', 'critical');
   }
 
   function buyChestsAll() {
+    if (!gameState.isRunning) return;
     const count = Math.floor(gameState.score / 10000);
     if (count > 0) openChest(count);
     else showFloatingText(window.innerWidth / 2, window.innerHeight / 2, 'НЕ ХВАТАЕТ!', 'critical');
@@ -705,13 +765,13 @@
       const card = document.createElement('div');
       card.className = `custom-card rarity-${data.rarity} ${isUnlocked ? '' : 'locked'} ${equippedId === id ? 'equipped' : ''}`;
       card.innerHTML = `<div class="custom-icon-wrapper">${isUnlocked ? (data.type === 'bg' ? `<div class="bg-preview" style="background:${data.css};"></div>` : data.icon) : '🔒'}</div><div class="custom-name">${isUnlocked ? data.name : '???'}</div><div class="custom-rarity">${data.rarity}</div>`;
-      if (isUnlocked) card.onclick = () => { if (currentCustomTab === 'skins') gameState.equippedSkin = id; else gameState.equippedBg = id; updateVisuals(); renderCustomGrid(); };
+      if (isUnlocked) card.onclick = () => { if (currentCustomTab === 'skins') gameState.equippedSkin = id; else gameState.equippedBg = id; updateVisuals(); renderCustomGrid(); saveGame(); };
       grid.appendChild(card);
     });
   }
 
   function spawnGoldenPoop() {
-    if (gameState.bossActive) return;
+    if (gameState.bossActive || !gameState.isRunning) return;
     const poop = document.createElement('div'); poop.className = 'golden-poop'; poop.textContent = '💩';
     poop.style.left = Math.random() * (window.innerWidth - 100) + 'px';
     poop.style.top = Math.random() * (window.innerHeight - 200) + 100 + 'px';
@@ -722,7 +782,7 @@
       createExplosion(e.clientX, e.clientY, 40, 'golden');
       showFloatingText(e.clientX, e.clientY, `ЗОЛОТО! +${formatNumber(bonus)}`, 'mega');
       soundBank.golden(); showEventBanner('💰 ЗОЛОТАЯ КАКАШКА! 💰'); triggerScreenEffect('critical');
-      poop.remove(); checkAchievements();
+      poop.remove(); checkAchievements(); saveGame();
     };
     poop.onclick = handler;
     document.getElementById('gameScreen').appendChild(poop);
@@ -730,7 +790,7 @@
   }
 
   function spawnBoss() {
-    if (gameState.bossActive) return;
+    if (gameState.bossActive || !gameState.isRunning) return;
     gameState.bossActive = true; gameState.bossMaxHP = Math.max(1000, gameState.score * 0.5); gameState.bossHP = gameState.bossMaxHP;
     showEventBanner('⚠️ БОСС ПОЯВИЛСЯ! ⚠️'); soundBank.boss();
     const container = document.createElement('div'); container.id = 'bossContainer';
@@ -754,6 +814,7 @@
     const container = document.getElementById('bossContainer'); if (container) container.remove();
     createExplosion(window.innerWidth / 2, window.innerHeight / 2, 100, 'mega');
     soundBank.bossDefeat(); showEventBanner(`🏆 ПОБЕДА! +${formatNumber(reward)} 🏆`); triggerScreenEffect('mega');
+    saveGame();
   }
 
   function formatNumber(num) {
@@ -791,6 +852,7 @@
         gameState.achievements.push(a.id);
         showAchievement(allAchievementsList.find(ach => ach.id === a.id)?.name || a.id);
         soundBank.achievement();
+        saveGame(); // сохраняем при получении достижения
       }
     });
   }
@@ -872,6 +934,7 @@
     ];
     const event = events[Math.floor(Math.random() * events.length)];
     showEventBanner('🎉 ' + event.name); soundBank.achievement(); event.action();
+    saveGame(); // сохраняем после случайного события
   }
 
   window.startGame = startGame;
