@@ -1,1 +1,909 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>💩 POOP CLICKER MADNESS V0.7.2 💩</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/bangers@5.0.0/index.min.css">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { font-family: 'Bangers', cursive; overflow: hidden; background: #000; color: #fff; user-select: none; -webkit-user-select: none; letter-spacing: 1px; }
+    #mainMenu { position: fixed; width: 100%; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; background: linear-gradient(135deg, #1a0033 0%, #4a0080 50%, #ff006e 100%); z-index: 1000; overflow: hidden; }
+    .menu-bg { position: absolute; width: 100%; height: 100%; background-image: url('https://image.qwenlm.ai/public_source/40df7e34-f90f-4d54-8713-262422be0295/10e850247-e3bf-9525-9dca-96bda72023d3.png'); background-size: cover; background-position: center; opacity: 0.4; animation: bgPulse 2s ease-in-out infinite, bgSpin 60s linear infinite; will-change: opacity, transform, filter; }
+    @keyframes bgPulse { 0%, 100% { opacity: 0.3; transform: scale(1); } 50% { opacity: 0.6; transform: scale(1.1); } }
+    @keyframes bgSpin { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
+    .version { position: absolute; top: 20px; left: 20px; font-size: 24px; color: #00ff00; text-shadow: 0 0 10px #00ff00, 2px 2px 4px rgba(0,0,0,0.8); z-index: 10; animation: versionGlitch 5s infinite; cursor: pointer; }
+    @keyframes versionGlitch { 0%, 90%, 100% { transform: translate(0, 0); opacity: 1; } 91% { transform: translate(-2px, 1px); opacity: 0.8; } 92% { transform: translate(2px, -1px); opacity: 0.9; } 93% { transform: translate(-1px, -1px); opacity: 0.7; color: #ff00ff; } }
+    .menu-header { text-align: center; margin-bottom: 20px; z-index: 10; }
+    .menu-title { font-size: 90px; background: linear-gradient(45deg, #ff0000, #ff8800, #ffff00, #00ff00, #00ffff, #0088ff, #ff00ff); background-size: 400% 400%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; animation: rainbowShift 3s ease infinite, titleBounce 1s ease-in-out infinite; filter: drop-shadow(4px 4px 0 #000) drop-shadow(8px 8px 20px rgba(0,0,0,0.8)); will-change: transform, background-position; line-height: 1.1; }
+    @keyframes rainbowShift { 0%, 100% { background-position: 0% 50%; } 50% { background-position: 100% 50%; } }
+    @keyframes titleBounce { 0%, 100% { transform: translateY(0) rotate(-2deg) scale(1); } 50% { transform: translateY(-15px) rotate(2deg) scale(1.05); } }
+    .menu-subtitle { font-size: 42px; color: #FFD700; text-shadow: 3px 3px 0 #ff0000, 6px 6px 0 #000; animation: subtitleCrazy 0.5s ease-in-out infinite; letter-spacing: 8px; will-change: transform; margin-top: 5px; }
+    @keyframes subtitleCrazy { 0%, 100% { transform: scale(1) skewX(0deg); } 25% { transform: scale(1.05) skewX(-3deg); } 75% { transform: scale(1.05) skewX(3deg); } }
+    .menu-container { position: relative; z-index: 10; width: 90%; max-width: 900px; background: rgba(10, 0, 20, 0.85); border: 4px solid #FFD700; border-radius: 25px; padding: 30px; backdrop-filter: blur(10px); box-shadow: 0 0 50px rgba(255, 215, 0, 0.3), inset 0 0 30px rgba(0,0,0,0.5); display: flex; flex-direction: column; align-items: center; }
+    .menu-nav { display: flex; gap: 15px; margin-bottom: 25px; flex-wrap: wrap; justify-content: center; width: 100%; }
+    .nav-btn { font-size: 28px; padding: 12px 25px; background: rgba(255, 255, 255, 0.1); border: 3px solid #FFD700; border-radius: 15px; color: #FFD700; cursor: pointer; transition: all 0.3s; text-shadow: 2px 2px 0 #000; letter-spacing: 2px; min-width: 180px; text-align: center; }
+    .nav-btn:hover, .nav-btn.active { background: #FFD700; color: #000; text-shadow: none; box-shadow: 0 0 25px rgba(255, 215, 0, 0.6); transform: translateY(-3px) scale(1.05); }
+    .menu-panel { display: none; width: 100%; max-height: 55vh; overflow-y: auto; animation: panelFadeIn 0.4s ease-out; padding: 10px; }
+    .menu-panel.active { display: block; }
+    #tab-play { display: none; justify-content: center; align-items: center; min-height: 200px; flex-direction: column; gap: 20px; }
+    #tab-play.active { display: flex; }
+    @keyframes panelFadeIn { from { opacity: 0; transform: translateY(20px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
+    .play-btn { font-size: 60px; padding: 25px 80px; background: linear-gradient(135deg, #ff006e, #ff8800, #ffbe0b); background-size: 200% 200%; border: 6px solid #fff; border-radius: 25px; color: #fff; cursor: pointer; text-shadow: 4px 4px 8px rgba(0,0,0,0.8); box-shadow: 0 15px 50px rgba(255,0,110,0.6), inset 0 0 30px rgba(255,255,255,0.3); animation: playPulse 0.8s ease-in-out infinite, rainbowBtn 2s linear infinite; letter-spacing: 5px; will-change: transform, background-position; }
+    @keyframes rainbowBtn { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
+    @keyframes playPulse { 0%, 100% { transform: scale(1) rotate(-2deg); } 50% { transform: scale(1.05) rotate(2deg); } }
+    .play-btn:hover { animation: playHover 0.2s ease-in-out infinite; }
+    @keyframes playHover { 0%, 100% { transform: scale(1.1) rotate(-3deg); } 50% { transform: scale(1.1) rotate(3deg); } }
+    .new-tab-btn { font-size: 28px; padding: 15px 40px; background: linear-gradient(135deg, #00bcd4, #009688); border: 4px solid #fff; border-radius: 20px; color: #fff; cursor: pointer; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); box-shadow: 0 10px 30px rgba(0, 188, 212, 0.5); transition: all 0.3s; letter-spacing: 2px; }
+    .new-tab-btn:hover { transform: scale(1.1) rotate(-2deg); box-shadow: 0 15px 40px rgba(0, 188, 212, 0.8); }
+    .panel-title { font-size: 48px; color: #FFD700; text-align: center; margin-bottom: 25px; text-shadow: 3px 3px 0 #000; letter-spacing: 3px; }
+    .achievements-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 15px; }
+    .achievement-card { background: linear-gradient(135deg, #2a0050, #500080); border: 2px solid #FFD700; border-radius: 15px; padding: 15px; display: flex; align-items: center; gap: 15px; transition: all 0.3s; }
+    .achievement-card:hover { transform: translateY(-3px); box-shadow: 0 5px 20px rgba(255,215,0,0.4); }
+    .achievement-card.locked { filter: grayscale(1) opacity(0.5); border-color: #666; background: linear-gradient(135deg, #1a1a1a, #2a2a2a); }
+    .achievement-icon { font-size: 40px; }
+    .achievement-info { flex: 1; }
+    .achievement-name { font-size: 28px; color: #FFD700; text-shadow: 2px 2px 0 #000; margin-bottom: 5px; }
+    .achievement-desc { font-size: 16px; color: #ccc; line-height: 1.4; }
+    .changelog-list { display: flex; flex-direction: column; gap: 20px; }
+    .changelog-entry { background: rgba(255,255,255,0.05); border-left: 4px solid #FFD700; border-radius: 0 15px 15px 0; padding: 20px; }
+    .changelog-version { font-size: 36px; color: #FF1493; text-shadow: 2px 2px 0 #000; margin-bottom: 10px; }
+    .changelog-item { font-size: 18px; color: #fff; margin-bottom: 8px; padding-left: 25px; position: relative; line-height: 1.5; }
+    .changelog-item::before { content: '💩'; position: absolute; left: 0; top: 2px; font-size: 16px; }
+    .floating-emoji { position: absolute; pointer-events: none; animation: floatAround linear infinite; z-index: 1; will-change: transform; }
+    @keyframes floatAround { 0% { transform: translate(0, 0) rotate(0deg); } 25% { transform: translate(200px, -200px) rotate(180deg); } 50% { transform: translate(400px, 0) rotate(360deg); } 75% { transform: translate(200px, 200px) rotate(540deg); } 100% { transform: translate(0, 0) rotate(720deg); } }
+    #gameScreen { display: none; width: 100%; height: 100vh; position: relative; overflow: hidden; }
+    .game-bg { position: absolute; width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); animation: bgHue 10s linear infinite; will-change: filter; transition: background 0.5s ease; }
+    @keyframes bgHue { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
+    .game-bg-pattern { position: absolute; width: 200%; height: 200%; top: -50%; left: -50%; background: repeating-conic-gradient(from 0deg, rgba(255,255,255,0.1) 0deg 10deg, transparent 10deg 20deg), radial-gradient(circle at center, rgba(255,215,0,0.2), transparent 70%); animation: patternSpin 30s linear infinite; will-change: transform; }
+    @keyframes patternSpin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    #canvas { position: absolute; top: 0; left: 0; pointer-events: none; z-index: 15; }
+    .stats-panel { position: absolute; left: 15px; top: 20px; background: linear-gradient(135deg, rgba(20,0,40,0.95), rgba(60,0,80,0.95)); border: 3px solid #FFD700; border-radius: 15px; padding: 15px; z-index: 10; font-size: 18px; min-width: 220px; box-shadow: 0 0 30px rgba(255,215,0,0.4); transition: all 0.3s ease; }
+    .stats-panel.collapsed { min-width: 50px; padding: 10px 5px; overflow: hidden; }
+    .stats-panel.collapsed .stats-content, .stats-panel.collapsed .stats-header span { display: none; }
+    .stats-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; border-bottom: 2px solid rgba(255,215,0,0.3); padding-bottom: 5px; }
+    .stats-header span { color: #FFD700; font-size: 22px; text-shadow: 2px 2px 0 #000; }
+    .collapse-btn { background: none; border: 2px solid #FFD700; color: #FFD700; border-radius: 50%; width: 30px; height: 30px; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+    .collapse-btn:hover { background: #FFD700; color: #000; }
+    .stats-panel.collapsed .collapse-btn { transform: rotate(180deg); margin: 0 auto; }
+    .stat-item { margin-bottom: 8px; color: #fff; display: flex; justify-content: space-between; }
+    .stat-label { color: #FFD700; }
+    .action-btn { width: 100%; margin-top: 10px; padding: 12px; border: 3px solid #fff; border-radius: 15px; font-size: 22px; color: #fff; cursor: pointer; text-shadow: 2px 2px 0 #000; box-shadow: 0 5px 20px rgba(0,0,0,0.4); transition: all 0.2s; }
+    .action-btn:hover { transform: scale(1.05); }
+    .customize-btn { background: linear-gradient(135deg, #9C27B0, #E91E63); }
+    .menu-return-btn-inline { background: linear-gradient(135deg, #f44336, #d32f2f); margin-top: 10px; }
+    .stats-expand-btn { position: absolute; left: 15px; top: 20px; z-index: 10; background: linear-gradient(135deg, rgba(20,0,40,0.95), rgba(60,0,80,0.95)); border: 3px solid #FFD700; border-radius: 50%; width: 50px; height: 50px; font-size: 24px; color: #FFD700; cursor: pointer; display: none; align-items: center; justify-content: center; box-shadow: 0 0 20px rgba(255,215,0,0.4); transition: all 0.2s; }
+    .stats-expand-btn:hover { transform: scale(1.1); background: #FFD700; color: #000; }
+    .score-display { position: absolute; top: 20px; left: 50%; transform: translateX(-50%); text-align: center; z-index: 10; }
+    .score-label { font-size: 24px; color: #FFD700; text-shadow: 2px 2px 0 #000; letter-spacing: 3px; }
+    .score-value { font-size: 80px; background: linear-gradient(45deg, #FFD700, #FFA500, #FF1493); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; filter: drop-shadow(4px 4px 0 #000); will-change: transform; }
+    @keyframes scoreBounce { 0% { transform: scale(1); } 50% { transform: scale(1.2); } 100% { transform: scale(1); } }
+    .combo-display { position: absolute; top: 180px; left: 50%; transform: translateX(-50%); font-size: 40px; color: #FF1493; text-shadow: 3px 3px 0 #000, 0 0 20px #FF1493; z-index: 10; opacity: 0; transition: opacity 0.3s; will-change: transform; }
+    .combo-display.active { opacity: 1; animation: comboCrazy 0.2s ease-in-out infinite; }
+    @keyframes comboCrazy { 0%, 100% { transform: translateX(-50%) rotate(-5deg) scale(1); } 50% { transform: translateX(-50%) rotate(5deg) scale(1.2); } }
+    .fever-bar { position: absolute; top: 230px; left: 50%; transform: translateX(-50%); width: 400px; height: 30px; background: rgba(0,0,0,0.6); border: 3px solid #fff; border-radius: 15px; overflow: hidden; z-index: 10; display: none; }
+    .fever-bar.active { display: block; animation: feverShake 0.1s ease-in-out infinite; }
+    @keyframes feverShake { 0%, 100% { transform: translateX(-50%) rotate(-1deg); } 50% { transform: translateX(-50%) rotate(1deg); } }
+    .fever-fill { height: 100%; background: linear-gradient(90deg, #ff0000, #ff8800, #ffff00, #00ff00, #00ffff, #0088ff, #ff00ff); background-size: 400% 100%; animation: feverFill 1s linear infinite; transition: width 0.2s; box-shadow: 0 0 20px #fff; will-change: width, background-position; }
+    @keyframes feverFill { 0% { background-position: 0% 50%; } 100% { background-position: 400% 50%; } }
+    .fever-mode .game-bg { animation: feverBg 0.5s linear infinite !important; filter: saturate(3) contrast(1.5); }
+    @keyframes feverBg { 0% { filter: hue-rotate(0deg) saturate(3) contrast(1.5); } 100% { filter: hue-rotate(360deg) saturate(3) contrast(1.5); } }
+    .fever-text { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 200px; color: #FF1493; text-shadow: 0 0 30px #FF1493, 0 0 60px #FFD700, 8px 8px 0 #000; pointer-events: none; z-index: 999; animation: feverFlash 0.3s ease-in-out infinite; display: none; will-change: transform, opacity; }
+    .fever-text.active { display: block; }
+    @keyframes feverFlash { 0%, 100% { transform: translate(-50%, -50%) scale(1) rotate(-5deg); opacity: 1; } 50% { transform: translate(-50%, -50%) scale(1.1) rotate(5deg); opacity: 0.8; } }
+    .poop-container { position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%); z-index: 10; }
+    .poop { font-size: 240px; cursor: pointer; user-select: none; filter: drop-shadow(0 20px 40px rgba(0,0,0,0.6)) drop-shadow(0 0 30px rgba(139,69,19,0.8)); animation: poopFloat 2s ease-in-out infinite; will-change: transform, filter; }
+    @keyframes poopFloat { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-15px) rotate(3deg); } }
+    .poop:hover { filter: drop-shadow(0 20px 40px rgba(0,0,0,0.8)) drop-shadow(0 0 50px #FFD700) brightness(1.3); }
+    .poop.clicked { animation: poopClick 0.15s ease-out; }
+    @keyframes poopClick { 0% { transform: scale(1) rotate(0deg); } 50% { transform: scale(0.7) rotate(-15deg); filter: brightness(2) hue-rotate(90deg); } 100% { transform: scale(1) rotate(0deg); } }
+    .poop.fever-poop { animation: feverPoop 0.2s ease-in-out infinite; filter: drop-shadow(0 0 80px #FF1493) brightness(1.5) saturate(2); }
+    @keyframes feverPoop { 0%, 100% { transform: scale(1.1) rotate(-10deg); } 50% { transform: scale(1.2) rotate(10deg); } }
+    .upgrade-panel { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); width: 340px; max-height: 85vh; overflow-y: auto; background: linear-gradient(135deg, rgba(20,0,40,0.95), rgba(60,0,80,0.95)); border: 4px solid #FFD700; border-radius: 20px; padding: 15px; z-index: 10; box-shadow: 0 0 40px rgba(255,215,0,0.5); contain: layout style paint; }
+    .upgrade-title { font-size: 36px; color: #FFD700; text-align: center; margin-bottom: 15px; text-shadow: 3px 3px 0 #000; letter-spacing: 3px; }
+    .chest-btn { width: 100%; padding: 15px; margin-bottom: 10px; background: linear-gradient(135deg, #FFD700, #FF8C00); border: 3px solid #fff; border-radius: 15px; font-size: 28px; color: #000; cursor: pointer; text-shadow: 1px 1px 0 #fff; box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4); transition: all 0.2s; }
+    .chest-btn:hover { transform: scale(1.05); box-shadow: 0 8px 30px rgba(255, 215, 0, 0.6); }
+    .chest-btn-10 { background: linear-gradient(135deg, #ff006e, #ff8800); color: #fff; text-shadow: 1px 1px 0 #000; }
+    .chest-btn-all { background: linear-gradient(135deg, #00c853, #00e676); color: #fff; text-shadow: 1px 1px 0 #000; }
+    .upgrade-item { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border: 3px solid #fff; border-radius: 15px; padding: 12px; margin-bottom: 10px; transition: all 0.2s; position: relative; overflow: hidden; }
+    .upgrade-item:hover { transform: scale(1.03) rotate(-1deg); box-shadow: 0 10px 30px rgba(255,215,0,0.6); }
+    .upgrade-item.cant-afford { opacity: 0.5; filter: grayscale(0.7); }
+    .upgrade-name { font-size: 20px; color: #fff; margin-bottom: 5px; text-shadow: 2px 2px 0 #000; }
+    .upgrade-info { font-size: 16px; color: #FFD700; margin-bottom: 3px; }
+    .upgrade-cost { font-size: 18px; color: #FF6B6B; font-weight: bold; margin-bottom: 8px; }
+    .upgrade-actions { display: flex; gap: 8px; }
+    .upgrade-btn { flex: 1; padding: 8px; border: 2px solid #fff; border-radius: 8px; font-size: 20px; cursor: pointer; transition: all 0.2s; text-shadow: 1px 1px 0 #000; }
+    .upgrade-btn.buy-1 { background: #4CAF50; color: #fff; }
+    .upgrade-btn.buy-1:hover { background: #45a049; transform: scale(1.05); }
+    .upgrade-btn.buy-max { background: #FF9800; color: #fff; }
+    .upgrade-btn.buy-max:hover { background: #e68900; transform: scale(1.05); }
+    .upgrade-item.cant-afford .upgrade-btn { cursor: not-allowed; opacity: 0.6; }
+    .golden-poop { position: absolute; font-size: 80px; cursor: pointer; z-index: 20; animation: goldenFloat 3s ease-in-out infinite, goldenGlow 1s ease-in-out infinite; filter: drop-shadow(0 0 30px #FFD700) drop-shadow(0 0 60px #FFA500); will-change: transform, filter; }
+    @keyframes goldenFloat { 0%, 100% { transform: translateY(0) rotate(0deg) scale(1); } 50% { transform: translateY(-30px) rotate(360deg) scale(1.2); } }
+    @keyframes goldenGlow { 0%, 100% { filter: drop-shadow(0 0 30px #FFD700) brightness(1); } 50% { filter: drop-shadow(0 0 60px #FFD700) brightness(1.5); } }
+    .boss-poop { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 400px; cursor: pointer; z-index: 500; filter: drop-shadow(0 0 80px #ff0000) drop-shadow(0 0 40px #ff0000); animation: bossShake 0.3s ease-in-out infinite; will-change: transform; }
+    @keyframes bossShake { 0%, 100% { transform: translate(-50%, -50%) rotate(-3deg) scale(1); } 50% { transform: translate(-50%, -50%) rotate(3deg) scale(1.05); } }
+    .boss-hp-bar { position: fixed; top: 50px; left: 50%; transform: translateX(-50%); width: 600px; height: 40px; background: rgba(0,0,0,0.8); border: 4px solid #ff0000; border-radius: 20px; z-index: 600; overflow: hidden; }
+    .boss-hp-fill { height: 100%; background: linear-gradient(90deg, #ff0000, #ff8800); transition: width 0.2s; }
+    .boss-title { position: fixed; top: 100px; left: 50%; transform: translateX(-50%); font-size: 48px; color: #ff0000; text-shadow: 3px 3px 0 #000, 0 0 30px #ff0000; z-index: 600; animation: bossTitle 0.5s ease-in-out infinite; will-change: transform; }
+    @keyframes bossTitle { 0%, 100% { transform: translateX(-50%) scale(1); } 50% { transform: translateX(-50%) scale(1.1); } }
+    .floating-text { position: absolute; text-shadow: 3px 3px 0 #000, 0 0 20px currentColor; pointer-events: none; z-index: 20; will-change: transform, opacity; }
+    .floating-text.normal { color: #FFD700; font-size: 36px; }
+    .floating-text.critical-text { color: #FF1493; font-size: 64px; text-shadow: 4px 4px 0 #000, 0 0 40px #FF1493; }
+    .floating-text.mega-text { color: #00ff00; font-size: 80px; text-shadow: 5px 5px 0 #000, 0 0 50px #00ff00, 0 0 100px #00ffff; }
+    .screen-shake { animation: screenShake 0.4s ease-out; }
+    @keyframes screenShake { 0%, 100% { transform: translate(0, 0) rotate(0deg); } 10% { transform: translate(-10px, -10px) rotate(-2deg); } 20% { transform: translate(10px, 10px) rotate(2deg); } 30% { transform: translate(-10px, 10px) rotate(-2deg); } 40% { transform: translate(10px, -10px) rotate(2deg); } 50% { transform: translate(-8px, -8px) rotate(-1deg); } 60% { transform: translate(8px, 8px) rotate(1deg); } 70% { transform: translate(-5px, 5px); } 80% { transform: translate(5px, -5px); } 90% { transform: translate(-3px, -3px); } }
+    .screen-flash { position: fixed; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; pointer-events: none; z-index: 100; animation: flashAnim 0.3s ease-out forwards; }
+    @keyframes flashAnim { 0% { opacity: 0.9; } 100% { opacity: 0; } }
+    .glitch-effect { animation: glitch 0.3s linear; }
+    @keyframes glitch { 0%, 100% { transform: translate(0); filter: none; } 20% { transform: translate(-5px, 3px); filter: hue-rotate(90deg); } 40% { transform: translate(5px, -3px); filter: hue-rotate(180deg) invert(1); } 60% { transform: translate(-3px, -5px); filter: hue-rotate(270deg); } 80% { transform: translate(3px, 5px); filter: saturate(3); } }
+    .achievement { position: fixed; top: -150px; left: 50%; transform: translateX(-50%); background: linear-gradient(135deg, #FFD700, #FFA500, #FF6B6B); border: 5px solid #fff; border-radius: 25px; padding: 25px 50px; font-size: 32px; color: #000; text-shadow: 2px 2px 0 rgba(255,255,255,0.5); z-index: 1000; box-shadow: 0 10px 40px rgba(0,0,0,0.8), 0 0 60px #FFD700; animation: achievementSlide 4s ease-in-out forwards; }
+    @keyframes achievementSlide { 0% { top: -150px; } 15% { top: 80px; transform: translateX(-50%) scale(1.2) rotate(-5deg); } 25% { top: 80px; transform: translateX(-50%) scale(1) rotate(0deg); } 80% { top: 80px; } 100% { top: -150px; } }
+    .event-banner { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 100px; color: #fff; text-shadow: 0 0 30px #FFD700, 0 0 60px #FF1493, 5px 5px 0 #000; z-index: 999; pointer-events: none; animation: eventBanner 2s ease-out forwards; will-change: transform, opacity; }
+    @keyframes eventBanner { 0% { opacity: 0; transform: translate(-50%, -50%) scale(0) rotate(-180deg); } 30% { opacity: 1; transform: translate(-50%, -50%) scale(1.5) rotate(10deg); } 70% { opacity: 1; transform: translate(-50%, -50%) scale(1.3) rotate(-5deg); } 100% { opacity: 0; transform: translate(-50%, -50%) scale(0.5) rotate(0deg); } }
+    .invert-screen { filter: invert(1) hue-rotate(180deg) !important; }
+    .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); z-index: 2000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+    .modal-overlay.active { display: flex; }
+    .modal-content { background: linear-gradient(135deg, #1a0033, #4a0080); border: 4px solid #FFD700; border-radius: 25px; padding: 30px; max-width: 800px; width: 90%; max-height: 80vh; overflow-y: auto; position: relative; box-shadow: 0 0 50px rgba(255, 215, 0, 0.5); animation: panelFadeIn 0.3s ease-out; }
+    .modal-close { position: absolute; top: 15px; right: 15px; font-size: 36px; background: #ff0000; color: #fff; border: 3px solid #fff; border-radius: 50%; width: 45px; height: 45px; cursor: pointer; display: flex; justify-content: center; align-items: center; transition: all 0.2s; }
+    .modal-close:hover { transform: scale(1.2) rotate(90deg); }
+    .custom-tabs { display: flex; gap: 10px; margin-bottom: 20px; justify-content: center; }
+    .custom-tab { font-size: 28px; padding: 10px 30px; background: rgba(255,255,255,0.1); border: 2px solid #FFD700; border-radius: 15px; color: #FFD700; cursor: pointer; transition: all 0.3s; }
+    .custom-tab.active { background: #FFD700; color: #000; }
+    .custom-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; }
+    .custom-card { background: rgba(0,0,0,0.5); border: 3px solid #666; border-radius: 15px; padding: 15px; text-align: center; cursor: pointer; transition: all 0.3s; position: relative; }
+    .custom-card:hover { transform: translateY(-5px); }
+    .custom-card.locked { opacity: 0.4; cursor: not-allowed; filter: grayscale(1); }
+    .custom-card.equipped { border-color: #00ff00; box-shadow: 0 0 20px #00ff00; }
+    .custom-icon-wrapper { width: 50px; height: 50px; margin: 0 auto 10px; border-radius: 50%; border: 2px solid #fff; display: flex; align-items: center; justify-content: center; font-size: 30px; overflow: hidden; }
+    .bg-preview { width: 100%; height: 100%; }
+    .custom-name { font-size: 24px; color: #fff; }
+    .custom-rarity { font-size: 16px; margin-top: 5px; text-transform: uppercase; letter-spacing: 1px; }
+    .custom-bonus { font-size: 14px; color: #00ff00; margin-top: 5px; }
+    .rarity-common { border-color: #aaa; } .rarity-common .custom-rarity { color: #aaa; }
+    .rarity-rare { border-color: #00aaff; box-shadow: 0 0 10px #00aaff; } .rarity-rare .custom-rarity { color: #00aaff; }
+    .rarity-epic { border-color: #aa00ff; box-shadow: 0 0 15px #aa00ff; } .rarity-epic .custom-rarity { color: #aa00ff; }
+    .rarity-legendary { border-color: #ff8800; box-shadow: 0 0 20px #ff8800; } .rarity-legendary .custom-rarity { color: #ff8800; }
+    .rarity-mythic { border-color: #ff00ff; box-shadow: 0 0 25px #ff00ff; animation: mythicGlow 2s linear infinite; } .rarity-mythic .custom-rarity { background: linear-gradient(45deg, #ff0000, #ff8800, #ffff00, #00ff00, #00ffff, #0088ff, #ff00ff); background-size: 400%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: rainbowShift 2s linear infinite; }
+    .rarity-ultra_mythic_plus { border-color: #fff; box-shadow: 0 0 30px #ff00ff, 0 0 60px #00ffff, 0 0 90px #FFD700; animation: ultraGlow 1s linear infinite; } .rarity-ultra_mythic_plus .custom-rarity { background: linear-gradient(45deg, #FFD700, #fff, #FFD700, #fff); background-size: 400%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: rainbowShift 1s linear infinite; font-weight: bold; }
+    @keyframes mythicGlow { 0%, 100% { box-shadow: 0 0 25px #ff00ff; } 50% { box-shadow: 0 0 40px #00ffff; } }
+    @keyframes ultraGlow { 0%, 100% { box-shadow: 0 0 30px #ff00ff, 0 0 60px #00ffff; } 50% { box-shadow: 0 0 50px #FFD700, 0 0 100px #ff00ff; } }
+    .chest-result { text-align: center; padding: 20px; }
+    .chest-result-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 15px; margin-top: 20px; }
+    .chest-result-item { background: rgba(0,0,0,0.5); border-radius: 15px; padding: 10px; animation: chestReveal 0.5s ease-out backwards; }
+    @keyframes chestReveal { 0% { transform: scale(0) rotate(-180deg); opacity: 0; } 100% { transform: scale(1) rotate(0deg); opacity: 1; } }
+    ::-webkit-scrollbar { width: 10px; } ::-webkit-scrollbar-track { background: rgba(0,0,0,0.5); border-radius: 10px; } ::-webkit-scrollbar-thumb { background: linear-gradient(#FFD700, #FF1493); border-radius: 10px; }
+  </style>
+</head>
+<body>
+<div id="mainMenu">
+  <div class="menu-bg"></div>
+  <div class="version" onclick="triggerSecret()">V0.7.2</div>
+  <div class="menu-header"><div class="menu-title">💩 POOP CLICKER 💩</div><div class="menu-subtitle">MADNESS EDITION</div></div>
+  <div class="menu-container">
+    <div class="menu-nav">
+      <button class="nav-btn active" onclick="showMenuTab('play', event)">🎮 ИГРАТЬ</button>
+      <button class="nav-btn" onclick="showMenuTab('achievements', event)">🏆 ДОСТИЖЕНИЯ</button>
+      <button class="nav-btn" onclick="showMenuTab('changelog', event)">📜 ЧТО НОВОГО</button>
+    </div>
+    <div id="tab-play" class="menu-panel active">
+      <button class="play-btn" onclick="startGame()">НАЧАТЬ БЕЗУМИЕ!</button>
+      <button class="new-tab-btn" onclick="openInNewTab()">🔗 ОТКРЫТЬ В НОВОЙ ВКЛАДКЕ</button>
+    </div>
+    <div id="tab-achievements" class="menu-panel">
+      <div class="panel-title">🏆 ЦЕЛИ И ДОСТИЖЕНИЯ 🏆</div>
+      <div class="achievements-grid" id="menuAchievementsGrid"></div>
+    </div>
+    <div id="tab-changelog" class="menu-panel">
+      <div class="panel-title">📜 ИСТОРИЯ ОБНОВЛЕНИЙ 📜</div>
+      <div class="changelog-list">
+        <div class="changelog-entry"><div class="changelog-version">V0.7.2 - Стабильность и исправления</div><div class="changelog-item">Полностью исправлены утечки памяти при спавне боссов и золотых какашек.</div><div class="changelog-item">Игровой цикл больше не работает в фоне главного меню, экономя ресурсы.</div><div class="changelog-item">Магазин улучшений обновляется точечно, без пересоздания DOM (прирост FPS).</div><div class="changelog-item">Исправлено получение достижения "100% прохождение".</div></div>
+        <div class="changelog-entry"><div class="changelog-version">V0.7.1 - Удобство</div><div class="changelog-item">Добавлена кнопка "Открыть в новой вкладке" в главном меню.</div></div>
+        <div class="changelog-entry"><div class="changelog-version">V0.7.0 - Ультра Мифик Плюс</div><div class="changelog-item">Новая редкость и постоянные бонусы, сундуки на всё, достижения коллекционера.</div></div>
+        <div class="changelog-entry"><div class="changelog-version">V0.6.0 - Кастомизация</div><div class="changelog-item">Покупка 10 сундуков, система фонов.</div></div>
+        <div class="changelog-entry"><div class="changelog-version">V0.5.0 - Магазин и скины</div><div class="changelog-item">Кнопка МАКС, библиотека скинов.</div></div>
+        <div class="changelog-entry"><div class="changelog-version">V0.4.2 - Улучшения интерфейса</div><div class="changelog-item">Скрытие достижений, кнопка возврата.</div></div>
+        <div class="changelog-entry"><div class="changelog-version">V0.4.1 - Меню</div><div class="changelog-item">Исправлено наложение кнопок.</div></div>
+        <div class="changelog-entry"><div class="changelog-version">V0.4 - Навигация</div><div class="changelog-item">Вкладки достижений и changelog.</div></div>
+        <div class="changelog-entry"><div class="changelog-version">V0.3 - Оптимизация</div><div class="changelog-item">Объектный пул для частиц.</div></div>
+        <div class="changelog-entry"><div class="changelog-version">V0.2 - Безумие</div><div class="changelog-item">FEVER, золотые какашки, боссы.</div></div>
+        <div class="changelog-entry"><div class="changelog-version">V0.1 - Релиз</div><div class="changelog-item">Базовая механика.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
 
+<div id="gameScreen">
+  <div class="game-bg" id="gameBg"></div>
+  <div class="game-bg-pattern"></div>
+  <canvas id="canvas"></canvas>
+  <div class="stats-panel" id="statsPanel">
+    <div class="stats-header"><span>📊 СТАТИСТИКА</span><button class="collapse-btn" onclick="toggleStats()">◀</button></div>
+    <div class="stats-content">
+      <div class="stat-item"><span class="stat-label">В СЕК:</span><span id="perSecond">0</span></div>
+      <div class="stat-item"><span class="stat-label">КЛИКОВ:</span><span id="totalClicks">0</span></div>
+      <div class="stat-item"><span class="stat-label">МНОЖ.:</span><span id="multiplier">x1</span></div>
+      <div class="stat-item"><span class="stat-label">КРИТ:</span><span id="critChance">1%</span></div>
+      <div class="stat-item"><span class="stat-label">СИЛА:</span><span id="clickPower">1</span></div>
+      <div class="stat-item" id="ultraBonusStat" style="display:none; color:#00ff00;"><span class="stat-label">УЛЬТРА БОНУС:</span><span id="ultraBonusVal">+0%</span></div>
+      <button class="action-btn customize-btn" onclick="openCustomization()">🎨 КАСТОМИЗАЦИЯ</button>
+      <button class="action-btn menu-return-btn-inline" onclick="returnToMenu()">🏠 В МЕНЮ</button>
+    </div>
+  </div>
+  <button class="stats-expand-btn" id="statsExpandBtn" onclick="toggleStats()">📊</button>
+  <div class="score-display"><div class="score-label">💩 КАКАШКИ 💩</div><div class="score-value" id="score">0</div></div>
+  <div class="combo-display" id="comboDisplay">🔥 COMBO x<span id="comboValue">0</span> 🔥</div>
+  <div class="fever-bar" id="feverBar"><div class="fever-fill" id="feverFill" style="width: 0%"></div></div>
+  <div class="fever-text" id="feverText">🔥 FEVER MODE 🔥</div>
+  <div class="poop-container"><div class="poop" id="poop" onclick="clickPoop(event)">💩</div></div>
+  <div class="upgrade-panel">
+    <div class="upgrade-title">⚡ МАГАЗИН ⚡</div>
+    <button class="chest-btn" onclick="openChest(1)">📦 СУНДУК (10K)</button>
+    <button class="chest-btn chest-btn-10" onclick="openChest(10)">📦 СУНДУКИ x10 (100K)</button>
+    <button class="chest-btn chest-btn-all" onclick="buyChestsAll()">💰 КУПИТЬ НА ВСЁ</button>
+    <div id="upgradeList"></div>
+  </div>
+</div>
+
+<div id="customizationModal" class="modal-overlay" onclick="if(event.target===this)closeCustomization()">
+  <div class="modal-content">
+    <button class="modal-close" onclick="closeCustomization()">×</button>
+    <div class="panel-title">🎨 КАСТОМИЗАЦИЯ</div>
+    <div class="custom-tabs">
+      <button class="custom-tab active" onclick="switchCustomTab('skins', event)">СКИНЫ</button>
+      <button class="custom-tab" onclick="switchCustomTab('backgrounds', event)">ФОНЫ</button>
+    </div>
+    <div class="custom-grid" id="customGrid"></div>
+  </div>
+</div>
+<div id="chestResultModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="chest-result" id="chestResultContent"></div>
+    <button class="play-btn" style="font-size:36px; padding:15px 40px; margin-top:30px;" onclick="closeChestResult()">ЗАБРАТЬ</button>
+  </div>
+</div>
+
+<script>
+  function openInNewTab() { window.open(window.location.href, '_blank'); }
+
+  const skinDatabase = {
+    '💩': { name: 'Классика', rarity: 'common', icon: '💩', type: 'skin' },
+    '🤎': { name: 'Шоколадка', rarity: 'common', icon: '🤎', type: 'skin' },
+    '🍫': { name: 'Плитка', rarity: 'common', icon: '🍫', type: 'skin' },
+    '🧊': { name: 'Лёд', rarity: 'rare', icon: '🧊', type: 'skin' },
+    '🪨': { name: 'Камень', rarity: 'rare', icon: '🪨', type: 'skin' },
+    '🥥': { name: 'Кокос', rarity: 'rare', icon: '🥥', type: 'skin' },
+    '🔥': { name: 'Огонь', rarity: 'epic', icon: '🔥', type: 'skin' },
+    '🧀': { name: 'Сыр', rarity: 'epic', icon: '🧀', type: 'skin' },
+    '🍩': { name: 'Пончик', rarity: 'epic', icon: '🍩', type: 'skin' },
+    '💎': { name: 'Алмаз', rarity: 'legendary', icon: '💎', type: 'skin' },
+    '👽': { name: 'Пришелец', rarity: 'legendary', icon: '👽', type: 'skin' },
+    '🤖': { name: 'Робот', rarity: 'legendary', icon: '🤖', type: 'skin' },
+    '🌈': { name: 'Радуга', rarity: 'mythic', icon: '🌈', type: 'skin' },
+    '👑': { name: 'Корона', rarity: 'mythic', icon: '👑', type: 'skin' },
+    '🪐': { name: 'Сверхновая', rarity: 'mythic', icon: '🪐', type: 'skin' },
+    '👁️': { name: 'Всевидящее Око', rarity: 'ultra_mythic_plus', icon: '👁️', type: 'skin', bonus: 0.10 },
+    '🌟': { name: 'Абсолют', rarity: 'ultra_mythic_plus', icon: '🌟', type: 'skin', bonus: 0.15 }
+  };
+  const bgDatabase = {
+    'bg_default': { name: 'Стандарт', rarity: 'common', css: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)', type: 'bg' },
+    'bg_neon': { name: 'Неон', rarity: 'rare', css: 'linear-gradient(135deg, #0f0c29, #302b63, #24243e)', type: 'bg' },
+    'bg_fire': { name: 'Адское Пламя', rarity: 'epic', css: 'linear-gradient(135deg, #f12711, #f5af19)', type: 'bg' },
+    'bg_matrix': { name: 'Матрица', rarity: 'legendary', css: 'linear-gradient(135deg, #000000, #0f3d0f)', type: 'bg' },
+    'bg_cosmic': { name: 'Космическая Бездна', rarity: 'mythic', css: 'linear-gradient(135deg, #000428, #004e92)', type: 'bg' },
+    'bg_sunset': { name: 'Закат', rarity: 'rare', css: 'linear-gradient(135deg, #ff512f, #dd2476)', type: 'bg' },
+    'bg_ocean': { name: 'Океан', rarity: 'epic', css: 'linear-gradient(135deg, #2193b0, #6dd5ed)', type: 'bg' },
+    'bg_omega': { name: 'Омега', rarity: 'ultra_mythic_plus', css: 'linear-gradient(135deg, #000000, #434343, #000000)', type: 'bg', bonus: 0.10 },
+    'bg_divine': { name: 'Божественный', rarity: 'ultra_mythic_plus', css: 'linear-gradient(135deg, #FFD700, #FFA500, #FFD700)', type: 'bg', bonus: 0.15 }
+  };
+  const allAchievementsList = [
+    { id: 'c10', icon: '🏆', name: '10 КЛИКОВ!', desc: 'Сделать 10 кликов' },
+    { id: 'c100', icon: '🏆', name: '100 КЛИКОВ!', desc: 'Сделать 100 кликов' },
+    { id: 'c1000', icon: '🏆', name: '1000 КЛИКОВ!', desc: 'Сделать 1000 кликов' },
+    { id: 'c10000', icon: '🏆', name: '10K КЛИКОВ!', desc: 'Сделать 10,000 кликов' },
+    { id: 's1k', icon: '💩', name: '1K КАКАШЕК!', desc: 'Накопить 1,000 какашек' },
+    { id: 's10k', icon: '💩', name: '10K КАКАШЕК!', desc: 'Накопить 10,000 какашек' },
+    { id: 's100k', icon: '💩', name: '100K!', desc: 'Накопить 100,000 какашек' },
+    { id: 's1m', icon: '💰', name: 'МИЛЛИОНЕР!', desc: 'Накопить 1,000,000 какашек' },
+    { id: 's1b', icon: '💎', name: 'МИЛЛИАРДЕР!', desc: 'Накопить 1,000,000,000 какашек' },
+    { id: 'combo20', icon: '🔥', name: 'COMBO 20!', desc: 'Достичь комбо x20' },
+    { id: 'combo50', icon: '🔥', name: 'COMBO 50!', desc: 'Достичь комбо x50' },
+    { id: 'combo100', icon: '🔥', name: 'COMBO 100!', desc: 'Достичь комбо x100' },
+    { id: 'gold5', icon: '👑', name: '5 ЗОЛОТЫХ!', desc: 'Собрать 5 золотых какашек' },
+    { id: 'gold20', icon: '👑', name: '20 ЗОЛОТЫХ!', desc: 'Собрать 20 золотых какашек' },
+    { id: 'fever', icon: '🌋', name: 'FEVER АКТИВИРОВАН!', desc: 'Войти в режим лихорадки' },
+    { id: 'all_skins', icon: '🎨', name: 'ВСЕ СКИНЫ!', desc: 'Собрать все доступные скины' },
+    { id: 'all_bgs', icon: '🖼️', name: 'ВСЕ ФОНЫ!', desc: 'Собрать все доступные фоны' },
+    { id: 'game_100', icon: '💯', name: '100% ПРОХОЖДЕНИЕ', desc: 'Получить все достижения в игре' }
+  ];
+
+  const gameState = {
+    score: 0, totalClicks: 0, clickPower: 1, perSecond: 0, multiplier: 1, critChance: 0.01,
+    combo: 0, feverEnergy: 0, feverActive: false, feverTimer: 0, lastClickTime: 0,
+    bossActive: false, bossHP: 0, bossMaxHP: 0, goldenPoopsCollected: 0,
+    unlockedItems: ['💩', 'bg_default'], equippedSkin: '💩', equippedBg: 'bg_default',
+    upgrades: {
+      finger: { count: 0, cost: 15, basePower: 1, basePerSec: 0.1, name: '💪 ПАЛЕЦ', desc: 'Клик +1' },
+      glove: { count: 0, cost: 100, basePower: 3, basePerSec: 0.5, name: '🧤 ПЕРЧАТКА', desc: 'Клик +3' },
+      toilet: { count: 0, cost: 500, basePower: 10, basePerSec: 3, name: '🚽 ТУАЛЕТ', desc: 'Клик +10' },
+      plunger: { count: 0, cost: 2500, basePower: 30, basePerSec: 10, name: '🪠 ВАНТУЗ', desc: 'Клик +30' },
+      sewer: { count: 0, cost: 15000, basePower: 100, basePerSec: 40, name: '🕳️ КАНАЛИЗАЦИЯ', desc: 'Клик +100' },
+      farm: { count: 0, cost: 100000, basePower: 400, basePerSec: 150, name: '🚜 ФЕРМА', desc: 'Клик +400' },
+      factory: { count: 0, cost: 750000, basePower: 1500, basePerSec: 600, name: '🏭 ФАБРИКА', desc: 'Клик +1500' },
+      lab: { count: 0, cost: 5000000, basePower: 6000, basePerSec: 2500, name: '🧪 ЛАБОРАТОРИЯ', desc: 'Клик +6000' },
+      portal: { count: 0, cost: 50000000, basePower: 30000, basePerSec: 12000, name: '🌀 ПОРТАЛ', desc: 'Клик +30K' },
+      space: { count: 0, cost: 500000000, basePower: 150000, basePerSec: 60000, name: '🚀 КОСМОС', desc: 'Клик +150K' }
+    },
+    achievements: [],
+    isRunning: false,
+    goldenSpawnTimer: 15,
+    bossSpawnTimer: 120,
+    randomEventTimer: 45
+  };
+
+  let currentCustomTab = 'skins';
+  let statsCollapsed = false;
+  let animationFrameId = null;
+  let currentBossHandler = null;
+
+  const scoreEl = document.getElementById('score');
+  const perSecondEl = document.getElementById('perSecond');
+  const totalClicksEl = document.getElementById('totalClicks');
+  const multiplierEl = document.getElementById('multiplier');
+  const critChanceEl = document.getElementById('critChance');
+  const clickPowerEl = document.getElementById('clickPower');
+  const ultraBonusStat = document.getElementById('ultraBonusStat');
+  const ultraBonusVal = document.getElementById('ultraBonusVal');
+  const comboDisplay = document.getElementById('comboDisplay');
+  const comboValue = document.getElementById('comboValue');
+  const feverBar = document.getElementById('feverBar');
+  const feverFill = document.getElementById('feverFill');
+  const feverText = document.getElementById('feverText');
+  const poopEl = document.getElementById('poop');
+  const gameScreen = document.getElementById('gameScreen');
+  const gameBg = document.getElementById('gameBg');
+
+  function toggleStats() {
+    statsCollapsed = !statsCollapsed;
+    const panel = document.getElementById('statsPanel');
+    const expandBtn = document.getElementById('statsExpandBtn');
+    if (statsCollapsed) { panel.classList.add('collapsed'); expandBtn.style.display = 'flex'; }
+    else { panel.classList.remove('collapsed'); expandBtn.style.display = 'none'; }
+  }
+
+  function returnToMenu() {
+    gameState.isRunning = false;
+    if (animationFrameId) { cancelAnimationFrame(animationFrameId); animationFrameId = null; }
+    document.getElementById('gameScreen').style.display = 'none';
+    document.getElementById('mainMenu').style.display = 'flex';
+    initMenuAchievements();
+  }
+
+  function showMenuTab(tabName, event) {
+    document.querySelectorAll('.menu-panel').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + tabName).classList.add('active');
+    if (event && event.currentTarget) event.currentTarget.classList.add('active');
+  }
+
+  function initMenuAchievements() {
+    const grid = document.getElementById('menuAchievementsGrid');
+    grid.innerHTML = '';
+    allAchievementsList.forEach(ach => {
+      const isUnlocked = gameState.achievements.includes(ach.id);
+      const card = document.createElement('div');
+      card.className = 'achievement-card' + (isUnlocked ? '' : ' locked');
+      card.innerHTML = `<div class="achievement-icon">${isUnlocked ? ach.icon : '❓'}</div><div class="achievement-info"><div class="achievement-name">${isUnlocked ? ach.name : '???'}</div><div class="achievement-desc">${isUnlocked ? ach.desc : `Условие: ${ach.desc}`}</div></div>`;
+      grid.appendChild(card);
+    });
+  }
+  initMenuAchievements();
+
+  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  let noiseBuffer;
+  function initAudio() {
+    const bufferSize = audioCtx.sampleRate * 2;
+    noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    const data = noiseBuffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 2);
+  }
+
+  function playTone(freq, duration, type = 'sine', volume = 0.15, delay = 0) {
+    const osc = audioCtx.createOscillator(), gain = audioCtx.createGain(), filter = audioCtx.createBiquadFilter();
+    filter.type = 'lowpass'; filter.frequency.value = 5000;
+    osc.connect(filter); filter.connect(gain); gain.connect(audioCtx.destination);
+    osc.frequency.value = freq; osc.type = type;
+    const startTime = audioCtx.currentTime + delay;
+    gain.gain.setValueAtTime(0, startTime);
+    gain.gain.linearRampToValueAtTime(volume, startTime + 0.01);
+    gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+    osc.start(startTime); osc.stop(startTime + duration);
+  }
+
+  function playNoise(duration, volume = 0.1) {
+    const source = audioCtx.createBufferSource(), gain = audioCtx.createGain();
+    source.buffer = noiseBuffer; source.connect(gain); gain.connect(audioCtx.destination);
+    gain.gain.setValueAtTime(volume, audioCtx.currentTime);
+    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+    source.start();
+  }
+
+  const soundBank = {
+    click: () => { playTone(400 + Math.random() * 400, 0.08, 'square', 0.1); playNoise(0.05, 0.05); },
+    combo: (level) => { const b = 500 + level * 50; playTone(b, 0.1, 'sawtooth', 0.12); playTone(b * 1.5, 0.1, 'sine', 0.08, 0.05); },
+    critical: () => { playTone(800, 0.15, 'sawtooth', 0.2); playTone(1200, 0.15, 'sawtooth', 0.15, 0.05); playTone(1600, 0.2, 'sawtooth', 0.12, 0.1); playNoise(0.2, 0.15); },
+    mega: () => { [400, 600, 800, 1000, 1200].forEach((f, i) => playTone(f, 0.3, 'sawtooth', 0.15, i * 0.05)); playNoise(0.4, 0.2); },
+    upgrade: () => { playTone(523, 0.1, 'sine', 0.15); playTone(659, 0.1, 'sine', 0.15, 0.08); playTone(784, 0.15, 'sine', 0.15, 0.16); playTone(1047, 0.2, 'triangle', 0.12, 0.25); },
+    achievement: () => { [523, 659, 784, 1047, 1319].forEach((f, i) => playTone(f, 0.2, 'triangle', 0.15, i * 0.08)); },
+    golden: () => { [1000, 1200, 1400, 1600, 1800, 2000].forEach((f, i) => playTone(f, 0.15, 'sine', 0.15, i * 0.04)); },
+    fever: () => { for (let i = 0; i < 10; i++) playTone(400 + i * 100, 0.2, 'sawtooth', 0.1, i * 0.03); playNoise(0.5, 0.15); },
+    boss: () => { playTone(100, 0.5, 'sawtooth', 0.2); playTone(80, 0.5, 'sawtooth', 0.2, 0.1); playNoise(0.6, 0.2); },
+    bossHit: () => { playTone(150, 0.1, 'square', 0.15); playNoise(0.08, 0.1); },
+    bossDefeat: () => { for (let i = 0; i < 15; i++) playTone(200 + i * 80, 0.3, 'sawtooth', 0.15, i * 0.05); playNoise(0.8, 0.25); },
+    chestOpen: () => { playTone(200, 0.5, 'sawtooth', 0.2); playTone(400, 0.5, 'sawtooth', 0.2, 0.1); playTone(800, 0.8, 'sine', 0.3, 0.2); playNoise(0.5, 0.2); }
+  };
+
+  const canvas = document.getElementById('canvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+  window.addEventListener('resize', () => { canvas.width = window.innerWidth; canvas.height = window.innerHeight; });
+
+  const MAX_PARTICLES = 600;
+  const particles = new Array(MAX_PARTICLES).fill(null).map(() => ({ active: false, x: 0, y: 0, vx: 0, vy: 0, life: 0, decay: 0, size: 0, rotation: 0, rotationSpeed: 0, emoji: '', type: 'normal', color: '#FFD700', gravity: 0.4 }));
+  const MAX_SHOCKWAVES = 20;
+  const shockwaves = new Array(MAX_SHOCKWAVES).fill(null).map(() => ({ active: false, x: 0, y: 0, radius: 0, maxRadius: 200, life: 0, color: '#FFD700' }));
+
+  function spawnParticle(x, y, opts = {}) {
+    for (let i = 0; i < MAX_PARTICLES; i++) {
+      if (!particles[i].active) {
+        const p = particles[i]; p.active = true; p.x = x; p.y = y;
+        const angle = opts.angle ?? Math.random() * Math.PI * 2;
+        const speed = opts.speed ?? (Math.random() * 10 + 5);
+        p.vx = Math.cos(angle) * speed; p.vy = Math.sin(angle) * speed;
+        p.life = 1; p.decay = opts.decay ?? 0.02; p.size = opts.size ?? (Math.random() * 20 + 15);
+        p.rotation = Math.random() * Math.PI * 2; p.rotationSpeed = (Math.random() - 0.5) * 0.3;
+        p.emoji = opts.emoji ?? '💩'; p.gravity = opts.gravity ?? 0.4; p.type = opts.type ?? 'normal'; p.color = opts.color ?? '#FFD700';
+        return;
+      }
+    }
+  }
+
+  function createExplosion(x, y, count = 15, type = 'normal') {
+    const emojis = ['💩', '💥', '⭐', '✨', '🔥', '💫'];
+    for (let i = 0; i < count; i++) spawnParticle(x, y, { emoji: emojis[Math.floor(Math.random() * emojis.length)], speed: Math.random() * 15 + 5, size: Math.random() * 20 + 10 });
+    if (type === 'critical' || type === 'golden' || type === 'mythic' || type === 'ultra_mythic_plus') {
+      for (let i = 0; i < 20; i++) spawnParticle(x, y, { type: 'spark', color: ['#FF1493','#FFD700','#00FFFF'][Math.floor(Math.random()*3)], speed: Math.random()*20+10, size: Math.random()*15+5, gravity:0.2, decay:0.03 });
+      spawnShockwave(x, y, '#FF1493');
+    }
+  }
+
+  const MAX_TEXTS = 40;
+  const textPool = [];
+  for (let i = 0; i < MAX_TEXTS; i++) {
+    const div = document.createElement('div');
+    div.style.position = 'absolute'; div.style.pointerEvents = 'none'; div.style.zIndex = '20'; div.style.display = 'none';
+    gameScreen.appendChild(div);
+    textPool.push({ el: div, active: false, life: 0, maxLife: 0, x: 0, y: 0, vx: 0, vy: 0, rotation: 0, rotSpeed: 0, scale: 1 });
+  }
+
+  function showFloatingText(x, y, text, type = 'normal') {
+    for (let i = 0; i < MAX_TEXTS; i++) {
+      if (!textPool[i].active) {
+        const t = textPool[i]; t.active = true;
+        t.life = type === 'mega' ? 2 : type === 'critical' ? 1.5 : 1.2;
+        t.maxLife = t.life; t.x = x + (Math.random()-0.5)*50; t.y = y;
+        t.vy = -150; t.vx = (Math.random()-0.5)*50; t.rotation = -10;
+        t.rotSpeed = type==='mega' ? -45 : (Math.random()*40-20);
+        t.scale = type==='mega'?3:type==='critical'?2.5:1.5;
+        t.el.textContent = text;
+        t.el.className = `floating-text ${type==='critical'?'critical-text':type==='mega'?'mega-text':'normal'}`;
+        t.el.style.display = 'block';
+        return;
+      }
+    }
+  }
+
+  function getUltraBonus() {
+    let bonus = 0;
+    gameState.unlockedItems.forEach(id => {
+      const item = skinDatabase[id] || bgDatabase[id];
+      if (item && item.rarity === 'ultra_mythic_plus' && item.bonus) bonus += item.bonus;
+    });
+    return bonus;
+  }
+
+  function updateVisuals() {
+    poopEl.textContent = gameState.equippedSkin;
+    const bgData = bgDatabase[gameState.equippedBg];
+    if (bgData) gameBg.style.background = bgData.css;
+    const ultraBonus = getUltraBonus();
+    if (ultraBonus > 0) {
+      ultraBonusStat.style.display = 'flex';
+      ultraBonusVal.textContent = `+${Math.round(ultraBonus * 100)}%`;
+    } else ultraBonusStat.style.display = 'none';
+  }
+
+  function startGame() {
+    document.getElementById('mainMenu').style.display = 'none';
+    gameScreen.style.display = 'block';
+    audioCtx.resume(); initAudio();
+    gameState.isRunning = true;
+    gameState.goldenSpawnTimer = 15;
+    gameState.bossSpawnTimer = 120;
+    gameState.randomEventTimer = 45;
+    buildUpgradeList();
+    updateVisuals();
+    if (animationFrameId) cancelAnimationFrame(animationFrameId);
+    animationFrameId = requestAnimationFrame(gameLoop);
+  }
+
+  const upgradeElements = {};
+  function buildUpgradeList() {
+    const list = document.getElementById('upgradeList');
+    list.innerHTML = '';
+    Object.entries(gameState.upgrades).forEach(([key, up]) => {
+      const div = document.createElement('div');
+      div.className = 'upgrade-item';
+      div.dataset.upgradeKey = key;
+      div.innerHTML = `
+        <div class="upgrade-name">${up.name} [<span class="count">0</span>]</div>
+        <div class="upgrade-info">${up.desc} | +${formatNumber(up.basePerSec)}/сек</div>
+        <div class="upgrade-cost">💰 ${formatNumber(up.cost)}</div>
+        <div class="upgrade-actions">
+          <button class="upgrade-btn buy-1">КУПИТЬ 1</button>
+          <button class="upgrade-btn buy-max">МАКС</button>
+        </div>
+      `;
+      const buy1 = div.querySelector('.buy-1');
+      const buyMax = div.querySelector('.buy-max');
+      buy1.onclick = () => buyUpgrade(key, 1);
+      buyMax.onclick = () => buyUpgrade(key, 'max');
+      list.appendChild(div);
+      upgradeElements[key] = {
+        container: div,
+        nameSpan: div.querySelector('.count'),
+        costSpan: div.querySelector('.upgrade-cost'),
+        buy1, buyMax
+      };
+    });
+  }
+
+  function updateUpgradeUI() {
+    const ultraMult = 1 + getUltraBonus();
+    Object.entries(gameState.upgrades).forEach(([key, up]) => {
+      const els = upgradeElements[key];
+      if (!els) return;
+      els.nameSpan.textContent = up.count;
+      els.costSpan.textContent = `💰 ${formatNumber(up.cost)}`;
+      const canAfford = gameState.score >= up.cost;
+      els.container.classList.toggle('cant-afford', !canAfford);
+    });
+  }
+
+  function buyUpgrade(key, amount) {
+    const up = gameState.upgrades[key];
+    if (amount === 1) {
+      if (gameState.score < up.cost) return;
+      gameState.score -= up.cost;
+      up.count++; up.cost = Math.floor(up.cost * 1.4);
+      gameState.clickPower += up.basePower; gameState.perSecond += up.basePerSec;
+      soundBank.upgrade();
+    } else if (amount === 'max') {
+      let count = 0, currentCost = up.cost;
+      while (gameState.score >= currentCost) { gameState.score -= currentCost; count++; currentCost = Math.floor(currentCost * 1.4); }
+      if (count > 0) {
+        up.count += count; up.cost = currentCost;
+        gameState.clickPower += up.basePower * count; gameState.perSecond += up.basePerSec * count;
+        soundBank.upgrade();
+        showFloatingText(window.innerWidth-170, window.innerHeight/2, `КУПЛЕНО x${count}!`, 'normal');
+      } else return;
+    }
+    updateUpgradeUI();
+  }
+
+  function clickPoop(event) {
+    if (gameState.bossActive) return;
+    const now = Date.now(), timeDiff = now - gameState.lastClickTime;
+    if (timeDiff < 600) {
+      gameState.combo++;
+      if (gameState.combo > 2) { comboDisplay.classList.add('active'); comboValue.textContent = gameState.combo; if (gameState.combo % 10 === 0) soundBank.combo(Math.min(gameState.combo/10,10)); }
+    } else {
+      gameState.combo = Math.max(0, gameState.combo - 5);
+      if (gameState.combo === 0) comboDisplay.classList.remove('active');
+    }
+    gameState.lastClickTime = now;
+    if (!gameState.feverActive) { gameState.feverEnergy = Math.min(100, gameState.feverEnergy + 1 + gameState.combo * 0.2); updateFeverBar(); if (gameState.feverEnergy >= 100) activateFever(); }
+    const critRoll = Math.random();
+    const isCritical = critRoll < gameState.critChance;
+    const isMega = critRoll < 0.001;
+    const comboMult = 1 + (gameState.combo * 0.05);
+    const feverMult = gameState.feverActive ? 10 : 1;
+    const critMult = isMega ? 100 : (isCritical ? 10 : 1);
+    const ultraMult = 1 + getUltraBonus();
+    const points = Math.floor(gameState.clickPower * gameState.multiplier * comboMult * feverMult * critMult * ultraMult);
+    gameState.score += points; gameState.totalClicks++;
+    poopEl.classList.add('clicked'); setTimeout(() => poopEl.classList.remove('clicked'), 150);
+    if (isMega) { createExplosion(event.clientX, event.clientY, 60, 'mega'); showFloatingText(event.clientX, event.clientY, `МЕГА! +${formatNumber(points)}`, 'mega'); soundBank.mega(); triggerScreenEffect('mega'); }
+    else if (isCritical) { createExplosion(event.clientX, event.clientY, 30, 'critical'); showFloatingText(event.clientX, event.clientY, `КРИТ! +${formatNumber(points)}`, 'critical'); soundBank.critical(); triggerScreenEffect('critical'); }
+    else { createExplosion(event.clientX, event.clientY, gameState.feverActive?20:8); showFloatingText(event.clientX, event.clientY, `+${formatNumber(points)}`); soundBank.click(); }
+    checkAchievements(); checkMilestones();
+  }
+
+  function triggerScreenEffect(type) {
+    if (type === 'critical') {
+      gameScreen.classList.add('screen-shake'); setTimeout(() => gameScreen.classList.remove('screen-shake'), 400);
+      const flash = document.createElement('div'); flash.className = 'screen-flash'; flash.style.background = 'radial-gradient(circle, #FF1493, transparent)'; document.body.appendChild(flash); setTimeout(() => flash.remove(), 300);
+    } else if (type === 'mega') {
+      gameScreen.classList.add('screen-shake','glitch-effect'); setTimeout(() => gameScreen.classList.remove('screen-shake','glitch-effect'), 500);
+      const flash = document.createElement('div'); flash.className = 'screen-flash'; flash.style.background = 'radial-gradient(circle, #FFD700, #FF1493, transparent)'; document.body.appendChild(flash); setTimeout(() => flash.remove(), 400);
+      document.body.classList.add('invert-screen'); setTimeout(() => document.body.classList.remove('invert-screen'), 200);
+    }
+  }
+
+  function updateFeverBar() {
+    if (gameState.feverActive) { feverBar.classList.add('active'); feverFill.style.width = (gameState.feverTimer / 10) * 100 + '%'; }
+    else if (gameState.feverEnergy > 0) { feverBar.classList.add('active'); feverFill.style.width = gameState.feverEnergy + '%'; }
+    else { feverBar.classList.remove('active'); }
+  }
+
+  function activateFever() {
+    gameState.feverActive = true; gameState.feverTimer = 10; gameState.feverEnergy = 0;
+    gameScreen.classList.add('fever-mode'); feverText.classList.add('active'); poopEl.classList.add('fever-poop');
+    soundBank.fever(); showEventBanner('🔥 FEVER MODE! 🔥');
+  }
+
+  function deactivateFever() {
+    gameState.feverActive = false; gameState.feverTimer = 0;
+    gameScreen.classList.remove('fever-mode'); feverText.classList.remove('active'); poopEl.classList.remove('fever-poop');
+    updateFeverBar();
+  }
+
+  function showEventBanner(text) {
+    const banner = document.createElement('div'); banner.className = 'event-banner'; banner.textContent = text;
+    document.body.appendChild(banner); setTimeout(() => banner.remove(), 2000);
+  }
+
+  function rollLoot() {
+    const roll = Math.random() * 100;
+    let rarity = 'common';
+    if (roll > 99.5) rarity = 'ultra_mythic_plus';
+    else if (roll > 98) rarity = 'mythic';
+    else if (roll > 90) rarity = 'legendary';
+    else if (roll > 75) rarity = 'epic';
+    else if (roll > 40) rarity = 'rare';
+    const isBg = Math.random() > 0.7;
+    const pool = isBg ? bgDatabase : skinDatabase;
+    const available = Object.entries(pool).filter(([id, data]) => data.rarity === rarity);
+    const wonId = available[Math.floor(Math.random() * available.length)][0];
+    const isNew = !gameState.unlockedItems.includes(wonId);
+    if (isNew) gameState.unlockedItems.push(wonId);
+    return { id: wonId, rarity, isNew, type: isBg ? 'bg' : 'skin' };
+  }
+
+  function openChest(count) {
+    const cost = 10000 * count;
+    if (gameState.score >= cost) {
+      gameState.score -= cost; soundBank.chestOpen();
+      const results = []; for (let i = 0; i < count; i++) results.push(rollLoot());
+      showChestResult(results, count); updateDisplay(); checkAchievements();
+    } else showFloatingText(window.innerWidth/2, window.innerHeight/2, 'НЕ ХВАТАЕТ!', 'critical');
+  }
+
+  function buyChestsAll() {
+    const count = Math.floor(gameState.score / 10000);
+    if (count > 0) openChest(count);
+    else showFloatingText(window.innerWidth/2, window.innerHeight/2, 'НЕ ХВАТАЕТ!', 'critical');
+  }
+
+  function showChestResult(results, count) {
+    const modal = document.getElementById('chestResultModal');
+    const content = document.getElementById('chestResultContent');
+    let html = `<div class="chest-result-title">${count > 1 ? `🎉 ОТКРЫТО ${count} СУНДУКОВ! 🎉` : '🎉 НОВАЯ НАХОДКА! 🎉'}</div><div class="chest-result-grid">`;
+    results.forEach((res, index) => {
+      const data = res.type === 'skin' ? skinDatabase[res.id] : bgDatabase[res.id];
+      const iconHtml = res.type === 'bg' ? `<div class="bg-preview" style="background: ${data.css};"></div>` : data.icon;
+      html += `<div class="chest-result-item rarity-${res.rarity}" style="animation-delay:${index*0.1}s;"><span class="revealed-icon">${iconHtml}</span><div class="revealed-name">${res.isNew ? data.name : 'Дубликат (+1K)'}</div><div class="revealed-rarity">${res.rarity}</div></div>`;
+      if (!res.isNew) gameState.score += 1000;
+    });
+    html += `</div>`; content.innerHTML = html; modal.classList.add('active');
+    updateVisuals();
+  }
+
+  function closeChestResult() { document.getElementById('chestResultModal').classList.remove('active'); }
+
+  function openCustomization() { currentCustomTab = 'skins'; renderCustomGrid(); document.getElementById('customizationModal').classList.add('active'); }
+  function closeCustomization() { document.getElementById('customizationModal').classList.remove('active'); }
+  function switchCustomTab(tab, event) { currentCustomTab = tab; document.querySelectorAll('.custom-tab').forEach(t => t.classList.remove('active')); event.currentTarget.classList.add('active'); renderCustomGrid(); }
+
+  function renderCustomGrid() {
+    const grid = document.getElementById('customGrid'); grid.innerHTML = '';
+    const database = currentCustomTab === 'skins' ? skinDatabase : bgDatabase;
+    const equippedId = currentCustomTab === 'skins' ? gameState.equippedSkin : gameState.equippedBg;
+    Object.entries(database).forEach(([id, data]) => {
+      const isUnlocked = gameState.unlockedItems.includes(id);
+      const card = document.createElement('div');
+      card.className = `custom-card rarity-${data.rarity} ${isUnlocked ? '' : 'locked'} ${equippedId === id ? 'equipped' : ''}`;
+      card.innerHTML = `<div class="custom-icon-wrapper">${isUnlocked ? (data.type==='bg' ? `<div class="bg-preview" style="background:${data.css};"></div>` : data.icon) : '🔒'}</div><div class="custom-name">${isUnlocked ? data.name : '???'}</div><div class="custom-rarity">${data.rarity}</div>`;
+      if (isUnlocked) card.onclick = () => { if (currentCustomTab === 'skins') gameState.equippedSkin = id; else gameState.equippedBg = id; updateVisuals(); renderCustomGrid(); };
+      grid.appendChild(card);
+    });
+  }
+
+  function spawnGoldenPoop() {
+    if (gameState.bossActive) return;
+    const poop = document.createElement('div'); poop.className = 'golden-poop'; poop.textContent = '💩';
+    poop.style.left = Math.random() * (window.innerWidth-100) + 'px';
+    poop.style.top = Math.random() * (window.innerHeight-200) + 100 + 'px';
+    const clickHandler = (e) => {
+      e.stopPropagation();
+      const bonus = Math.floor(gameState.perSecond * 60 + gameState.clickPower * 100);
+      gameState.score += bonus; gameState.goldenPoopsCollected++;
+      createExplosion(e.clientX, e.clientY, 40, 'golden');
+      showFloatingText(e.clientX, e.clientY, `ЗОЛОТО! +${formatNumber(bonus)}`, 'mega');
+      soundBank.golden(); showEventBanner('💰 ЗОЛОТАЯ КАКАШКА! 💰'); triggerScreenEffect('critical');
+      poop.remove(); checkAchievements();
+    };
+    poop.onclick = clickHandler;
+    gameScreen.appendChild(poop);
+    const timeout = setTimeout(() => {
+      if (poop.parentNode) { poop.onclick = null; poop.remove(); }
+    }, 8000);
+  }
+
+  function spawnBoss() {
+    if (gameState.bossActive) return;
+    gameState.bossActive = true;
+    gameState.bossMaxHP = Math.max(1000, gameState.score * 0.5);
+    gameState.bossHP = gameState.bossMaxHP;
+    showEventBanner('⚠️ БОСС ПОЯВИЛСЯ! ⚠️'); soundBank.boss();
+    const bossContainer = document.createElement('div'); bossContainer.id = 'bossContainer';
+    bossContainer.innerHTML = `<div class="boss-hp-bar"><div class="boss-hp-fill" id="bossHpFill" style="width:100%"></div></div><div class="boss-title">💀 ВЕЛИКИЙ КАКАШЕ-БОСС 💀</div><div class="boss-poop" id="bossPoop">💩</div>`;
+    document.body.appendChild(bossContainer);
+    const bossPoop = document.getElementById('bossPoop');
+    currentBossHandler = (e) => {
+      e.stopPropagation();
+      const damage = gameState.clickPower * gameState.multiplier * 5 * (1 + getUltraBonus());
+      gameState.bossHP -= damage;
+      createExplosion(e.clientX, e.clientY, 15, 'critical'); soundBank.bossHit();
+      showFloatingText(e.clientX, e.clientY, `-${formatNumber(damage)}`, 'critical');
+      document.getElementById('bossHpFill').style.width = Math.max(0, (gameState.bossHP / gameState.bossMaxHP) * 100) + '%';
+      if (gameState.bossHP <= 0) defeatBoss();
+    };
+    bossPoop.onclick = currentBossHandler;
+  }
+
+  function defeatBoss() {
+    const reward = Math.floor(gameState.bossMaxHP * 2);
+    gameState.score += reward; gameState.bossActive = false;
+    const bossPoop = document.getElementById('bossPoop');
+    if (bossPoop) { bossPoop.onclick = null; }
+    const container = document.getElementById('bossContainer');
+    if (container) container.remove();
+    createExplosion(window.innerWidth/2, window.innerHeight/2, 100, 'mega');
+    soundBank.bossDefeat(); showEventBanner(`🏆 ПОБЕДА! +${formatNumber(reward)} 🏆`);
+    triggerScreenEffect('mega');
+  }
+
+  function formatNumber(num) {
+    if (num >= 1e12) return (num/1e12).toFixed(2)+'T';
+    if (num >= 1e9) return (num/1e9).toFixed(2)+'B';
+    if (num >= 1e6) return (num/1e6).toFixed(2)+'M';
+    if (num >= 1e3) return (num/1e3).toFixed(2)+'K';
+    return Math.floor(num).toLocaleString();
+  }
+
+  const achievementCheckList = [
+    { id: 'c10', cond: () => gameState.totalClicks >= 10 },
+    { id: 'c100', cond: () => gameState.totalClicks >= 100 },
+    { id: 'c1000', cond: () => gameState.totalClicks >= 1000 },
+    { id: 'c10000', cond: () => gameState.totalClicks >= 10000 },
+    { id: 's1k', cond: () => gameState.score >= 1000 },
+    { id: 's10k', cond: () => gameState.score >= 10000 },
+    { id: 's100k', cond: () => gameState.score >= 100000 },
+    { id: 's1m', cond: () => gameState.score >= 1000000 },
+    { id: 's1b', cond: () => gameState.score >= 1000000000 },
+    { id: 'combo20', cond: () => gameState.combo >= 20 },
+    { id: 'combo50', cond: () => gameState.combo >= 50 },
+    { id: 'combo100', cond: () => gameState.combo >= 100 },
+    { id: 'gold5', cond: () => gameState.goldenPoopsCollected >= 5 },
+    { id: 'gold20', cond: () => gameState.goldenPoopsCollected >= 20 },
+    { id: 'fever', cond: () => gameState.feverActive },
+    { id: 'all_skins', cond: () => Object.keys(skinDatabase).every(id => gameState.unlockedItems.includes(id)) },
+    { id: 'all_bgs', cond: () => Object.keys(bgDatabase).every(id => gameState.unlockedItems.includes(id)) },
+    { id: 'game_100', cond: () => allAchievementsList.filter(a => a.id !== 'game_100').every(a => gameState.achievements.includes(a.id)) }
+  ];
+
+  function checkAchievements() {
+    achievementCheckList.forEach(a => {
+      if (!gameState.achievements.includes(a.id) && a.cond()) {
+        gameState.achievements.push(a.id);
+        showAchievement(allAchievementsList.find(ach => ach.id === a.id)?.name || a.id);
+        soundBank.achievement();
+      }
+    });
+  }
+
+  function checkMilestones() { if (gameState.totalClicks % 50 === 0 && gameState.totalClicks > 0) createPoopRain(10); }
+  function showAchievement(text) { const div = document.createElement('div'); div.className = 'achievement'; div.textContent = text; document.body.appendChild(div); setTimeout(() => div.remove(), 4000); }
+
+  function createPoopRain(count) { for (let i=0;i<count;i++) spawnParticle(Math.random()*canvas.width, -50, { emoji:'💩', speed:5, angle:Math.PI/2, gravity:0.5, decay:0.005 }); }
+
+  function triggerSecret() { soundBank.mega(); showEventBanner('🎮 СЕКРЕТНЫЙ РЕЖИМ!'); createPoopRain(100); }
+
+  function updateDisplay() {
+    const ultraMult = 1 + getUltraBonus();
+    perSecondEl.textContent = formatNumber(gameState.perSecond * ultraMult);
+    totalClicksEl.textContent = formatNumber(gameState.totalClicks);
+    multiplierEl.textContent = 'x' + (gameState.multiplier * ultraMult).toFixed(2);
+    critChanceEl.textContent = Math.floor(gameState.critChance * 100) + '%';
+    clickPowerEl.textContent = formatNumber(gameState.clickPower * ultraMult);
+    updateUpgradeUI();
+  }
+
+  let lastFormattedScore = '';
+  let lastUIUpdate = 0;
+  let scoreAccumulator = 0;
+
+  function gameLoop(timestamp) {
+    if (!gameState.isRunning) return;
+    const dt = Math.min((timestamp - (lastTime || timestamp)) / 1000, 0.1);
+    lastTime = timestamp;
+
+    const ultraMult = 1 + getUltraBonus();
+    scoreAccumulator += gameState.perSecond * ultraMult * dt;
+    if (scoreAccumulator >= 1) { const add = Math.floor(scoreAccumulator); gameState.score += add; scoreAccumulator -= add; }
+
+    if (gameState.feverActive) { gameState.feverTimer -= dt; updateFeverBar(); if (gameState.feverTimer <= 0) deactivateFever(); }
+
+    gameState.goldenSpawnTimer -= dt;
+    if (gameState.goldenSpawnTimer <= 0) { if (Math.random() < 0.7 && !gameState.bossActive) spawnGoldenPoop(); gameState.goldenSpawnTimer = 25 + Math.random() * 10; }
+
+    gameState.bossSpawnTimer -= dt;
+    if (gameState.bossSpawnTimer <= 0) { if (gameState.score > 10000 && !gameState.bossActive && Math.random() < 0.5) spawnBoss(); gameState.bossSpawnTimer = 120; }
+
+    gameState.randomEventTimer -= dt;
+    if (gameState.randomEventTimer <= 0) { if (Math.random() < 0.3) triggerRandomEvent(); gameState.randomEventTimer = 45; }
+
+    for (let i=0;i<MAX_TEXTS;i++) {
+      const t = textPool[i]; if (!t.active) continue;
+      t.life -= dt;
+      if (t.life <= 0) { t.active = false; t.el.style.display = 'none'; }
+      else { t.x += t.vx*dt; t.y += t.vy*dt; t.rotation += t.rotSpeed*dt; t.el.style.transform = `translate(${t.x}px,${t.y}px) rotate(${t.rotation}deg) scale(${t.scale*(1-(1-t.life/t.maxLife)*0.5)})`; t.el.style.opacity = Math.min(1, t.life/0.3); }
+    }
+
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    for (let i=0;i<MAX_PARTICLES;i++) {
+      const p = particles[i]; if (!p.active) continue;
+      p.life -= p.decay; if (p.life <= 0) { p.active = false; continue; }
+      p.x += p.vx; p.y += p.vy; p.vy += p.gravity; p.vx *= 0.99; p.rotation += p.rotationSpeed;
+      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rotation); ctx.globalAlpha = Math.max(0, p.life);
+      if (p.type==='spark') { ctx.fillStyle=p.color; ctx.shadowBlur=20; ctx.shadowColor=p.color; ctx.beginPath(); ctx.arc(0,0,p.size*p.life,0,Math.PI*2); ctx.fill(); }
+      else { ctx.font=`${p.size}px Arial`; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(p.emoji,0,0); }
+      ctx.restore();
+    }
+
+    const currentFormatted = formatNumber(gameState.score);
+    if (currentFormatted !== lastFormattedScore) { scoreEl.textContent = currentFormatted; lastFormattedScore = currentFormatted; scoreEl.style.animation = 'none'; scoreEl.offsetHeight; scoreEl.style.animation = 'scoreBounce 0.3s ease'; }
+
+    if (timestamp - lastUIUpdate > 500) { updateDisplay(); lastUIUpdate = timestamp; }
+
+    animationFrameId = requestAnimationFrame(gameLoop);
+  }
+
+  function triggerRandomEvent() {
+    const events = [
+      { name: 'Дождь какашек!', action: () => { createPoopRain(40); gameState.score += gameState.clickPower * 100; } },
+      { name: 'x2 Множитель на 10 сек!', action: () => { gameState.multiplier *= 2; setTimeout(() => gameState.multiplier /= 2, 10000); } },
+      { name: 'Fever Energy +50!', action: () => { gameState.feverEnergy = Math.min(100, gameState.feverEnergy + 50); updateFeverBar(); } },
+      { name: 'Крит шанс +5% на 15 сек!', action: () => { gameState.critChance += 0.05; setTimeout(() => gameState.critChance -= 0.05, 15000); } },
+      { name: 'БОНУС! +1000 какашек!', action: () => { gameState.score += 1000 * gameState.multiplier; } }
+    ];
+    const event = events[Math.floor(Math.random()*events.length)];
+    showEventBanner('🎉 ' + event.name); soundBank.achievement(); event.action();
+  }
+
+  window.startGame = startGame;
+  window.returnToMenu = returnToMenu;
+</script>
+</body>
+</html>
