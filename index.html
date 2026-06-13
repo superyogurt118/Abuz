@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>💩 КАКАШКИ КЛИКЕР (и не только какашек) V0.7.12 💩</title>
+  <title>💩 КАКАШКИ КЛИКЕР (и не только какашек) V0.7.13 💩</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/bangers@5.0.0/index.min.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -34,6 +34,8 @@
     @keyframes playPulse { 0%, 100% { transform: scale(1) rotate(-2deg); } 50% { transform: scale(1.05) rotate(2deg); } }
     .play-btn:hover { animation: playHover 0.2s ease-in-out infinite; }
     @keyframes playHover { 0%, 100% { transform: scale(1.1) rotate(-3deg); } 50% { transform: scale(1.1) rotate(3deg); } }
+    .reset-btn { font-size: 36px; padding: 15px 40px; background: linear-gradient(135deg, #f44336, #d32f2f); border: 4px solid #fff; border-radius: 15px; color: #fff; cursor: pointer; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); box-shadow: 0 10px 30px rgba(244,67,54,0.5); transition: all 0.3s; letter-spacing: 2px; margin-top: 15px; }
+    .reset-btn:hover { transform: scale(1.05); }
 
     #gameScreen { display: none; width: 100%; height: 100vh; position: relative; overflow: hidden; }
     .game-bg { position: absolute; width: 100%; height: 100%; background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%); animation: bgHue 10s linear infinite; will-change: filter; transition: background 0.5s ease; }
@@ -70,11 +72,14 @@
 
     .upgrade-panel { position: absolute; right: 10px; top: 50%; transform: translateY(-50%); width: 340px; max-height: 85vh; overflow-y: auto; background: linear-gradient(135deg, rgba(20,0,40,0.95), rgba(60,0,80,0.95)); border: 4px solid #FFD700; border-radius: 20px; padding: 15px; z-index: 10; box-shadow: 0 0 40px rgba(255,215,0,0.5); contain: layout style paint; }
     .upgrade-title { font-size: 36px; color: #FFD700; text-align: center; margin-bottom: 15px; text-shadow: 3px 3px 0 #000; letter-spacing: 3px; }
-    .chest-btn { width: 100%; padding: 15px; margin-bottom: 10px; background: linear-gradient(135deg, #FFD700, #FF8C00); border: 3px solid #fff; border-radius: 15px; font-size: 28px; color: #000; cursor: pointer; text-shadow: 1px 1px 0 #fff; box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4); transition: all 0.2s; }
+    .chest-btn, .rebirth-btn { width: 100%; padding: 15px; margin-bottom: 10px; border: 3px solid #fff; border-radius: 15px; font-size: 28px; cursor: pointer; text-shadow: 1px 1px 0 #000; box-shadow: 0 5px 20px rgba(0,0,0,0.4); transition: all 0.2s; }
+    .chest-btn { background: linear-gradient(135deg, #FFD700, #FF8C00); color: #000; }
     .chest-btn:disabled { opacity: 0.5; filter: grayscale(0.6); cursor: not-allowed; pointer-events: none; }
     .chest-btn:hover:not(:disabled) { transform: scale(1.05); box-shadow: 0 8px 30px rgba(255, 215, 0, 0.6); }
-    .chest-btn-10 { background: linear-gradient(135deg, #ff006e, #ff8800); color: #fff; text-shadow: 1px 1px 0 #000; }
-    .chest-btn-all { background: linear-gradient(135deg, #00c853, #00e676); color: #fff; text-shadow: 1px 1px 0 #000; }
+    .chest-btn-10 { background: linear-gradient(135deg, #ff006e, #ff8800); color: #fff; }
+    .chest-btn-all { background: linear-gradient(135deg, #00c853, #00e676); color: #fff; }
+    .rebirth-btn { background: linear-gradient(135deg, #9C27B0, #E91E63); color: #fff; }
+    .rebirth-btn:hover:not(:disabled) { transform: scale(1.05); }
     .action-btn { width: 100%; margin-top: 10px; padding: 12px; border: 3px solid #fff; border-radius: 15px; font-size: 22px; color: #fff; cursor: pointer; text-shadow: 2px 2px 0 #000; box-shadow: 0 5px 20px rgba(0,0,0,0.4); transition: all 0.2s; }
     .action-btn:hover { transform: scale(1.05); }
     .customize-btn { background: linear-gradient(135deg, #9C27B0, #E91E63); }
@@ -107,6 +112,7 @@
     .rarity-epic .revealed-rarity { color: #aa00ff; } .rarity-epic { border: 3px solid #aa00ff; box-shadow: 0 0 18px #aa00ff; }
     .rarity-legendary .revealed-rarity { color: #ff8800; } .rarity-legendary { border: 3px solid #ff8800; box-shadow: 0 0 24px #ff8800; }
     .rarity-mythic .revealed-rarity { color: #ff00ff; } .rarity-mythic { border: 3px solid #ff00ff; box-shadow: 0 0 30px #ff00ff; animation: mythicGlow 2s linear infinite; }
+    .rarity-ultra_mythic .revealed-rarity { color: #fff; background: linear-gradient(45deg, #00ffff, #ff00ff, #00ffff); background-size: 400%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; } .rarity-ultra_mythic { border: 3px solid #00ffff; box-shadow: 0 0 30px #ff00ff, 0 0 60px #00ffff; animation: ultraGlow 1.5s linear infinite; }
     .rarity-ultra_mythic_plus .revealed-rarity { color: #fff; background: linear-gradient(45deg, #FFD700, #fff, #FFD700, #fff); background-size: 400%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: bold; } .rarity-ultra_mythic_plus { border: 3px solid #fff; box-shadow: 0 0 40px #ff00ff, 0 0 80px #00ffff; animation: ultraGlow 1s linear infinite; }
     .chest-result-item.duplicate { opacity: 0.7; }
     .duplicate-badge { position: absolute; top: 10px; right: 10px; background: #ff0000; color: #fff; border-radius: 10px; padding: 4px 10px; font-size: 14px; text-shadow: 1px 1px 0 #000; }
@@ -158,6 +164,7 @@
     .rarity-epic { border-color: #aa00ff; box-shadow: 0 0 15px #aa00ff; } .rarity-epic .custom-rarity { color: #aa00ff; }
     .rarity-legendary { border-color: #ff8800; box-shadow: 0 0 20px #ff8800; } .rarity-legendary .custom-rarity { color: #ff8800; }
     .rarity-mythic { border-color: #ff00ff; box-shadow: 0 0 25px #ff00ff; animation: mythicGlow 2s linear infinite; } .rarity-mythic .custom-rarity { background: linear-gradient(45deg, #ff0000, #ff8800, #ffff00, #00ff00, #00ffff, #0088ff, #ff00ff); background-size: 400%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: rainbowShift 2s linear infinite; }
+    .rarity-ultra_mythic { border-color: #00ffff; box-shadow: 0 0 30px #ff00ff, 0 0 60px #00ffff; animation: ultraGlow 1.5s linear infinite; } .rarity-ultra_mythic .custom-rarity { background: linear-gradient(45deg, #00ffff, #ff00ff, #00ffff); background-size: 400%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
     .rarity-ultra_mythic_plus { border-color: #fff; box-shadow: 0 0 30px #ff00ff, 0 0 60px #00ffff, 0 0 90px #FFD700; animation: ultraGlow 1s linear infinite; } .rarity-ultra_mythic_plus .custom-rarity { background: linear-gradient(45deg, #FFD700, #fff, #FFD700, #fff); background-size: 400%; -webkit-background-clip: text; -webkit-text-fill-color: transparent; animation: rainbowShift 1s linear infinite; font-weight: bold; }
     @keyframes mythicGlow { 0%, 100% { box-shadow: 0 0 25px #ff00ff; } 50% { box-shadow: 0 0 40px #00ffff; } }
     @keyframes ultraGlow { 0%, 100% { box-shadow: 0 0 30px #ff00ff, 0 0 60px #00ffff; } 50% { box-shadow: 0 0 50px #FFD700, 0 0 100px #ff00ff; } }
@@ -184,7 +191,7 @@
 <body>
 <div id="mainMenu">
   <div class="menu-bg"></div>
-  <div class="version" onclick="openVersionModal()">V0.7.12</div>
+  <div class="version" onclick="openVersionModal()">V0.7.13</div>
   <div class="menu-header"><div class="menu-title">💩 КАКАШКИ КЛИКЕР (и не только какашек) 💩</div><div class="menu-subtitle">БЕЗУМНОЕ ИЗДАНИЕ</div></div>
   <div class="menu-container">
     <div class="menu-nav">
@@ -194,6 +201,7 @@
     </div>
     <div id="tab-play" class="menu-panel active">
       <button class="play-btn" onclick="startGame()">НАЧАТЬ БЕЗУМИЕ!</button>
+      <button class="reset-btn" onclick="resetProgress()">🗑️ СБРОСИТЬ ПРОГРЕСС</button>
     </div>
     <div id="tab-achievements" class="menu-panel">
       <div class="panel-title" style="font-size:48px; color:#FFD700; text-align:center; margin-bottom:25px;">🏆 ЦЕЛИ И ДОСТИЖЕНИЯ 🏆</div>
@@ -210,6 +218,7 @@
         <div class="stat-item" id="menuUltraBonusStat" style="display:none; color:#00ff00;"><span class="stat-label">УЛЬТРА БОНУС:</span><span id="menuUltraBonusVal">+0%</span></div>
         <div class="stat-item"><span class="stat-label">ЗОЛОТЫХ:</span><span id="menuGoldenPoops">0</span></div>
         <div class="stat-item"><span class="stat-label">УЛУЧШЕНИЙ:</span><span id="menuUpgradesCount">0</span></div>
+        <div class="stat-item"><span class="stat-label">ПЕРЕРОЖДЕНИЙ:</span><span id="menuRebirthCount">0</span></div>
       </div>
     </div>
   </div>
@@ -229,6 +238,7 @@
     <button class="chest-btn" id="chestBtn1" onclick="openChest(1)">📦 СУНДУК (10K)</button>
     <button class="chest-btn chest-btn-10" id="chestBtn10" onclick="openChest(10)">📦 СУНДУКИ x10</button>
     <button class="chest-btn chest-btn-all" id="chestBtnAll" onclick="buyChestsAll()">💰 ВСЁ (макс 99)</button>
+    <button class="rebirth-btn" id="rebirthBtn" onclick="rebirth()">🌀 ПЕРЕРОЖДЕНИЕ (1M)</button>
     <button class="action-btn customize-btn" onclick="openCustomization()" style="margin-bottom:5px;">🎨 КАСТОМИЗАЦИЯ</button>
     <button class="action-btn menu-return-btn-inline" onclick="returnToMenu()">🏠 В МЕНЮ</button>
     <div id="upgradeList"></div>
@@ -243,12 +253,12 @@
 <div id="versionModal" class="modal-overlay">
   <div class="modal-content">
     <button class="modal-close" onclick="closeVersionModal()">×</button>
-    <div class="panel-title" style="font-size:40px; text-align:center;">ВЕРСИЯ V0.7.12</div>
+    <div class="panel-title" style="font-size:40px; text-align:center;">ВЕРСИЯ V0.7.13</div>
     <div class="changelog-list" style="margin-top:25px;">
-      <div class="changelog-item">Лимит улучшений снижен до 99.</div>
-      <div class="changelog-item">Иконка валюты, название и анимации заменяются на выбранный скин.</div>
-      <div class="changelog-item">В название игры добавлено «(и не только какашек)».</div>
-      <div class="changelog-item">Максимум 99 сундуков за раз.</div>
+      <div class="changelog-item">Добавлена кнопка сброса прогресса в главном меню.</div>
+      <div class="changelog-item">Механика перерождения: сброс очков и улучшений за бонус к множителю.</div>
+      <div class="changelog-item">Секретный скин и фон золотой какашки за все достижения золотых какашек.</div>
+      <div class="changelog-item">Новая редкость «Ультра-Мифическая» перед Ультра-Мифической +.</div>
     </div>
   </div>
 </div>
@@ -270,8 +280,11 @@
     '🌈': { name: 'Радуга', rarity: 'mythic', icon: '🌈', type: 'skin' },
     '👑': { name: 'Корона', rarity: 'mythic', icon: '👑', type: 'skin' },
     '🪐': { name: 'Сверхновая', rarity: 'mythic', icon: '🪐', type: 'skin' },
+    '💠': { name: 'Кристалл', rarity: 'ultra_mythic', icon: '💠', type: 'skin' },
+    '🕳️': { name: 'Тёмная материя', rarity: 'ultra_mythic', icon: '🕳️', type: 'skin' },
     '👁️': { name: 'Всевидящее Око', rarity: 'ultra_mythic_plus', icon: '👁️', type: 'skin', bonus: 0.10 },
-    '🌟': { name: 'Абсолют', rarity: 'ultra_mythic_plus', icon: '🌟', type: 'skin', bonus: 0.15 }
+    '🌟': { name: 'Абсолют', rarity: 'ultra_mythic_plus', icon: '🌟', type: 'skin', bonus: 0.15 },
+    '🏅': { name: 'Золотая какашка', rarity: 'ultra_mythic_plus', icon: '🏅', type: 'skin', bonus: 0.20, secret: true }
   };
   const bgDatabase = {
     'bg_default': { name: 'Стандарт', rarity: 'common', css: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)', type: 'bg' },
@@ -281,8 +294,11 @@
     'bg_cosmic': { name: 'Космическая Бездна', rarity: 'mythic', css: 'linear-gradient(135deg, #000428, #004e92)', type: 'bg' },
     'bg_sunset': { name: 'Закат', rarity: 'rare', css: 'linear-gradient(135deg, #ff512f, #dd2476)', type: 'bg' },
     'bg_ocean': { name: 'Океан', rarity: 'epic', css: 'linear-gradient(135deg, #2193b0, #6dd5ed)', type: 'bg' },
+    'bg_galaxy': { name: 'Галактика', rarity: 'ultra_mythic', css: 'linear-gradient(135deg, #8E2DE2, #4A00E0)', type: 'bg' },
+    'bg_emerald': { name: 'Изумрудный', rarity: 'ultra_mythic', css: 'linear-gradient(135deg, #11998e, #38ef7d)', type: 'bg' },
     'bg_omega': { name: 'Омега', rarity: 'ultra_mythic_plus', css: 'linear-gradient(135deg, #000000, #434343, #000000)', type: 'bg' },
-    'bg_divine': { name: 'Божественный', rarity: 'ultra_mythic_plus', css: 'linear-gradient(135deg, #FFD700, #FFA500, #FFD700)', type: 'bg' }
+    'bg_divine': { name: 'Божественный', rarity: 'ultra_mythic_plus', css: 'linear-gradient(135deg, #FFD700, #FFA500, #FFD700)', type: 'bg' },
+    'bg_golden': { name: 'Золотой фон', rarity: 'ultra_mythic_plus', css: 'linear-gradient(135deg, #FFD700, #FFA500, #FFD700, #FFF8DC)', type: 'bg', secret: true }
   };
   const allAchievementsList = [
     { id: 'c10', icon: '🏆', name: '10 КЛИКОВ!', desc: 'Сделать 10 кликов' },
@@ -322,6 +338,8 @@
       space: { count: 0, cost: 500000000, basePower: 150000, basePerSec: 60000, name: '🚀 КОСМОС', desc: 'Клик +150K' }
     },
     achievements: [],
+    rebirthCount: 0,
+    rebirthMultiplier: 1,
     isRunning: false,
     goldenSpawnTimer: 15,
     bossSpawnTimer: 120,
@@ -338,6 +356,11 @@
     document.getElementById('chestBtn1').disabled = allUnlocked;
     document.getElementById('chestBtn10').disabled = allUnlocked;
     document.getElementById('chestBtnAll').disabled = allUnlocked;
+  }
+
+  function updateRebirthButton() {
+    const btn = document.getElementById('rebirthBtn');
+    btn.disabled = gameState.score < 1000000;
   }
 
   function saveGame() { localStorage.setItem('poopClickerSave', JSON.stringify(gameState)); }
@@ -357,11 +380,14 @@
         gameState.equippedSkin = parsed.equippedSkin || '💩';
         gameState.equippedBg = parsed.equippedBg || 'bg_default';
         gameState.achievements = parsed.achievements || [];
+        gameState.rebirthCount = parsed.rebirthCount || 0;
+        gameState.rebirthMultiplier = parsed.rebirthMultiplier || 1;
         if (parsed.upgrades) {
           Object.keys(gameState.upgrades).forEach(key => {
             if (parsed.upgrades[key]) gameState.upgrades[key] = parsed.upgrades[key];
           });
         }
+        unlockSecretItems();
       } catch (e) { console.log('Ошибка загрузки сохранения'); }
     }
   }
@@ -373,6 +399,56 @@
   let animationFrameId = null;
   let lastTime = 0;
   let scoreAccumulator = 0;
+
+  function resetProgress() {
+    if (confirm('Вы уверены, что хотите полностью сбросить прогресс? Это действие необратимо!')) {
+      Object.keys(gameState.upgrades).forEach(key => {
+        gameState.upgrades[key].count = 0;
+        gameState.upgrades[key].cost = gameState.upgrades[key].cost;
+      });
+      gameState.score = 0;
+      gameState.totalClicks = 0;
+      gameState.clickPower = 1;
+      gameState.perSecond = 0;
+      gameState.multiplier = 1;
+      gameState.critChance = 0.01;
+      gameState.goldenPoopsCollected = 0;
+      gameState.achievements = [];
+      gameState.unlockedItems = ['💩', 'bg_default'];
+      gameState.equippedSkin = '💩';
+      gameState.equippedBg = 'bg_default';
+      gameState.rebirthCount = 0;
+      gameState.rebirthMultiplier = 1;
+      saveGame();
+      initMenuAchievements();
+      updateMenuStats();
+    }
+  }
+
+  function rebirth() {
+    if (gameState.score < 1000000 || !gameState.isRunning) return;
+    gameState.rebirthCount++;
+    gameState.rebirthMultiplier += 0.1;
+    gameState.score = 0;
+    gameState.clickPower = 1;
+    gameState.perSecond = 0;
+    gameState.multiplier = 1;
+    gameState.critChance = 0.01;
+    Object.keys(gameState.upgrades).forEach(key => {
+      gameState.upgrades[key].count = 0;
+      gameState.upgrades[key].cost = [15,100,500,2500,15000,100000,750000,5000000,50000000,500000000][Object.keys(gameState.upgrades).indexOf(key)];
+    });
+    buildUpgradeList();
+    showEventBanner('🌀 ПЕРЕРОЖДЕНИЕ! МНОЖИТЕЛЬ +0.1');
+    saveGame();
+  }
+
+  function unlockSecretItems() {
+    if (gameState.achievements.includes('gold5') && gameState.achievements.includes('gold20')) {
+      if (!gameState.unlockedItems.includes('🏅')) gameState.unlockedItems.push('🏅');
+      if (!gameState.unlockedItems.includes('bg_golden')) gameState.unlockedItems.push('bg_golden');
+    }
+  }
 
   function returnToMenu() {
     gameState.isRunning = false;
@@ -407,7 +483,7 @@
   }
 
   function updateMenuStats() {
-    const ultraMult = 1 + getUltraBonus();
+    const ultraMult = 1 + getUltraBonus() * gameState.rebirthMultiplier;
     document.getElementById('menuPerSecond').textContent = formatNumber(gameState.perSecond * ultraMult);
     document.getElementById('menuTotalClicks').textContent = formatNumber(gameState.totalClicks);
     document.getElementById('menuMultiplier').textContent = 'x' + (gameState.multiplier * ultraMult).toFixed(2);
@@ -423,10 +499,11 @@
     let totalUpgrades = 0;
     Object.values(gameState.upgrades).forEach(up => totalUpgrades += up.count);
     document.getElementById('menuUpgradesCount').textContent = totalUpgrades;
+    document.getElementById('menuRebirthCount').textContent = gameState.rebirthCount;
   }
 
   function rarityDisplay(rarity) {
-    const ru = { common:'ОБЫЧНАЯ', rare:'РЕДКАЯ', epic:'ЭПИЧЕСКАЯ', legendary:'ЛЕГЕНДАРНАЯ', mythic:'МИФИЧЕСКАЯ', ultra_mythic_plus:'УЛЬТРА-МИФИЧЕСКАЯ +' };
+    const ru = { common:'ОБЫЧНАЯ', rare:'РЕДКАЯ', epic:'ЭПИЧЕСКАЯ', legendary:'ЛЕГЕНДАРНАЯ', mythic:'МИФИЧЕСКАЯ', ultra_mythic:'УЛЬТРА-МИФИЧЕСКАЯ', ultra_mythic_plus:'УЛЬТРА-МИФИЧЕСКАЯ +' };
     return ru[rarity] || rarity;
   }
 
@@ -493,7 +570,7 @@
   function createExplosion(x,y,count=15,type='normal'){
     const e=[gameState.equippedSkin,'💥','⭐','✨','🔥','💫'];
     for(let i=0;i<count;i++) spawnParticle(x,y,{emoji:e[Math.floor(Math.random()*e.length)],speed:Math.random()*15+5,size:Math.random()*20+10});
-    if(type==='critical'||type==='golden'||type==='mythic'||type==='ultra_mythic_plus')
+    if(type==='critical'||type==='golden'||type==='mythic'||type==='ultra_mythic'||type==='ultra_mythic_plus')
       for(let i=0;i<20;i++) spawnParticle(x,y,{type:'spark',color:['#FF1493','#FFD700','#00FFFF'][Math.floor(Math.random()*3)],speed:Math.random()*20+10,size:Math.random()*15+5,gravity:0.2,decay:0.03});
   }
 
@@ -526,7 +603,7 @@
       const item=skinDatabase[id];
       if(item&&item.rarity==='ultra_mythic_plus'&&item.bonus) bonus+=item.bonus;
     });
-    return bonus;
+    return bonus * gameState.rebirthMultiplier;
   }
 
   function updateVisuals(){
@@ -545,7 +622,7 @@
     audioCtx.resume(); initAudio();
     gameState.isRunning=true;
     gameState.goldenSpawnTimer=15; gameState.bossSpawnTimer=120; gameState.randomEventTimer=45;
-    buildUpgradeList(); updateVisuals(); updateChestButtons();
+    buildUpgradeList(); updateVisuals(); updateChestButtons(); updateRebirthButton();
     if(animationFrameId) cancelAnimationFrame(animationFrameId);
     animationFrameId=requestAnimationFrame(gameLoop);
     saveGame();
@@ -643,7 +720,7 @@
       showFloatingText(event.clientX,event.clientY,`+${formatNumber(points)}`);
       soundBank.click();
     }
-    checkAchievements(); saveGame();
+    checkAchievements(); saveGame(); updateRebirthButton();
   }
 
   function triggerScreenEffect(type){
@@ -683,14 +760,16 @@
   function rollLoot(){
     const roll=Math.random()*100;
     let rarity='common';
-    if(roll>99.5) rarity='ultra_mythic_plus';
+    if(roll>99.9) rarity='ultra_mythic_plus';
+    else if(roll>99.5) rarity='ultra_mythic';
     else if(roll>98) rarity='mythic';
     else if(roll>90) rarity='legendary';
     else if(roll>75) rarity='epic';
     else if(roll>40) rarity='rare';
     const isBg=Math.random()>0.7;
     const pool=isBg?bgDatabase:skinDatabase;
-    const avail=Object.entries(pool).filter(([id,data])=>data.rarity===rarity);
+    const avail=Object.entries(pool).filter(([id,data])=>data.rarity===rarity && !data.secret);
+    if(avail.length===0) return null;
     const wonId=avail[Math.floor(Math.random()*avail.length)][0];
     const isNew=!gameState.unlockedItems.includes(wonId);
     if(isNew) gameState.unlockedItems.push(wonId);
@@ -706,8 +785,9 @@
     const cost=10000*count;
     if(gameState.score>=cost){
       gameState.score-=cost; soundBank.chestOpen();
-      const results=[]; for(let i=0;i<count;i++) results.push(rollLoot());
-      showChestResult(results,count); updateUpgradeUI(); checkAchievements(); updateChestButtons();
+      const results=[]; for(let i=0;i<count;i++) { const loot = rollLoot(); if(loot) results.push(loot); }
+      if(results.length>0) showChestResult(results,count);
+      updateUpgradeUI(); checkAchievements(); updateChestButtons();
       saveGame();
     }else showFloatingText(window.innerWidth/2,window.innerHeight/2,'НЕ ХВАТАЕТ!','critical');
   }
@@ -770,7 +850,7 @@
       createExplosion(e.clientX,e.clientY,40,'golden');
       showFloatingText(e.clientX,e.clientY,`ЗОЛОТО! +${formatNumber(bonus)}`,'mega');
       soundBank.golden(); showEventBanner('💰 ЗОЛОТАЯ КАКАШКА! 💰'); triggerScreenEffect('critical');
-      poop.remove(); checkAchievements(); saveGame();
+      poop.remove(); checkAchievements(); saveGame(); unlockSecretItems();
     };
     poop.onclick=handler;
     document.getElementById('gameScreen').appendChild(poop);
@@ -801,7 +881,7 @@
     const container=document.getElementById('bossContainer'); if(container) container.remove();
     createExplosion(window.innerWidth/2,window.innerHeight/2,100,'mega');
     soundBank.bossDefeat(); showEventBanner(`🏆 ПОБЕДА! +${formatNumber(reward)} 🏆`); triggerScreenEffect('mega');
-    saveGame();
+    saveGame(); updateRebirthButton();
   }
 
   function formatNumber(num){
@@ -830,7 +910,7 @@
       if(!gameState.achievements.includes(a.id)&&a.cond()){
         gameState.achievements.push(a.id);
         showAchievement(allAchievementsList.find(ach=>ach.id===a.id)?.name||a.id);
-        soundBank.achievement(); saveGame();
+        soundBank.achievement(); saveGame(); unlockSecretItems();
       }
     });
   }
@@ -898,11 +978,12 @@
       {name:'БОНУС! +1000 какашек!',action:()=>{ gameState.score+=1000*gameState.multiplier; }}
     ];
     const event=events[Math.floor(Math.random()*events.length)];
-    showEventBanner('🎉 '+event.name); soundBank.achievement(); event.action(); saveGame();
+    showEventBanner('🎉 '+event.name); soundBank.achievement(); event.action(); saveGame(); updateRebirthButton();
   }
 
   window.startGame = startGame;
   window.returnToMenu = returnToMenu;
+  window.resetProgress = resetProgress;
 </script>
 </body>
 </html>
