@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>💩 КАКАШКИ КЛИКЕР (и не только какашек) V0.7.13 💩</title>
+  <title>💩 КАКАШКИ КЛИКЕР (и не только какашек) V0.8.0 💩</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/bangers@5.0.0/index.min.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -29,11 +29,10 @@
     #tab-play { display: none; justify-content: center; align-items: center; min-height: 200px; flex-direction: column; gap: 20px; }
     #tab-play.active { display: flex; }
     @keyframes panelFadeIn { from { opacity: 0; transform: translateY(20px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
-    .play-btn { font-size: 60px; padding: 25px 80px; background: linear-gradient(135deg, #ff006e, #ff8800, #ffbe0b); background-size: 200% 200%; border: 6px solid #fff; border-radius: 25px; color: #fff; cursor: pointer; text-shadow: 4px 4px 8px rgba(0,0,0,0.8); box-shadow: 0 15px 50px rgba(255,0,110,0.6), inset 0 0 30px rgba(255,255,255,0.3); animation: playPulse 0.8s ease-in-out infinite, rainbowBtn 2s linear infinite; letter-spacing: 5px; will-change: transform, background-position; }
-    @keyframes rainbowBtn { 0% { background-position: 0% 50%; } 100% { background-position: 200% 50%; } }
-    @keyframes playPulse { 0%, 100% { transform: scale(1) rotate(-2deg); } 50% { transform: scale(1.05) rotate(2deg); } }
-    .play-btn:hover { animation: playHover 0.2s ease-in-out infinite; }
-    @keyframes playHover { 0%, 100% { transform: scale(1.1) rotate(-3deg); } 50% { transform: scale(1.1) rotate(3deg); } }
+    .play-btn, .ultra-btn { font-size: 36px; padding: 15px 40px; border: 4px solid #fff; border-radius: 15px; color: #fff; cursor: pointer; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); box-shadow: 0 10px 30px rgba(0,0,0,0.5); transition: all 0.3s; letter-spacing: 2px; margin: 5px; }
+    .play-btn { background: linear-gradient(135deg, #ff006e, #ff8800, #ffbe0b); background-size: 200% 200%; animation: rainbowBtn 3s linear infinite; }
+    .ultra-btn { background: linear-gradient(135deg, #4a00e0, #8e2de2); }
+    .play-btn:hover, .ultra-btn:hover { transform: scale(1.05); }
     .reset-btn { font-size: 36px; padding: 15px 40px; background: linear-gradient(135deg, #f44336, #d32f2f); border: 4px solid #fff; border-radius: 15px; color: #fff; cursor: pointer; text-shadow: 2px 2px 4px rgba(0,0,0,0.8); box-shadow: 0 10px 30px rgba(244,67,54,0.5); transition: all 0.3s; letter-spacing: 2px; margin-top: 15px; }
     .reset-btn:hover { transform: scale(1.05); }
 
@@ -97,6 +96,11 @@
     .upgrade-btn.buy-max { background: #FF9800; color: #fff; }
     .upgrade-btn.buy-max:hover { background: #e68900; transform: scale(1.05); }
     .upgrade-item.cant-afford .upgrade-btn { cursor: not-allowed; opacity: 0.6; }
+
+    .ultra-hard-indicator { position: absolute; top: 10px; right: 10px; font-size: 24px; background: linear-gradient(135deg, #4a00e0, #8e2de2); padding: 8px 15px; border-radius: 10px; color: #fff; text-shadow: 2px 2px 0 #000; z-index: 20; display: none; }
+    .ultra-hard-event { position: fixed; top: 30%; left: 50%; transform: translate(-50%, -50%); background: rgba(0,0,0,0.9); border: 3px solid #ff0000; border-radius: 20px; padding: 20px 30px; text-align: center; z-index: 800; font-size: 36px; color: #fff; text-shadow: 2px 2px 0 #000; display: none; }
+    .ultra-hard-event.active { display: block; animation: ultraEventPulse 0.5s ease-in-out infinite; }
+    @keyframes ultraEventPulse { 0%, 100% { box-shadow: 0 0 30px #ff0000; } 50% { box-shadow: 0 0 60px #ff0000; } }
 
     .chest-result-title { font-size: 48px; color: #FFD700; text-align: center; margin-bottom: 25px; text-shadow: 3px 3px 0 #000; animation: titleBounce 1s ease-in-out infinite; }
     .chest-result-grid { display: flex; flex-wrap: wrap; gap: 20px; justify-content: center; }
@@ -191,7 +195,7 @@
 <body>
 <div id="mainMenu">
   <div class="menu-bg"></div>
-  <div class="version" onclick="openVersionModal()">V0.7.13</div>
+  <div class="version" onclick="openVersionModal()">V0.8.0</div>
   <div class="menu-header"><div class="menu-title">💩 КАКАШКИ КЛИКЕР (и не только какашек) 💩</div><div class="menu-subtitle">БЕЗУМНОЕ ИЗДАНИЕ</div></div>
   <div class="menu-container">
     <div class="menu-nav">
@@ -200,12 +204,17 @@
       <button class="nav-btn" onclick="showMenuTab('stats', event)">📊 СТАТИСТИКА</button>
     </div>
     <div id="tab-play" class="menu-panel active">
-      <button class="play-btn" onclick="startGame()">НАЧАТЬ БЕЗУМИЕ!</button>
+      <button class="play-btn" onclick="startGame(false)">ОБЫЧНЫЙ РЕЖИМ</button>
+      <button class="ultra-btn" onclick="startGame(true)">УЛЬТРА СЛОЖНЫЙ</button>
       <button class="reset-btn" onclick="resetProgress()">🗑️ СБРОСИТЬ ПРОГРЕСС</button>
     </div>
     <div id="tab-achievements" class="menu-panel">
-      <div class="panel-title" style="font-size:48px; color:#FFD700; text-align:center; margin-bottom:25px;">🏆 ЦЕЛИ И ДОСТИЖЕНИЯ 🏆</div>
+      <div class="panel-title" style="font-size:48px; color:#FFD700; text-align:center; margin-bottom:25px;">🏆 ДОСТИЖЕНИЯ 🏆</div>
       <div class="achievements-grid" id="menuAchievementsGrid"></div>
+      <div id="ultraAchievementsSection" style="display:none;">
+        <div class="panel-title" style="font-size:36px; color:#ff5555; text-align:center; margin:25px 0;">💀 ХАРДКОРНЫЕ ДОСТИЖЕНИЯ 💀</div>
+        <div class="achievements-grid" id="ultraAchievementsGrid"></div>
+      </div>
     </div>
     <div id="tab-stats" class="menu-panel">
       <div class="panel-title" style="font-size:48px; color:#FFD700; text-align:center; margin-bottom:25px;">📊 СТАТИСТИКА 📊</div>
@@ -228,11 +237,13 @@
   <div class="game-bg" id="gameBg"></div>
   <div class="game-bg-pattern"></div>
   <canvas id="canvas"></canvas>
+  <div class="ultra-hard-indicator" id="ultraHardIndicator">💀 УЛЬТРА СЛОЖНЫЙ</div>
   <div class="score-display"><div class="score-label" id="scoreLabel">💩 КАКАШКИ</div><div class="score-value" id="score">0</div></div>
   <div class="combo-display" id="comboDisplay">🔥 КОМБО x<span id="comboValue">0</span> 🔥</div>
   <div class="fever-bar" id="feverBar"><div class="fever-fill" id="feverFill" style="width: 0%"></div></div>
   <div class="fever-text" id="feverText">🔥 РЕЖИМ ЛИХОРАДКИ 🔥</div>
   <div class="poop-container"><div class="poop" id="poop" onclick="clickPoop(event)">💩</div></div>
+  <div class="ultra-hard-event" id="ultraHardEvent"></div>
   <div class="upgrade-panel" id="upgradePanel">
     <div class="upgrade-title">⚡ МАГАЗИН ⚡</div>
     <button class="chest-btn" id="chestBtn1" onclick="openChest(1)">📦 СУНДУК (10K)</button>
@@ -253,12 +264,11 @@
 <div id="versionModal" class="modal-overlay">
   <div class="modal-content">
     <button class="modal-close" onclick="closeVersionModal()">×</button>
-    <div class="panel-title" style="font-size:40px; text-align:center;">ВЕРСИЯ V0.7.13</div>
+    <div class="panel-title" style="font-size:40px; text-align:center;">ВЕРСИЯ V0.8.0</div>
     <div class="changelog-list" style="margin-top:25px;">
-      <div class="changelog-item">Добавлена кнопка сброса прогресса в главном меню.</div>
-      <div class="changelog-item">Механика перерождения: сброс очков и улучшений за бонус к множителю.</div>
-      <div class="changelog-item">Секретный скин и фон золотой какашки за все достижения золотых какашек.</div>
-      <div class="changelog-item">Новая редкость «Ультра-Мифическая» перед Ультра-Мифической +.</div>
+      <div class="changelog-item">Фоны структурированы по редкостям как и скины.</div>
+      <div class="changelog-item">Добавлен ультра сложный режим без бонусов с отдельными хардкорными достижениями.</div>
+      <div class="changelog-item">В ультра сложном режиме появляются ивенты с риском полного обнуления при провале.</div>
     </div>
   </div>
 </div>
@@ -288,12 +298,17 @@
   };
   const bgDatabase = {
     'bg_default': { name: 'Стандарт', rarity: 'common', css: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)', type: 'bg' },
+    'bg_light': { name: 'Светлый', rarity: 'common', css: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)', type: 'bg' },
     'bg_neon': { name: 'Неон', rarity: 'rare', css: 'linear-gradient(135deg, #0f0c29, #302b63, #24243e)', type: 'bg' },
-    'bg_fire': { name: 'Адское Пламя', rarity: 'epic', css: 'linear-gradient(135deg, #f12711, #f5af19)', type: 'bg' },
-    'bg_matrix': { name: 'Матрица', rarity: 'legendary', css: 'linear-gradient(135deg, #000000, #0f3d0f)', type: 'bg' },
-    'bg_cosmic': { name: 'Космическая Бездна', rarity: 'mythic', css: 'linear-gradient(135deg, #000428, #004e92)', type: 'bg' },
     'bg_sunset': { name: 'Закат', rarity: 'rare', css: 'linear-gradient(135deg, #ff512f, #dd2476)', type: 'bg' },
+    'bg_forest': { name: 'Лес', rarity: 'rare', css: 'linear-gradient(135deg, #134e5e, #71b280)', type: 'bg' },
+    'bg_fire': { name: 'Адское Пламя', rarity: 'epic', css: 'linear-gradient(135deg, #f12711, #f5af19)', type: 'bg' },
     'bg_ocean': { name: 'Океан', rarity: 'epic', css: 'linear-gradient(135deg, #2193b0, #6dd5ed)', type: 'bg' },
+    'bg_volcano': { name: 'Вулкан', rarity: 'epic', css: 'linear-gradient(135deg, #f12711, #f5af19)', type: 'bg' },
+    'bg_matrix': { name: 'Матрица', rarity: 'legendary', css: 'linear-gradient(135deg, #000000, #0f3d0f)', type: 'bg' },
+    'bg_dragon': { name: 'Дракон', rarity: 'legendary', css: 'linear-gradient(135deg, #ff4b1f, #ff9068)', type: 'bg' },
+    'bg_cosmic': { name: 'Космическая Бездна', rarity: 'mythic', css: 'linear-gradient(135deg, #000428, #004e92)', type: 'bg' },
+    'bg_phoenix': { name: 'Феникс', rarity: 'mythic', css: 'linear-gradient(135deg, #ff6a00, #ee0979)', type: 'bg' },
     'bg_galaxy': { name: 'Галактика', rarity: 'ultra_mythic', css: 'linear-gradient(135deg, #8E2DE2, #4A00E0)', type: 'bg' },
     'bg_emerald': { name: 'Изумрудный', rarity: 'ultra_mythic', css: 'linear-gradient(135deg, #11998e, #38ef7d)', type: 'bg' },
     'bg_omega': { name: 'Омега', rarity: 'ultra_mythic_plus', css: 'linear-gradient(135deg, #000000, #434343, #000000)', type: 'bg' },
@@ -320,6 +335,12 @@
     { id: 'all_bgs', icon: '🖼️', name: 'ВСЕ ФОНЫ!', desc: 'Собрать все доступные фоны' },
     { id: 'game_100', icon: '💯', name: '100% ПРОХОЖДЕНИЕ', desc: 'Получить все достижения в игре' }
   ];
+  const ultraAchievementsList = [
+    { id: 'uh_survive1', icon: '💀', name: 'ВЫЖИВШИЙ I', desc: 'Пережить 1 ультра ивент' },
+    { id: 'uh_survive5', icon: '💀', name: 'ВЫЖИВШИЙ II', desc: 'Пережить 5 ультра ивентов' },
+    { id: 'uh_clicks', icon: '💀', name: 'КЛИКЕР-ЭКСТРИМ', desc: 'Сделать 10,000 кликов в ультра режиме' },
+    { id: 'uh_score', icon: '💀', name: 'ЭКОНОМИКА ВЫЖИВАНИЯ', desc: 'Накопить 1,000,000 какашек в ультра режиме' }
+  ];
   const gameState = {
     score: 0, totalClicks: 0, clickPower: 1, perSecond: 0, multiplier: 1, critChance: 0.01,
     combo: 0, feverEnergy: 0, feverActive: false, feverTimer: 0, lastClickTime: 0,
@@ -338,8 +359,14 @@
       space: { count: 0, cost: 500000000, basePower: 150000, basePerSec: 60000, name: '🚀 КОСМОС', desc: 'Клик +150K' }
     },
     achievements: [],
+    ultraAchievements: [],
     rebirthCount: 0,
     rebirthMultiplier: 1,
+    ultraHardMode: false,
+    ultraHardEventTimer: 0,
+    ultraHardEventTarget: 0,
+    ultraHardEventType: null,
+    ultraHardEventsSurvived: 0,
     isRunning: false,
     goldenSpawnTimer: 15,
     bossSpawnTimer: 120,
@@ -360,7 +387,7 @@
 
   function updateRebirthButton() {
     const btn = document.getElementById('rebirthBtn');
-    btn.disabled = gameState.score < 1000000;
+    btn.disabled = gameState.score < 1000000 || gameState.ultraHardMode;
   }
 
   function saveGame() { localStorage.setItem('poopClickerSave', JSON.stringify(gameState)); }
@@ -380,8 +407,10 @@
         gameState.equippedSkin = parsed.equippedSkin || '💩';
         gameState.equippedBg = parsed.equippedBg || 'bg_default';
         gameState.achievements = parsed.achievements || [];
+        gameState.ultraAchievements = parsed.ultraAchievements || [];
         gameState.rebirthCount = parsed.rebirthCount || 0;
         gameState.rebirthMultiplier = parsed.rebirthMultiplier || 1;
+        gameState.ultraHardEventsSurvived = parsed.ultraHardEventsSurvived || 0;
         if (parsed.upgrades) {
           Object.keys(gameState.upgrades).forEach(key => {
             if (parsed.upgrades[key]) gameState.upgrades[key] = parsed.upgrades[key];
@@ -404,7 +433,7 @@
     if (confirm('Вы уверены, что хотите полностью сбросить прогресс? Это действие необратимо!')) {
       Object.keys(gameState.upgrades).forEach(key => {
         gameState.upgrades[key].count = 0;
-        gameState.upgrades[key].cost = gameState.upgrades[key].cost;
+        gameState.upgrades[key].cost = [15,100,500,2500,15000,100000,750000,5000000,50000000,500000000][Object.keys(gameState.upgrades).indexOf(key)];
       });
       gameState.score = 0;
       gameState.totalClicks = 0;
@@ -414,11 +443,13 @@
       gameState.critChance = 0.01;
       gameState.goldenPoopsCollected = 0;
       gameState.achievements = [];
+      gameState.ultraAchievements = [];
       gameState.unlockedItems = ['💩', 'bg_default'];
       gameState.equippedSkin = '💩';
       gameState.equippedBg = 'bg_default';
       gameState.rebirthCount = 0;
       gameState.rebirthMultiplier = 1;
+      gameState.ultraHardEventsSurvived = 0;
       saveGame();
       initMenuAchievements();
       updateMenuStats();
@@ -426,7 +457,7 @@
   }
 
   function rebirth() {
-    if (gameState.score < 1000000 || !gameState.isRunning) return;
+    if (gameState.score < 1000000 || !gameState.isRunning || gameState.ultraHardMode) return;
     gameState.rebirthCount++;
     gameState.rebirthMultiplier += 0.1;
     gameState.score = 0;
@@ -450,6 +481,52 @@
     }
   }
 
+  function ultraHardReset() {
+    gameState.score = 0;
+    gameState.clickPower = 1;
+    gameState.perSecond = 0;
+    gameState.multiplier = 1;
+    gameState.critChance = 0.01;
+    Object.keys(gameState.upgrades).forEach(key => {
+      gameState.upgrades[key].count = 0;
+      gameState.upgrades[key].cost = [15,100,500,2500,15000,100000,750000,5000000,50000000,500000000][Object.keys(gameState.upgrades).indexOf(key)];
+    });
+    buildUpgradeList();
+    showEventBanner('💀 ПРОВАЛ! ВСЁ ОБНУЛЕНО');
+    stopUltraHardEvent();
+    saveGame();
+  }
+
+  function startUltraHardEvent() {
+    const types = ['clicks', 'score'];
+    const type = types[Math.floor(Math.random() * types.length)];
+    let target;
+    if (type === 'clicks') {
+      target = Math.floor(100 + Math.random() * 200);
+    } else {
+      target = Math.floor(5000 + Math.random() * 20000);
+    }
+    gameState.ultraHardEventType = type;
+    gameState.ultraHardEventTarget = target;
+    gameState.ultraHardEventTimer = 30;
+    const eventDiv = document.getElementById('ultraHardEvent');
+    eventDiv.classList.add('active');
+    updateUltraHardEventDisplay();
+  }
+
+  function stopUltraHardEvent() {
+    gameState.ultraHardEventType = null;
+    gameState.ultraHardEventTimer = 0;
+    document.getElementById('ultraHardEvent').classList.remove('active');
+  }
+
+  function updateUltraHardEventDisplay() {
+    const eventDiv = document.getElementById('ultraHardEvent');
+    if (!gameState.ultraHardEventType) return;
+    const type = gameState.ultraHardEventType === 'clicks' ? 'кликов' : 'какашек';
+    eventDiv.innerHTML = `⚠️ ЗА ${Math.ceil(gameState.ultraHardEventTimer)} сек: ${gameState.ultraHardEventTarget} ${type} (${gameState.ultraHardEventType === 'clicks' ? gameState.totalClicks : gameState.score}/${gameState.ultraHardEventTarget})`;
+  }
+
   function returnToMenu() {
     gameState.isRunning = false;
     if (animationFrameId) { cancelAnimationFrame(animationFrameId); animationFrameId = null; }
@@ -467,11 +544,11 @@
     if (tab) tab.classList.add('active');
     if (event && event.currentTarget) event.currentTarget.classList.add('active');
     if (tabName === 'stats') updateMenuStats();
+    if (tabName === 'achievements') initMenuAchievements();
   }
 
   function initMenuAchievements() {
     const grid = document.getElementById('menuAchievementsGrid');
-    if (!grid) return;
     grid.innerHTML = '';
     allAchievementsList.forEach(ach => {
       const isUnlocked = gameState.achievements.includes(ach.id);
@@ -480,16 +557,31 @@
       card.innerHTML = `<div class="achievement-icon">${isUnlocked ? ach.icon : '❓'}</div><div class="achievement-info"><div class="achievement-name">${isUnlocked ? ach.name : '???'}</div><div class="achievement-desc">${isUnlocked ? ach.desc : `Условие: ${ach.desc}`}</div></div>`;
       grid.appendChild(card);
     });
+    const ultraSection = document.getElementById('ultraAchievementsSection');
+    const ultraGrid = document.getElementById('ultraAchievementsGrid');
+    if (gameState.ultraAchievements.length > 0 || gameState.ultraHardMode) {
+      ultraSection.style.display = 'block';
+      ultraGrid.innerHTML = '';
+      ultraAchievementsList.forEach(ach => {
+        const isUnlocked = gameState.ultraAchievements.includes(ach.id);
+        const card = document.createElement('div');
+        card.className = 'achievement-card' + (isUnlocked ? '' : ' locked');
+        card.innerHTML = `<div class="achievement-icon">${isUnlocked ? ach.icon : '❓'}</div><div class="achievement-info"><div class="achievement-name">${isUnlocked ? ach.name : '???'}</div><div class="achievement-desc">${isUnlocked ? ach.desc : `Условие: ${ach.desc}`}</div></div>`;
+        ultraGrid.appendChild(card);
+      });
+    } else {
+      ultraSection.style.display = 'none';
+    }
   }
 
   function updateMenuStats() {
-    const ultraMult = 1 + getUltraBonus() * gameState.rebirthMultiplier;
+    const ultraMult = gameState.ultraHardMode ? 1 : 1 + getUltraBonus() * gameState.rebirthMultiplier;
     document.getElementById('menuPerSecond').textContent = formatNumber(gameState.perSecond * ultraMult);
     document.getElementById('menuTotalClicks').textContent = formatNumber(gameState.totalClicks);
     document.getElementById('menuMultiplier').textContent = 'x' + (gameState.multiplier * ultraMult).toFixed(2);
     document.getElementById('menuCritChance').textContent = Math.floor(gameState.critChance * 100) + '%';
     document.getElementById('menuClickPower').textContent = formatNumber(gameState.clickPower * ultraMult);
-    const ultraBonus = getUltraBonus();
+    const ultraBonus = gameState.ultraHardMode ? 0 : getUltraBonus();
     const ultraStat = document.getElementById('menuUltraBonusStat');
     if (ultraBonus > 0) {
       ultraStat.style.display = 'flex';
@@ -598,6 +690,7 @@
   }
 
   function getUltraBonus(){
+    if (gameState.ultraHardMode) return 0;
     let bonus=0;
     gameState.unlockedItems.forEach(id=>{
       const item=skinDatabase[id];
@@ -616,11 +709,13 @@
     }
   }
 
-  function startGame(){
+  function startGame(ultraHard){
     document.getElementById('mainMenu').style.display='none';
     document.getElementById('gameScreen').style.display='block';
     audioCtx.resume(); initAudio();
     gameState.isRunning=true;
+    gameState.ultraHardMode = ultraHard;
+    document.getElementById('ultraHardIndicator').style.display = ultraHard ? 'block' : 'none';
     gameState.goldenSpawnTimer=15; gameState.bossSpawnTimer=120; gameState.randomEventTimer=45;
     buildUpgradeList(); updateVisuals(); updateChestButtons(); updateRebirthButton();
     if(animationFrameId) cancelAnimationFrame(animationFrameId);
@@ -702,9 +797,17 @@
     const isCritical=critRoll<gameState.critChance, isMega=critRoll<0.001;
     const comboMult=1+gameState.combo*0.05, feverMult=gameState.feverActive?10:1;
     const critMult=isMega?100:(isCritical?10:1);
-    const ultraMult=1+getUltraBonus();
+    const ultraMult = gameState.ultraHardMode ? 1 : (1+getUltraBonus());
     const points=Math.floor(gameState.clickPower*gameState.multiplier*comboMult*feverMult*critMult*ultraMult);
     gameState.score+=points; gameState.totalClicks++;
+    if (gameState.ultraHardMode && gameState.ultraHardEventType === 'clicks') {
+      if (gameState.totalClicks >= gameState.ultraHardEventTarget) {
+        gameState.ultraHardEventsSurvived++;
+        showEventBanner('✅ ИВЕНТ ПРОЙДЕН!');
+        stopUltraHardEvent();
+        checkUltraAchievements();
+      }
+    }
     const poop=document.getElementById('poop');
     poop.classList.add('clicked'); setTimeout(()=>poop.classList.remove('clicked'),150);
     if(isMega){
@@ -866,7 +969,7 @@
     document.body.appendChild(container);
     document.getElementById('bossPoop').onclick=(e)=>{
       e.stopPropagation();
-      const damage=gameState.clickPower*gameState.multiplier*5*(1+getUltraBonus());
+      const damage=gameState.clickPower*gameState.multiplier*5*(gameState.ultraHardMode?1:1+getUltraBonus());
       gameState.bossHP-=damage;
       createExplosion(e.clientX,e.clientY,15,'critical'); soundBank.bossHit();
       showFloatingText(e.clientX,e.clientY,`-${formatNumber(damage)}`,'critical');
@@ -905,12 +1008,30 @@
     {id:'game_100',cond:()=>allAchievementsList.filter(a=>a.id!=='game_100').every(a=>gameState.achievements.includes(a.id))}
   ];
 
+  const ultraAchievementCheckList = [
+    {id:'uh_survive1',cond:()=>gameState.ultraHardEventsSurvived>=1},
+    {id:'uh_survive5',cond:()=>gameState.ultraHardEventsSurvived>=5},
+    {id:'uh_clicks',cond:()=>gameState.totalClicks>=10000},
+    {id:'uh_score',cond:()=>gameState.score>=1000000}
+  ];
+
   function checkAchievements(){
     achievementCheckList.forEach(a=>{
       if(!gameState.achievements.includes(a.id)&&a.cond()){
         gameState.achievements.push(a.id);
         showAchievement(allAchievementsList.find(ach=>ach.id===a.id)?.name||a.id);
         soundBank.achievement(); saveGame(); unlockSecretItems();
+      }
+    });
+  }
+
+  function checkUltraAchievements(){
+    if (!gameState.ultraHardMode) return;
+    ultraAchievementCheckList.forEach(a=>{
+      if(!gameState.ultraAchievements.includes(a.id)&&a.cond()){
+        gameState.ultraAchievements.push(a.id);
+        showAchievement(ultraAchievementsList.find(ach=>ach.id===a.id)?.name||a.id);
+        soundBank.achievement(); saveGame();
       }
     });
   }
@@ -930,7 +1051,7 @@
   function gameLoop(timestamp){
     if(!gameState.isRunning) return;
     const dt=Math.min((timestamp-lastTime)/1000,0.1); lastTime=timestamp;
-    const ultraMult=1+getUltraBonus();
+    const ultraMult = gameState.ultraHardMode ? 1 : 1+getUltraBonus();
     scoreAccumulator+=gameState.perSecond*ultraMult*dt;
     if(scoreAccumulator>=1){ const add=Math.floor(scoreAccumulator); gameState.score+=add; scoreAccumulator-=add; }
     if(gameState.feverActive){ gameState.feverTimer-=dt; updateFeverBar(); if(gameState.feverTimer<=0) deactivateFever(); }
@@ -939,7 +1060,24 @@
     gameState.bossSpawnTimer-=dt;
     if(gameState.bossSpawnTimer<=0){ if(gameState.score>10000&&!gameState.bossActive&&Math.random()<0.5) spawnBoss(); gameState.bossSpawnTimer=120; }
     gameState.randomEventTimer-=dt;
-    if(gameState.randomEventTimer<=0){ if(Math.random()<0.3) triggerRandomEvent(); gameState.randomEventTimer=45; }
+    if(gameState.randomEventTimer<=0){
+      if(gameState.ultraHardMode && !gameState.ultraHardEventType && Math.random()<0.3) startUltraHardEvent();
+      else if(!gameState.ultraHardMode && Math.random()<0.3) triggerRandomEvent();
+      gameState.randomEventTimer=45;
+    }
+    if(gameState.ultraHardEventType) {
+      gameState.ultraHardEventTimer -= dt;
+      updateUltraHardEventDisplay();
+      if(gameState.ultraHardEventTimer <= 0) {
+        ultraHardReset();
+      }
+      if(gameState.ultraHardEventType === 'score' && gameState.score >= gameState.ultraHardEventTarget) {
+        gameState.ultraHardEventsSurvived++;
+        showEventBanner('✅ ИВЕНТ ПРОЙДЕН!');
+        stopUltraHardEvent();
+        checkUltraAchievements();
+      }
+    }
 
     for(let i=0;i<MAX_TEXTS;i++){
       const t=textPool[i]; if(!t.active) continue;
