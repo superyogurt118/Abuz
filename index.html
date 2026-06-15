@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>💩 КАКАШКИ КЛИКЕР (и не только какашек) V0.8.0 💩</title>
+  <title>💩 КАКАШКИ КЛИКЕР (и не только какашек) V0.8.1 💩</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fontsource/bangers@5.0.0/index.min.css">
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -195,7 +195,7 @@
 <body>
 <div id="mainMenu">
   <div class="menu-bg"></div>
-  <div class="version" onclick="openVersionModal()">V0.8.0</div>
+  <div class="version" onclick="openVersionModal()">V0.8.1</div>
   <div class="menu-header"><div class="menu-title">💩 КАКАШКИ КЛИКЕР (и не только какашек) 💩</div><div class="menu-subtitle">БЕЗУМНОЕ ИЗДАНИЕ</div></div>
   <div class="menu-container">
     <div class="menu-nav">
@@ -211,10 +211,6 @@
     <div id="tab-achievements" class="menu-panel">
       <div class="panel-title" style="font-size:48px; color:#FFD700; text-align:center; margin-bottom:25px;">🏆 ДОСТИЖЕНИЯ 🏆</div>
       <div class="achievements-grid" id="menuAchievementsGrid"></div>
-      <div id="ultraAchievementsSection" style="display:none;">
-        <div class="panel-title" style="font-size:36px; color:#ff5555; text-align:center; margin:25px 0;">💀 ХАРДКОРНЫЕ ДОСТИЖЕНИЯ 💀</div>
-        <div class="achievements-grid" id="ultraAchievementsGrid"></div>
-      </div>
     </div>
     <div id="tab-stats" class="menu-panel">
       <div class="panel-title" style="font-size:48px; color:#FFD700; text-align:center; margin-bottom:25px;">📊 СТАТИСТИКА 📊</div>
@@ -264,864 +260,843 @@
 <div id="versionModal" class="modal-overlay">
   <div class="modal-content">
     <button class="modal-close" onclick="closeVersionModal()">×</button>
-    <div class="panel-title" style="font-size:40px; text-align:center;">ВЕРСИЯ V0.8.0</div>
+    <div class="panel-title" style="font-size:40px; text-align:center;">ВЕРСИЯ V0.8.1</div>
     <div class="changelog-list" style="margin-top:25px;">
-      <div class="changelog-item">Фоны структурированы по редкостям как и скины.</div>
-      <div class="changelog-item">Добавлен ультра сложный режим без бонусов с отдельными хардкорными достижениями.</div>
-      <div class="changelog-item">В ультра сложном режиме появляются ивенты с риском полного обнуления при провале.</div>
+      <div class="changelog-item">Ультра-сложный режим теперь полностью изолирован: начинается с нуля, без бонусов и лихорадки, без сохранения прогресса.</div>
     </div>
   </div>
 </div>
 
 <script>
-  const skinDatabase = {
-    '💩': { name: 'Классика', rarity: 'common', icon: '💩', type: 'skin' },
-    '🤎': { name: 'Шоколадка', rarity: 'common', icon: '🤎', type: 'skin' },
-    '🍫': { name: 'Плитка', rarity: 'common', icon: '🍫', type: 'skin' },
-    '🧊': { name: 'Лёд', rarity: 'rare', icon: '🧊', type: 'skin' },
-    '🪨': { name: 'Камень', rarity: 'rare', icon: '🪨', type: 'skin' },
-    '🥥': { name: 'Кокос', rarity: 'rare', icon: '🥥', type: 'skin' },
-    '🔥': { name: 'Огонь', rarity: 'epic', icon: '🔥', type: 'skin' },
-    '🧀': { name: 'Сыр', rarity: 'epic', icon: '🧀', type: 'skin' },
-    '🍩': { name: 'Пончик', rarity: 'epic', icon: '🍩', type: 'skin' },
-    '💎': { name: 'Алмаз', rarity: 'legendary', icon: '💎', type: 'skin' },
-    '👽': { name: 'Пришелец', rarity: 'legendary', icon: '👽', type: 'skin' },
-    '🤖': { name: 'Робот', rarity: 'legendary', icon: '🤖', type: 'skin' },
-    '🌈': { name: 'Радуга', rarity: 'mythic', icon: '🌈', type: 'skin' },
-    '👑': { name: 'Корона', rarity: 'mythic', icon: '👑', type: 'skin' },
-    '🪐': { name: 'Сверхновая', rarity: 'mythic', icon: '🪐', type: 'skin' },
-    '💠': { name: 'Кристалл', rarity: 'ultra_mythic', icon: '💠', type: 'skin' },
-    '🕳️': { name: 'Тёмная материя', rarity: 'ultra_mythic', icon: '🕳️', type: 'skin' },
-    '👁️': { name: 'Всевидящее Око', rarity: 'ultra_mythic_plus', icon: '👁️', type: 'skin', bonus: 0.10 },
-    '🌟': { name: 'Абсолют', rarity: 'ultra_mythic_plus', icon: '🌟', type: 'skin', bonus: 0.15 },
-    '🏅': { name: 'Золотая какашка', rarity: 'ultra_mythic_plus', icon: '🏅', type: 'skin', bonus: 0.20, secret: true }
-  };
-  const bgDatabase = {
-    'bg_default': { name: 'Стандарт', rarity: 'common', css: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)', type: 'bg' },
-    'bg_light': { name: 'Светлый', rarity: 'common', css: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)', type: 'bg' },
-    'bg_neon': { name: 'Неон', rarity: 'rare', css: 'linear-gradient(135deg, #0f0c29, #302b63, #24243e)', type: 'bg' },
-    'bg_sunset': { name: 'Закат', rarity: 'rare', css: 'linear-gradient(135deg, #ff512f, #dd2476)', type: 'bg' },
-    'bg_forest': { name: 'Лес', rarity: 'rare', css: 'linear-gradient(135deg, #134e5e, #71b280)', type: 'bg' },
-    'bg_fire': { name: 'Адское Пламя', rarity: 'epic', css: 'linear-gradient(135deg, #f12711, #f5af19)', type: 'bg' },
-    'bg_ocean': { name: 'Океан', rarity: 'epic', css: 'linear-gradient(135deg, #2193b0, #6dd5ed)', type: 'bg' },
-    'bg_volcano': { name: 'Вулкан', rarity: 'epic', css: 'linear-gradient(135deg, #f12711, #f5af19)', type: 'bg' },
-    'bg_matrix': { name: 'Матрица', rarity: 'legendary', css: 'linear-gradient(135deg, #000000, #0f3d0f)', type: 'bg' },
-    'bg_dragon': { name: 'Дракон', rarity: 'legendary', css: 'linear-gradient(135deg, #ff4b1f, #ff9068)', type: 'bg' },
-    'bg_cosmic': { name: 'Космическая Бездна', rarity: 'mythic', css: 'linear-gradient(135deg, #000428, #004e92)', type: 'bg' },
-    'bg_phoenix': { name: 'Феникс', rarity: 'mythic', css: 'linear-gradient(135deg, #ff6a00, #ee0979)', type: 'bg' },
-    'bg_galaxy': { name: 'Галактика', rarity: 'ultra_mythic', css: 'linear-gradient(135deg, #8E2DE2, #4A00E0)', type: 'bg' },
-    'bg_emerald': { name: 'Изумрудный', rarity: 'ultra_mythic', css: 'linear-gradient(135deg, #11998e, #38ef7d)', type: 'bg' },
-    'bg_omega': { name: 'Омега', rarity: 'ultra_mythic_plus', css: 'linear-gradient(135deg, #000000, #434343, #000000)', type: 'bg' },
-    'bg_divine': { name: 'Божественный', rarity: 'ultra_mythic_plus', css: 'linear-gradient(135deg, #FFD700, #FFA500, #FFD700)', type: 'bg' },
-    'bg_golden': { name: 'Золотой фон', rarity: 'ultra_mythic_plus', css: 'linear-gradient(135deg, #FFD700, #FFA500, #FFD700, #FFF8DC)', type: 'bg', secret: true }
-  };
-  const allAchievementsList = [
-    { id: 'c10', icon: '🏆', name: '10 КЛИКОВ!', desc: 'Сделать 10 кликов' },
-    { id: 'c100', icon: '🏆', name: '100 КЛИКОВ!', desc: 'Сделать 100 кликов' },
-    { id: 'c1000', icon: '🏆', name: '1000 КЛИКОВ!', desc: 'Сделать 1000 кликов' },
-    { id: 'c10000', icon: '🏆', name: '10K КЛИКОВ!', desc: 'Сделать 10,000 кликов' },
-    { id: 's1k', icon: '💩', name: '1K КАКАШЕК!', desc: 'Накопить 1,000 какашек' },
-    { id: 's10k', icon: '💩', name: '10K КАКАШЕК!', desc: 'Накопить 10,000 какашек' },
-    { id: 's100k', icon: '💩', name: '100K!', desc: 'Накопить 100,000 какашек' },
-    { id: 's1m', icon: '💰', name: 'МИЛЛИОНЕР!', desc: 'Накопить 1,000,000 какашек' },
-    { id: 's1b', icon: '💎', name: 'МИЛЛИАРДЕР!', desc: 'Накопить 1,000,000,000 какашек' },
-    { id: 'combo20', icon: '🔥', name: 'КОМБО 20!', desc: 'Достичь комбо x20' },
-    { id: 'combo50', icon: '🔥', name: 'КОМБО 50!', desc: 'Достичь комбо x50' },
-    { id: 'combo100', icon: '🔥', name: 'КОМБО 100!', desc: 'Достичь комбо x100' },
-    { id: 'gold5', icon: '👑', name: '5 ЗОЛОТЫХ!', desc: 'Собрать 5 золотых какашек' },
-    { id: 'gold20', icon: '👑', name: '20 ЗОЛОТЫХ!', desc: 'Собрать 20 золотых какашек' },
-    { id: 'fever', icon: '🌋', name: 'ЛИХОРАДКА!', desc: 'Войти в режим лихорадки' },
-    { id: 'all_skins', icon: '🎨', name: 'ВСЕ СКИНЫ!', desc: 'Собрать все доступные скины' },
-    { id: 'all_bgs', icon: '🖼️', name: 'ВСЕ ФОНЫ!', desc: 'Собрать все доступные фоны' },
-    { id: 'game_100', icon: '💯', name: '100% ПРОХОЖДЕНИЕ', desc: 'Получить все достижения в игре' }
-  ];
-  const ultraAchievementsList = [
-    { id: 'uh_survive1', icon: '💀', name: 'ВЫЖИВШИЙ I', desc: 'Пережить 1 ультра ивент' },
-    { id: 'uh_survive5', icon: '💀', name: 'ВЫЖИВШИЙ II', desc: 'Пережить 5 ультра ивентов' },
-    { id: 'uh_clicks', icon: '💀', name: 'КЛИКЕР-ЭКСТРИМ', desc: 'Сделать 10,000 кликов в ультра режиме' },
-    { id: 'uh_score', icon: '💀', name: 'ЭКОНОМИКА ВЫЖИВАНИЯ', desc: 'Накопить 1,000,000 какашек в ультра режиме' }
-  ];
-  const gameState = {
-    score: 0, totalClicks: 0, clickPower: 1, perSecond: 0, multiplier: 1, critChance: 0.01,
-    combo: 0, feverEnergy: 0, feverActive: false, feverTimer: 0, lastClickTime: 0,
-    bossActive: false, bossHP: 0, bossMaxHP: 0, goldenPoopsCollected: 0,
-    unlockedItems: ['💩', 'bg_default'], equippedSkin: '💩', equippedBg: 'bg_default',
-    upgrades: {
-      finger: { count: 0, cost: 15, basePower: 1, basePerSec: 0.1, name: '💪 ПАЛЕЦ', desc: 'Клик +1' },
-      glove: { count: 0, cost: 100, basePower: 3, basePerSec: 0.5, name: '🧤 ПЕРЧАТКА', desc: 'Клик +3' },
-      toilet: { count: 0, cost: 500, basePower: 10, basePerSec: 3, name: '🚽 ТУАЛЕТ', desc: 'Клик +10' },
-      plunger: { count: 0, cost: 2500, basePower: 30, basePerSec: 10, name: '🪠 ВАНТУЗ', desc: 'Клик +30' },
-      sewer: { count: 0, cost: 15000, basePower: 100, basePerSec: 40, name: '🕳️ КАНАЛИЗАЦИЯ', desc: 'Клик +100' },
-      farm: { count: 0, cost: 100000, basePower: 400, basePerSec: 150, name: '🚜 ФЕРМА', desc: 'Клик +400' },
-      factory: { count: 0, cost: 750000, basePower: 1500, basePerSec: 600, name: '🏭 ФАБРИКА', desc: 'Клик +1500' },
-      lab: { count: 0, cost: 5000000, basePower: 6000, basePerSec: 2500, name: '🧪 ЛАБОРАТОРИЯ', desc: 'Клик +6000' },
-      portal: { count: 0, cost: 50000000, basePower: 30000, basePerSec: 12000, name: '🌀 ПОРТАЛ', desc: 'Клик +30K' },
-      space: { count: 0, cost: 500000000, basePower: 150000, basePerSec: 60000, name: '🚀 КОСМОС', desc: 'Клик +150K' }
-    },
-    achievements: [],
-    ultraAchievements: [],
-    rebirthCount: 0,
-    rebirthMultiplier: 1,
-    ultraHardMode: false,
-    ultraHardEventTimer: 0,
-    ultraHardEventTarget: 0,
-    ultraHardEventType: null,
-    ultraHardEventsSurvived: 0,
-    isRunning: false,
-    goldenSpawnTimer: 15,
-    bossSpawnTimer: 120,
-    randomEventTimer: 45
-  };
+  (function() {
+    // Базы данных остаются прежними
+    const skinDatabase = {
+      '💩': { name: 'Классика', rarity: 'common', icon: '💩', type: 'skin' },
+      '🤎': { name: 'Шоколадка', rarity: 'common', icon: '🤎', type: 'skin' },
+      '🍫': { name: 'Плитка', rarity: 'common', icon: '🍫', type: 'skin' },
+      '🧊': { name: 'Лёд', rarity: 'rare', icon: '🧊', type: 'skin' },
+      '🪨': { name: 'Камень', rarity: 'rare', icon: '🪨', type: 'skin' },
+      '🥥': { name: 'Кокос', rarity: 'rare', icon: '🥥', type: 'skin' },
+      '🔥': { name: 'Огонь', rarity: 'epic', icon: '🔥', type: 'skin' },
+      '🧀': { name: 'Сыр', rarity: 'epic', icon: '🧀', type: 'skin' },
+      '🍩': { name: 'Пончик', rarity: 'epic', icon: '🍩', type: 'skin' },
+      '💎': { name: 'Алмаз', rarity: 'legendary', icon: '💎', type: 'skin' },
+      '👽': { name: 'Пришелец', rarity: 'legendary', icon: '👽', type: 'skin' },
+      '🤖': { name: 'Робот', rarity: 'legendary', icon: '🤖', type: 'skin' },
+      '🌈': { name: 'Радуга', rarity: 'mythic', icon: '🌈', type: 'skin' },
+      '👑': { name: 'Корона', rarity: 'mythic', icon: '👑', type: 'skin' },
+      '🪐': { name: 'Сверхновая', rarity: 'mythic', icon: '🪐', type: 'skin' },
+      '💠': { name: 'Кристалл', rarity: 'ultra_mythic', icon: '💠', type: 'skin' },
+      '🕳️': { name: 'Тёмная материя', rarity: 'ultra_mythic', icon: '🕳️', type: 'skin' },
+      '👁️': { name: 'Всевидящее Око', rarity: 'ultra_mythic_plus', icon: '👁️', type: 'skin', bonus: 0.10 },
+      '🌟': { name: 'Абсолют', rarity: 'ultra_mythic_plus', icon: '🌟', type: 'skin', bonus: 0.15 },
+      '🏅': { name: 'Золотая какашка', rarity: 'ultra_mythic_plus', icon: '🏅', type: 'skin', bonus: 0.20, secret: true }
+    };
+    const bgDatabase = {
+      'bg_default': { name: 'Стандарт', rarity: 'common', css: 'linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%)', type: 'bg' },
+      'bg_light': { name: 'Светлый', rarity: 'common', css: 'linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%)', type: 'bg' },
+      'bg_neon': { name: 'Неон', rarity: 'rare', css: 'linear-gradient(135deg, #0f0c29, #302b63, #24243e)', type: 'bg' },
+      'bg_sunset': { name: 'Закат', rarity: 'rare', css: 'linear-gradient(135deg, #ff512f, #dd2476)', type: 'bg' },
+      'bg_forest': { name: 'Лес', rarity: 'rare', css: 'linear-gradient(135deg, #134e5e, #71b280)', type: 'bg' },
+      'bg_fire': { name: 'Адское Пламя', rarity: 'epic', css: 'linear-gradient(135deg, #f12711, #f5af19)', type: 'bg' },
+      'bg_ocean': { name: 'Океан', rarity: 'epic', css: 'linear-gradient(135deg, #2193b0, #6dd5ed)', type: 'bg' },
+      'bg_volcano': { name: 'Вулкан', rarity: 'epic', css: 'linear-gradient(135deg, #f12711, #f5af19)', type: 'bg' },
+      'bg_matrix': { name: 'Матрица', rarity: 'legendary', css: 'linear-gradient(135deg, #000000, #0f3d0f)', type: 'bg' },
+      'bg_dragon': { name: 'Дракон', rarity: 'legendary', css: 'linear-gradient(135deg, #ff4b1f, #ff9068)', type: 'bg' },
+      'bg_cosmic': { name: 'Космическая Бездна', rarity: 'mythic', css: 'linear-gradient(135deg, #000428, #004e92)', type: 'bg' },
+      'bg_phoenix': { name: 'Феникс', rarity: 'mythic', css: 'linear-gradient(135deg, #ff6a00, #ee0979)', type: 'bg' },
+      'bg_galaxy': { name: 'Галактика', rarity: 'ultra_mythic', css: 'linear-gradient(135deg, #8E2DE2, #4A00E0)', type: 'bg' },
+      'bg_emerald': { name: 'Изумрудный', rarity: 'ultra_mythic', css: 'linear-gradient(135deg, #11998e, #38ef7d)', type: 'bg' },
+      'bg_omega': { name: 'Омега', rarity: 'ultra_mythic_plus', css: 'linear-gradient(135deg, #000000, #434343, #000000)', type: 'bg' },
+      'bg_divine': { name: 'Божественный', rarity: 'ultra_mythic_plus', css: 'linear-gradient(135deg, #FFD700, #FFA500, #FFD700)', type: 'bg' },
+      'bg_golden': { name: 'Золотой фон', rarity: 'ultra_mythic_plus', css: 'linear-gradient(135deg, #FFD700, #FFA500, #FFD700, #FFF8DC)', type: 'bg', secret: true }
+    };
+    const allAchievementsList = [
+      { id: 'c10', icon: '🏆', name: '10 КЛИКОВ!', desc: 'Сделать 10 кликов' },
+      { id: 'c100', icon: '🏆', name: '100 КЛИКОВ!', desc: 'Сделать 100 кликов' },
+      { id: 'c1000', icon: '🏆', name: '1000 КЛИКОВ!', desc: 'Сделать 1000 кликов' },
+      { id: 'c10000', icon: '🏆', name: '10K КЛИКОВ!', desc: 'Сделать 10,000 кликов' },
+      { id: 's1k', icon: '💩', name: '1K КАКАШЕК!', desc: 'Накопить 1,000 какашек' },
+      { id: 's10k', icon: '💩', name: '10K КАКАШЕК!', desc: 'Накопить 10,000 какашек' },
+      { id: 's100k', icon: '💩', name: '100K!', desc: 'Накопить 100,000 какашек' },
+      { id: 's1m', icon: '💰', name: 'МИЛЛИОНЕР!', desc: 'Накопить 1,000,000 какашек' },
+      { id: 's1b', icon: '💎', name: 'МИЛЛИАРДЕР!', desc: 'Накопить 1,000,000,000 какашек' },
+      { id: 'combo20', icon: '🔥', name: 'КОМБО 20!', desc: 'Достичь комбо x20' },
+      { id: 'combo50', icon: '🔥', name: 'КОМБО 50!', desc: 'Достичь комбо x50' },
+      { id: 'combo100', icon: '🔥', name: 'КОМБО 100!', desc: 'Достичь комбо x100' },
+      { id: 'gold5', icon: '👑', name: '5 ЗОЛОТЫХ!', desc: 'Собрать 5 золотых какашек' },
+      { id: 'gold20', icon: '👑', name: '20 ЗОЛОТЫХ!', desc: 'Собрать 20 золотых какашек' },
+      { id: 'fever', icon: '🌋', name: 'ЛИХОРАДКА!', desc: 'Войти в режим лихорадки' },
+      { id: 'all_skins', icon: '🎨', name: 'ВСЕ СКИНЫ!', desc: 'Собрать все доступные скины' },
+      { id: 'all_bgs', icon: '🖼️', name: 'ВСЕ ФОНЫ!', desc: 'Собрать все доступные фоны' },
+      { id: 'game_100', icon: '💯', name: '100% ПРОХОЖДЕНИЕ', desc: 'Получить все достижения в игре' }
+    ];
 
-  function areAllCosmeticsUnlocked() {
-    return Object.keys(skinDatabase).every(id => gameState.unlockedItems.includes(id)) &&
-           Object.keys(bgDatabase).every(id => gameState.unlockedItems.includes(id));
-  }
-
-  function updateChestButtons() {
-    const allUnlocked = areAllCosmeticsUnlocked();
-    document.getElementById('chestBtn1').disabled = allUnlocked;
-    document.getElementById('chestBtn10').disabled = allUnlocked;
-    document.getElementById('chestBtnAll').disabled = allUnlocked;
-  }
-
-  function updateRebirthButton() {
-    const btn = document.getElementById('rebirthBtn');
-    btn.disabled = gameState.score < 1000000 || gameState.ultraHardMode;
-  }
-
-  function saveGame() { localStorage.setItem('poopClickerSave', JSON.stringify(gameState)); }
-  function loadGame() {
-    const saved = localStorage.getItem('poopClickerSave');
-    if (saved) {
-      try {
-        const parsed = JSON.parse(saved);
-        gameState.score = parsed.score || 0;
-        gameState.totalClicks = parsed.totalClicks || 0;
-        gameState.clickPower = parsed.clickPower || 1;
-        gameState.perSecond = parsed.perSecond || 0;
-        gameState.multiplier = parsed.multiplier || 1;
-        gameState.critChance = parsed.critChance || 0.01;
-        gameState.goldenPoopsCollected = parsed.goldenPoopsCollected || 0;
-        gameState.unlockedItems = parsed.unlockedItems || ['💩', 'bg_default'];
-        gameState.equippedSkin = parsed.equippedSkin || '💩';
-        gameState.equippedBg = parsed.equippedBg || 'bg_default';
-        gameState.achievements = parsed.achievements || [];
-        gameState.ultraAchievements = parsed.ultraAchievements || [];
-        gameState.rebirthCount = parsed.rebirthCount || 0;
-        gameState.rebirthMultiplier = parsed.rebirthMultiplier || 1;
-        gameState.ultraHardEventsSurvived = parsed.ultraHardEventsSurvived || 0;
-        if (parsed.upgrades) {
-          Object.keys(gameState.upgrades).forEach(key => {
-            if (parsed.upgrades[key]) gameState.upgrades[key] = parsed.upgrades[key];
-          });
-        }
-        unlockSecretItems();
-      } catch (e) { console.log('Ошибка загрузки сохранения'); }
+    // Базовый стейт
+    function createDefaultGameState() {
+      return {
+        score: 0, totalClicks: 0, clickPower: 1, perSecond: 0, multiplier: 1, critChance: 0.01,
+        combo: 0, feverEnergy: 0, feverActive: false, feverTimer: 0, lastClickTime: 0,
+        bossActive: false, bossHP: 0, bossMaxHP: 0, goldenPoopsCollected: 0,
+        unlockedItems: ['💩', 'bg_default'], equippedSkin: '💩', equippedBg: 'bg_default',
+        upgrades: {
+          finger: { count: 0, cost: 15, basePower: 1, basePerSec: 0.1, name: '💪 ПАЛЕЦ', desc: 'Клик +1' },
+          glove: { count: 0, cost: 100, basePower: 3, basePerSec: 0.5, name: '🧤 ПЕРЧАТКА', desc: 'Клик +3' },
+          toilet: { count: 0, cost: 500, basePower: 10, basePerSec: 3, name: '🚽 ТУАЛЕТ', desc: 'Клик +10' },
+          plunger: { count: 0, cost: 2500, basePower: 30, basePerSec: 10, name: '🪠 ВАНТУЗ', desc: 'Клик +30' },
+          sewer: { count: 0, cost: 15000, basePower: 100, basePerSec: 40, name: '🕳️ КАНАЛИЗАЦИЯ', desc: 'Клик +100' },
+          farm: { count: 0, cost: 100000, basePower: 400, basePerSec: 150, name: '🚜 ФЕРМА', desc: 'Клик +400' },
+          factory: { count: 0, cost: 750000, basePower: 1500, basePerSec: 600, name: '🏭 ФАБРИКА', desc: 'Клик +1500' },
+          lab: { count: 0, cost: 5000000, basePower: 6000, basePerSec: 2500, name: '🧪 ЛАБОРАТОРИЯ', desc: 'Клик +6000' },
+          portal: { count: 0, cost: 50000000, basePower: 30000, basePerSec: 12000, name: '🌀 ПОРТАЛ', desc: 'Клик +30K' },
+          space: { count: 0, cost: 500000000, basePower: 150000, basePerSec: 60000, name: '🚀 КОСМОС', desc: 'Клик +150K' }
+        },
+        achievements: [],
+        ultraAchievements: [],
+        rebirthCount: 0,
+        rebirthMultiplier: 1,
+        ultraHardMode: false,
+        ultraHardEventTimer: 0,
+        ultraHardEventTarget: 0,
+        ultraHardEventType: null,
+        ultraHardEventsSurvived: 0,
+        isRunning: false,
+        goldenSpawnTimer: 15,
+        bossSpawnTimer: 120,
+        randomEventTimer: 45
+      };
     }
-  }
-  loadGame();
-  initMenuAchievements();
-  setInterval(saveGame, 5000);
 
-  let currentCustomTab = 'skins';
-  let animationFrameId = null;
-  let lastTime = 0;
-  let scoreAccumulator = 0;
+    let gameState = createDefaultGameState();   // основной прогресс
+    let activeGameState = gameState;            // текущий активный стейт
 
-  function resetProgress() {
-    if (confirm('Вы уверены, что хотите полностью сбросить прогресс? Это действие необратимо!')) {
-      Object.keys(gameState.upgrades).forEach(key => {
-        gameState.upgrades[key].count = 0;
-        gameState.upgrades[key].cost = [15,100,500,2500,15000,100000,750000,5000000,50000000,500000000][Object.keys(gameState.upgrades).indexOf(key)];
-      });
+    // Сохранение/загрузка основного прогресса
+    function saveGame() {
+      if (activeGameState === gameState && !gameState.ultraHardMode) {
+        localStorage.setItem('poopClickerSave', JSON.stringify(gameState));
+      }
+    }
+    function loadGame() {
+      const saved = localStorage.getItem('poopClickerSave');
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+          Object.assign(gameState, parsed);
+          if (parsed.upgrades) {
+            Object.keys(gameState.upgrades).forEach(key => {
+              if (parsed.upgrades[key]) gameState.upgrades[key] = parsed.upgrades[key];
+            });
+          }
+          unlockSecretItems();
+        } catch (e) { console.log('Ошибка загрузки сохранения'); }
+      }
+    }
+    loadGame();
+    initMenuAchievements();
+    setInterval(() => { if (activeGameState === gameState && !gameState.ultraHardMode) saveGame(); }, 5000);
+
+    let currentCustomTab = 'skins';
+    let animationFrameId = null;
+    let lastTime = 0;
+    let scoreAccumulator = 0;
+
+    function resetProgress() {
+      if (confirm('Вы уверены, что хотите полностью сбросить прогресс? Это действие необратимо!')) {
+        gameState = createDefaultGameState();
+        activeGameState = gameState;
+        saveGame();
+        initMenuAchievements();
+        updateMenuStats();
+      }
+    }
+
+    function rebirth() {
+      if (activeGameState !== gameState || gameState.ultraHardMode || gameState.score < 1000000 || !gameState.isRunning) return;
+      gameState.rebirthCount++;
+      gameState.rebirthMultiplier += 0.1;
       gameState.score = 0;
-      gameState.totalClicks = 0;
       gameState.clickPower = 1;
       gameState.perSecond = 0;
       gameState.multiplier = 1;
       gameState.critChance = 0.01;
-      gameState.goldenPoopsCollected = 0;
-      gameState.achievements = [];
-      gameState.ultraAchievements = [];
-      gameState.unlockedItems = ['💩', 'bg_default'];
-      gameState.equippedSkin = '💩';
-      gameState.equippedBg = 'bg_default';
-      gameState.rebirthCount = 0;
-      gameState.rebirthMultiplier = 1;
-      gameState.ultraHardEventsSurvived = 0;
+      Object.keys(gameState.upgrades).forEach(key => {
+        gameState.upgrades[key].count = 0;
+        gameState.upgrades[key].cost = [15,100,500,2500,15000,100000,750000,5000000,50000000,500000000][Object.keys(gameState.upgrades).indexOf(key)];
+      });
+      buildUpgradeList();
+      showEventBanner('🌀 ПЕРЕРОЖДЕНИЕ! МНОЖИТЕЛЬ +0.1');
       saveGame();
+    }
+
+    function unlockSecretItems() {
+      if (gameState.achievements.includes('gold5') && gameState.achievements.includes('gold20')) {
+        if (!gameState.unlockedItems.includes('🏅')) gameState.unlockedItems.push('🏅');
+        if (!gameState.unlockedItems.includes('bg_golden')) gameState.unlockedItems.push('bg_golden');
+      }
+    }
+
+    // Ультра-режим сброс
+    function ultraHardReset() {
+      activeGameState.score = 0;
+      activeGameState.clickPower = 1;
+      activeGameState.perSecond = 0;
+      activeGameState.multiplier = 1;
+      activeGameState.critChance = 0.01;
+      Object.keys(activeGameState.upgrades).forEach(key => {
+        activeGameState.upgrades[key].count = 0;
+        activeGameState.upgrades[key].cost = [15,100,500,2500,15000,100000,750000,5000000,50000000,500000000][Object.keys(activeGameState.upgrades).indexOf(key)];
+      });
+      buildUpgradeList();
+      showEventBanner('💀 ПРОВАЛ! ВСЁ ОБНУЛЕНО');
+      stopUltraHardEvent();
+    }
+
+    function startUltraHardEvent() {
+      const types = ['clicks', 'score'];
+      const type = types[Math.floor(Math.random() * types.length)];
+      let target;
+      if (type === 'clicks') {
+        target = Math.floor(100 + Math.random() * 200);
+      } else {
+        target = Math.floor(5000 + Math.random() * 20000);
+      }
+      activeGameState.ultraHardEventType = type;
+      activeGameState.ultraHardEventTarget = target;
+      activeGameState.ultraHardEventTimer = 30;
+      document.getElementById('ultraHardEvent').classList.add('active');
+      updateUltraHardEventDisplay();
+    }
+
+    function stopUltraHardEvent() {
+      activeGameState.ultraHardEventType = null;
+      activeGameState.ultraHardEventTimer = 0;
+      document.getElementById('ultraHardEvent').classList.remove('active');
+    }
+
+    function updateUltraHardEventDisplay() {
+      const eventDiv = document.getElementById('ultraHardEvent');
+      if (!activeGameState.ultraHardEventType) return;
+      const type = activeGameState.ultraHardEventType === 'clicks' ? 'кликов' : 'какашек';
+      eventDiv.innerHTML = `⚠️ ЗА ${Math.ceil(activeGameState.ultraHardEventTimer)} сек: ${activeGameState.ultraHardEventTarget} ${type} (${activeGameState.ultraHardEventType === 'clicks' ? activeGameState.totalClicks : activeGameState.score}/${activeGameState.ultraHardEventTarget})`;
+    }
+
+    function returnToMenu() {
+      if (activeGameState !== gameState) {
+        // Ультра-режим: просто забываем временный стейт
+        activeGameState.isRunning = false;
+      } else {
+        gameState.isRunning = false;
+        saveGame();
+      }
+      if (animationFrameId) { cancelAnimationFrame(animationFrameId); animationFrameId = null; }
+      document.getElementById('gameScreen').style.display = 'none';
+      document.getElementById('mainMenu').style.display = 'block';
+      activeGameState = gameState;  // возвращаем основной стейт
       initMenuAchievements();
       updateMenuStats();
     }
-  }
 
-  function rebirth() {
-    if (gameState.score < 1000000 || !gameState.isRunning || gameState.ultraHardMode) return;
-    gameState.rebirthCount++;
-    gameState.rebirthMultiplier += 0.1;
-    gameState.score = 0;
-    gameState.clickPower = 1;
-    gameState.perSecond = 0;
-    gameState.multiplier = 1;
-    gameState.critChance = 0.01;
-    Object.keys(gameState.upgrades).forEach(key => {
-      gameState.upgrades[key].count = 0;
-      gameState.upgrades[key].cost = [15,100,500,2500,15000,100000,750000,5000000,50000000,500000000][Object.keys(gameState.upgrades).indexOf(key)];
-    });
-    buildUpgradeList();
-    showEventBanner('🌀 ПЕРЕРОЖДЕНИЕ! МНОЖИТЕЛЬ +0.1');
-    saveGame();
-  }
-
-  function unlockSecretItems() {
-    if (gameState.achievements.includes('gold5') && gameState.achievements.includes('gold20')) {
-      if (!gameState.unlockedItems.includes('🏅')) gameState.unlockedItems.push('🏅');
-      if (!gameState.unlockedItems.includes('bg_golden')) gameState.unlockedItems.push('bg_golden');
+    function showMenuTab(tabName, event) {
+      document.querySelectorAll('.menu-panel').forEach(p => p.classList.remove('active'));
+      document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+      const tab = document.getElementById('tab-' + tabName);
+      if (tab) tab.classList.add('active');
+      if (event && event.currentTarget) event.currentTarget.classList.add('active');
+      if (tabName === 'stats') updateMenuStats();
+      if (tabName === 'achievements') initMenuAchievements();
     }
-  }
 
-  function ultraHardReset() {
-    gameState.score = 0;
-    gameState.clickPower = 1;
-    gameState.perSecond = 0;
-    gameState.multiplier = 1;
-    gameState.critChance = 0.01;
-    Object.keys(gameState.upgrades).forEach(key => {
-      gameState.upgrades[key].count = 0;
-      gameState.upgrades[key].cost = [15,100,500,2500,15000,100000,750000,5000000,50000000,500000000][Object.keys(gameState.upgrades).indexOf(key)];
-    });
-    buildUpgradeList();
-    showEventBanner('💀 ПРОВАЛ! ВСЁ ОБНУЛЕНО');
-    stopUltraHardEvent();
-    saveGame();
-  }
-
-  function startUltraHardEvent() {
-    const types = ['clicks', 'score'];
-    const type = types[Math.floor(Math.random() * types.length)];
-    let target;
-    if (type === 'clicks') {
-      target = Math.floor(100 + Math.random() * 200);
-    } else {
-      target = Math.floor(5000 + Math.random() * 20000);
-    }
-    gameState.ultraHardEventType = type;
-    gameState.ultraHardEventTarget = target;
-    gameState.ultraHardEventTimer = 30;
-    const eventDiv = document.getElementById('ultraHardEvent');
-    eventDiv.classList.add('active');
-    updateUltraHardEventDisplay();
-  }
-
-  function stopUltraHardEvent() {
-    gameState.ultraHardEventType = null;
-    gameState.ultraHardEventTimer = 0;
-    document.getElementById('ultraHardEvent').classList.remove('active');
-  }
-
-  function updateUltraHardEventDisplay() {
-    const eventDiv = document.getElementById('ultraHardEvent');
-    if (!gameState.ultraHardEventType) return;
-    const type = gameState.ultraHardEventType === 'clicks' ? 'кликов' : 'какашек';
-    eventDiv.innerHTML = `⚠️ ЗА ${Math.ceil(gameState.ultraHardEventTimer)} сек: ${gameState.ultraHardEventTarget} ${type} (${gameState.ultraHardEventType === 'clicks' ? gameState.totalClicks : gameState.score}/${gameState.ultraHardEventTarget})`;
-  }
-
-  function returnToMenu() {
-    gameState.isRunning = false;
-    if (animationFrameId) { cancelAnimationFrame(animationFrameId); animationFrameId = null; }
-    document.getElementById('gameScreen').style.display = 'none';
-    document.getElementById('mainMenu').style.display = 'block';
-    initMenuAchievements();
-    updateMenuStats();
-    saveGame();
-  }
-
-  function showMenuTab(tabName, event) {
-    document.querySelectorAll('.menu-panel').forEach(p => p.classList.remove('active'));
-    document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-    const tab = document.getElementById('tab-' + tabName);
-    if (tab) tab.classList.add('active');
-    if (event && event.currentTarget) event.currentTarget.classList.add('active');
-    if (tabName === 'stats') updateMenuStats();
-    if (tabName === 'achievements') initMenuAchievements();
-  }
-
-  function initMenuAchievements() {
-    const grid = document.getElementById('menuAchievementsGrid');
-    grid.innerHTML = '';
-    allAchievementsList.forEach(ach => {
-      const isUnlocked = gameState.achievements.includes(ach.id);
-      const card = document.createElement('div');
-      card.className = 'achievement-card' + (isUnlocked ? '' : ' locked');
-      card.innerHTML = `<div class="achievement-icon">${isUnlocked ? ach.icon : '❓'}</div><div class="achievement-info"><div class="achievement-name">${isUnlocked ? ach.name : '???'}</div><div class="achievement-desc">${isUnlocked ? ach.desc : `Условие: ${ach.desc}`}</div></div>`;
-      grid.appendChild(card);
-    });
-    const ultraSection = document.getElementById('ultraAchievementsSection');
-    const ultraGrid = document.getElementById('ultraAchievementsGrid');
-    if (gameState.ultraAchievements.length > 0 || gameState.ultraHardMode) {
-      ultraSection.style.display = 'block';
-      ultraGrid.innerHTML = '';
-      ultraAchievementsList.forEach(ach => {
-        const isUnlocked = gameState.ultraAchievements.includes(ach.id);
+    function initMenuAchievements() {
+      const grid = document.getElementById('menuAchievementsGrid');
+      grid.innerHTML = '';
+      allAchievementsList.forEach(ach => {
+        const isUnlocked = gameState.achievements.includes(ach.id);
         const card = document.createElement('div');
         card.className = 'achievement-card' + (isUnlocked ? '' : ' locked');
         card.innerHTML = `<div class="achievement-icon">${isUnlocked ? ach.icon : '❓'}</div><div class="achievement-info"><div class="achievement-name">${isUnlocked ? ach.name : '???'}</div><div class="achievement-desc">${isUnlocked ? ach.desc : `Условие: ${ach.desc}`}</div></div>`;
-        ultraGrid.appendChild(card);
+        grid.appendChild(card);
       });
-    } else {
-      ultraSection.style.display = 'none';
     }
-  }
 
-  function updateMenuStats() {
-    const ultraMult = gameState.ultraHardMode ? 1 : 1 + getUltraBonus() * gameState.rebirthMultiplier;
-    document.getElementById('menuPerSecond').textContent = formatNumber(gameState.perSecond * ultraMult);
-    document.getElementById('menuTotalClicks').textContent = formatNumber(gameState.totalClicks);
-    document.getElementById('menuMultiplier').textContent = 'x' + (gameState.multiplier * ultraMult).toFixed(2);
-    document.getElementById('menuCritChance').textContent = Math.floor(gameState.critChance * 100) + '%';
-    document.getElementById('menuClickPower').textContent = formatNumber(gameState.clickPower * ultraMult);
-    const ultraBonus = gameState.ultraHardMode ? 0 : getUltraBonus();
-    const ultraStat = document.getElementById('menuUltraBonusStat');
-    if (ultraBonus > 0) {
-      ultraStat.style.display = 'flex';
-      document.getElementById('menuUltraBonusVal').textContent = '+' + Math.round(ultraBonus * 100) + '%';
-    } else ultraStat.style.display = 'none';
-    document.getElementById('menuGoldenPoops').textContent = gameState.goldenPoopsCollected;
-    let totalUpgrades = 0;
-    Object.values(gameState.upgrades).forEach(up => totalUpgrades += up.count);
-    document.getElementById('menuUpgradesCount').textContent = totalUpgrades;
-    document.getElementById('menuRebirthCount').textContent = gameState.rebirthCount;
-  }
-
-  function rarityDisplay(rarity) {
-    const ru = { common:'ОБЫЧНАЯ', rare:'РЕДКАЯ', epic:'ЭПИЧЕСКАЯ', legendary:'ЛЕГЕНДАРНАЯ', mythic:'МИФИЧЕСКАЯ', ultra_mythic:'УЛЬТРА-МИФИЧЕСКАЯ', ultra_mythic_plus:'УЛЬТРА-МИФИЧЕСКАЯ +' };
-    return ru[rarity] || rarity;
-  }
-
-  const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-  let noiseBuffer;
-  function initAudio() {
-    const bufferSize = audioCtx.sampleRate * 2;
-    noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-    const data = noiseBuffer.getChannelData(0);
-    for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 2);
-  }
-  function playTone(freq, duration, type = 'sine', volume = 0.15, delay = 0) {
-    const osc = audioCtx.createOscillator(), gain = audioCtx.createGain(), filter = audioCtx.createBiquadFilter();
-    filter.type = 'lowpass'; filter.frequency.value = 5000;
-    osc.connect(filter); filter.connect(gain); gain.connect(audioCtx.destination);
-    osc.frequency.value = freq; osc.type = type;
-    const startTime = audioCtx.currentTime + delay;
-    gain.gain.setValueAtTime(0, startTime);
-    gain.gain.linearRampToValueAtTime(volume, startTime + 0.01);
-    gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
-    osc.start(startTime); osc.stop(startTime + duration);
-  }
-  function playNoise(duration, volume = 0.1) {
-    const source = audioCtx.createBufferSource(), gain = audioCtx.createGain();
-    source.buffer = noiseBuffer; source.connect(gain); gain.connect(audioCtx.destination);
-    gain.gain.setValueAtTime(volume, audioCtx.currentTime);
-    gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
-    source.start();
-  }
-  const soundBank = {
-    click: ()=>{ playTone(400+Math.random()*400,0.08,'square',0.1); playNoise(0.05,0.05); },
-    combo: (l)=>{ const b=500+l*50; playTone(b,0.1,'sawtooth',0.12); playTone(b*1.5,0.1,'sine',0.08,0.05); },
-    critical: ()=>{ playTone(800,0.15,'sawtooth',0.2); playTone(1200,0.15,'sawtooth',0.15,0.05); playTone(1600,0.2,'sawtooth',0.12,0.1); playNoise(0.2,0.15); },
-    mega: ()=>{ [400,600,800,1000,1200].forEach((f,i)=>playTone(f,0.3,'sawtooth',0.15,i*0.05)); playNoise(0.4,0.2); },
-    upgrade: ()=>{ playTone(523,0.1,'sine',0.15); playTone(659,0.1,'sine',0.15,0.08); playTone(784,0.15,'sine',0.15,0.16); playTone(1047,0.2,'triangle',0.12,0.25); },
-    achievement: ()=>{ [523,659,784,1047,1319].forEach((f,i)=>playTone(f,0.2,'triangle',0.15,i*0.08)); },
-    golden: ()=>{ [1000,1200,1400,1600,1800,2000].forEach((f,i)=>playTone(f,0.15,'sine',0.15,i*0.04)); },
-    fever: ()=>{ for(let i=0;i<10;i++) playTone(400+i*100,0.2,'sawtooth',0.1,i*0.03); playNoise(0.5,0.15); },
-    boss: ()=>{ playTone(100,0.5,'sawtooth',0.2); playTone(80,0.5,'sawtooth',0.2,0.1); playNoise(0.6,0.2); },
-    bossHit: ()=>{ playTone(150,0.1,'square',0.15); playNoise(0.08,0.1); },
-    bossDefeat: ()=>{ for(let i=0;i<15;i++) playTone(200+i*80,0.3,'sawtooth',0.15,i*0.05); playNoise(0.8,0.25); },
-    chestOpen: ()=>{ playTone(200,0.5,'sawtooth',0.2); playTone(400,0.5,'sawtooth',0.2,0.1); playTone(800,0.8,'sine',0.3,0.2); playNoise(0.5,0.2); }
-  };
-
-  const canvas = document.getElementById('canvas');
-  const ctx = canvas.getContext('2d');
-  function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-  window.addEventListener('resize', resizeCanvas);
-  resizeCanvas();
-
-  const MAX_PARTICLES = 600;
-  const particles = new Array(MAX_PARTICLES).fill(null).map(()=>({ active:false, x:0,y:0,vx:0,vy:0,life:0,decay:0,size:0,rotation:0,rotationSpeed:0,emoji:'',type:'normal',color:'#FFD700',gravity:0.4 }));
-  function spawnParticle(x,y,opts={}){
-    for(let i=0;i<MAX_PARTICLES;i++) if(!particles[i].active){
-      const p=particles[i]; p.active=true; p.x=x; p.y=y;
-      const angle=opts.angle??Math.random()*Math.PI*2, speed=opts.speed??(Math.random()*10+5);
-      p.vx=Math.cos(angle)*speed; p.vy=Math.sin(angle)*speed;
-      p.life=1; p.decay=opts.decay??0.02; p.size=opts.size??(Math.random()*20+15);
-      p.rotation=Math.random()*Math.PI*2; p.rotationSpeed=(Math.random()-0.5)*0.3;
-      p.emoji=opts.emoji??gameState.equippedSkin; p.gravity=opts.gravity??0.4; p.type=opts.type??'normal'; p.color=opts.color??'#FFD700';
-      return;
+    function updateMenuStats() {
+      const ultraMult = 1 + getUltraBonus() * gameState.rebirthMultiplier;
+      document.getElementById('menuPerSecond').textContent = formatNumber(gameState.perSecond * ultraMult);
+      document.getElementById('menuTotalClicks').textContent = formatNumber(gameState.totalClicks);
+      document.getElementById('menuMultiplier').textContent = 'x' + (gameState.multiplier * ultraMult).toFixed(2);
+      document.getElementById('menuCritChance').textContent = Math.floor(gameState.critChance * 100) + '%';
+      document.getElementById('menuClickPower').textContent = formatNumber(gameState.clickPower * ultraMult);
+      const ultraBonus = getUltraBonus();
+      const ultraStat = document.getElementById('menuUltraBonusStat');
+      if (ultraBonus > 0) {
+        ultraStat.style.display = 'flex';
+        document.getElementById('menuUltraBonusVal').textContent = '+' + Math.round(ultraBonus * 100) + '%';
+      } else ultraStat.style.display = 'none';
+      document.getElementById('menuGoldenPoops').textContent = gameState.goldenPoopsCollected;
+      let totalUpgrades = 0;
+      Object.values(gameState.upgrades).forEach(up => totalUpgrades += up.count);
+      document.getElementById('menuUpgradesCount').textContent = totalUpgrades;
+      document.getElementById('menuRebirthCount').textContent = gameState.rebirthCount;
     }
-  }
-  function createExplosion(x,y,count=15,type='normal'){
-    const e=[gameState.equippedSkin,'💥','⭐','✨','🔥','💫'];
-    for(let i=0;i<count;i++) spawnParticle(x,y,{emoji:e[Math.floor(Math.random()*e.length)],speed:Math.random()*15+5,size:Math.random()*20+10});
-    if(type==='critical'||type==='golden'||type==='mythic'||type==='ultra_mythic'||type==='ultra_mythic_plus')
-      for(let i=0;i<20;i++) spawnParticle(x,y,{type:'spark',color:['#FF1493','#FFD700','#00FFFF'][Math.floor(Math.random()*3)],speed:Math.random()*20+10,size:Math.random()*15+5,gravity:0.2,decay:0.03});
-  }
 
-  const MAX_TEXTS=40;
-  const textPool=[];
-  for(let i=0;i<MAX_TEXTS;i++){
-    const div=document.createElement('div');
-    div.style.cssText='position:absolute;pointer-events:none;z-index:20;display:none';
-    document.getElementById('gameScreen').appendChild(div);
-    textPool.push({el:div,active:false,life:0,maxLife:0,x:0,y:0,vx:0,vy:0,rotation:0,rotSpeed:0,scale:1});
-  }
-  function showFloatingText(x,y,text,type='normal'){
-    for(let i=0;i<MAX_TEXTS;i++) if(!textPool[i].active){
-      const t=textPool[i]; t.active=true;
-      t.life=type==='mega'?2:type==='critical'?1.5:1.2; t.maxLife=t.life;
-      t.x=x+(Math.random()-0.5)*50; t.y=y;
-      t.vy=-150; t.vx=(Math.random()-0.5)*50; t.rotation=-10;
-      t.rotSpeed=type==='mega'?-45:(Math.random()*40-20);
-      t.scale=type==='mega'?3:type==='critical'?2.5:1.5;
-      t.el.textContent=text;
-      t.el.className=`floating-text ${type==='critical'?'critical-text':type==='mega'?'mega-text':'normal'}`;
-      t.el.style.display='block';
-      return;
+    function rarityDisplay(rarity) {
+      const ru = { common:'ОБЫЧНАЯ', rare:'РЕДКАЯ', epic:'ЭПИЧЕСКАЯ', legendary:'ЛЕГЕНДАРНАЯ', mythic:'МИФИЧЕСКАЯ', ultra_mythic:'УЛЬТРА-МИФИЧЕСКАЯ', ultra_mythic_plus:'УЛЬТРА-МИФИЧЕСКАЯ +' };
+      return ru[rarity] || rarity;
     }
-  }
 
-  function getUltraBonus(){
-    if (gameState.ultraHardMode) return 0;
-    let bonus=0;
-    gameState.unlockedItems.forEach(id=>{
-      const item=skinDatabase[id];
-      if(item&&item.rarity==='ultra_mythic_plus'&&item.bonus) bonus+=item.bonus;
-    });
-    return bonus * gameState.rebirthMultiplier;
-  }
-
-  function updateVisuals(){
-    document.getElementById('poop').textContent=gameState.equippedSkin;
-    const bg=bgDatabase[gameState.equippedBg];
-    if(bg) document.getElementById('gameBg').style.background=bg.css;
-    const skinData = skinDatabase[gameState.equippedSkin];
-    if (skinData) {
-      document.getElementById('scoreLabel').innerHTML = skinData.icon + ' ' + skinData.name.toUpperCase();
+    // Аудио
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    let noiseBuffer;
+    function initAudio() {
+      const bufferSize = audioCtx.sampleRate * 2;
+      noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+      const data = noiseBuffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) data[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / bufferSize, 2);
     }
-  }
-
-  function startGame(ultraHard){
-    document.getElementById('mainMenu').style.display='none';
-    document.getElementById('gameScreen').style.display='block';
-    audioCtx.resume(); initAudio();
-    gameState.isRunning=true;
-    gameState.ultraHardMode = ultraHard;
-    document.getElementById('ultraHardIndicator').style.display = ultraHard ? 'block' : 'none';
-    gameState.goldenSpawnTimer=15; gameState.bossSpawnTimer=120; gameState.randomEventTimer=45;
-    buildUpgradeList(); updateVisuals(); updateChestButtons(); updateRebirthButton();
-    if(animationFrameId) cancelAnimationFrame(animationFrameId);
-    animationFrameId=requestAnimationFrame(gameLoop);
-    saveGame();
-  }
-
-  const upgradeElements={};
-  function buildUpgradeList(){
-    const list=document.getElementById('upgradeList'); list.innerHTML='';
-    Object.entries(gameState.upgrades).forEach(([key,up])=>{
-      const div=document.createElement('div'); div.className='upgrade-item'; div.dataset.upgradeKey=key;
-      div.innerHTML=`<div class="upgrade-name">${up.name} [<span class="count">0</span>/99]</div><div class="upgrade-info">${up.desc} | +${formatNumber(up.basePerSec)}/сек</div><div class="upgrade-cost">💰 ${formatNumber(up.cost)}</div><div class="upgrade-actions"><button class="upgrade-btn buy-1">КУПИТЬ 1</button><button class="upgrade-btn buy-max">МАКС</button></div>`;
-      const buy1=div.querySelector('.buy-1'), buyMax=div.querySelector('.buy-max');
-      buy1.onclick=()=>buyUpgrade(key,1); buyMax.onclick=()=>buyUpgrade(key,'max');
-      list.appendChild(div);
-      upgradeElements[key]={container:div,nameSpan:div.querySelector('.count'),costSpan:div.querySelector('.upgrade-cost'),buy1,buyMax};
-    });
-  }
-
-  function updateUpgradeUI(){
-    Object.entries(gameState.upgrades).forEach(([key,up])=>{
-      const els=upgradeElements[key]; if(!els) return;
-      els.nameSpan.textContent=up.count;
-      els.costSpan.textContent=`💰 ${formatNumber(up.cost)}`;
-      const canAfford = gameState.score>=up.cost && up.count<99;
-      els.container.classList.toggle('cant-afford', !canAfford);
-      els.buy1.disabled = up.count>=99;
-      els.buyMax.disabled = up.count>=99;
-    });
-  }
-
-  function buyUpgrade(key,amount){
-    if(!gameState.isRunning) return;
-    const up=gameState.upgrades[key];
-    const maxAffordable = 99 - up.count;
-    if (maxAffordable <= 0) return;
-    if(amount===1){
-      if(gameState.score<up.cost) return;
-      gameState.score-=up.cost; up.count++; up.cost=Math.floor(up.cost*1.4);
-      gameState.clickPower+=up.basePower; gameState.perSecond+=up.basePerSec;
-      soundBank.upgrade();
-    }else if(amount==='max'){
-      let count=0,cost=up.cost;
-      while(gameState.score>=cost && up.count+count<99){
-        gameState.score-=cost; count++; cost=Math.floor(cost*1.4);
-      }
-      if(count>0){
-        up.count+=count; up.cost=cost;
-        gameState.clickPower+=up.basePower*count; gameState.perSecond+=up.basePerSec*count;
-        soundBank.upgrade();
-        showFloatingText(window.innerWidth-170,window.innerHeight/2,`КУПЛЕНО x${count}!`,'normal');
-      }else return;
+    function playTone(freq, duration, type = 'sine', volume = 0.15, delay = 0) {
+      const osc = audioCtx.createOscillator(), gain = audioCtx.createGain(), filter = audioCtx.createBiquadFilter();
+      filter.type = 'lowpass'; filter.frequency.value = 5000;
+      osc.connect(filter); filter.connect(gain); gain.connect(audioCtx.destination);
+      osc.frequency.value = freq; osc.type = type;
+      const startTime = audioCtx.currentTime + delay;
+      gain.gain.setValueAtTime(0, startTime);
+      gain.gain.linearRampToValueAtTime(volume, startTime + 0.01);
+      gain.gain.exponentialRampToValueAtTime(0.001, startTime + duration);
+      osc.start(startTime); osc.stop(startTime + duration);
     }
-    updateUpgradeUI(); saveGame();
-  }
-
-  function clickPoop(event){
-    if(!gameState.isRunning||gameState.bossActive) return;
-    const now=Date.now(),diff=now-gameState.lastClickTime;
-    if(diff<600){
-      gameState.combo++;
-      if(gameState.combo>2){
-        document.getElementById('comboDisplay').classList.add('active');
-        document.getElementById('comboValue').textContent=gameState.combo;
-        if(gameState.combo%10===0) soundBank.combo(Math.min(gameState.combo/10,10));
-      }
-    }else{
-      gameState.combo=Math.max(0,gameState.combo-5);
-      if(gameState.combo===0) document.getElementById('comboDisplay').classList.remove('active');
+    function playNoise(duration, volume = 0.1) {
+      const source = audioCtx.createBufferSource(), gain = audioCtx.createGain();
+      source.buffer = noiseBuffer; source.connect(gain); gain.connect(audioCtx.destination);
+      gain.gain.setValueAtTime(volume, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+      source.start();
     }
-    gameState.lastClickTime=now;
-    if(!gameState.feverActive){
-      gameState.feverEnergy=Math.min(100,gameState.feverEnergy+1+gameState.combo*0.2);
-      updateFeverBar();
-      if(gameState.feverEnergy>=100) activateFever();
-    }
-    const critRoll=Math.random();
-    const isCritical=critRoll<gameState.critChance, isMega=critRoll<0.001;
-    const comboMult=1+gameState.combo*0.05, feverMult=gameState.feverActive?10:1;
-    const critMult=isMega?100:(isCritical?10:1);
-    const ultraMult = gameState.ultraHardMode ? 1 : (1+getUltraBonus());
-    const points=Math.floor(gameState.clickPower*gameState.multiplier*comboMult*feverMult*critMult*ultraMult);
-    gameState.score+=points; gameState.totalClicks++;
-    if (gameState.ultraHardMode && gameState.ultraHardEventType === 'clicks') {
-      if (gameState.totalClicks >= gameState.ultraHardEventTarget) {
-        gameState.ultraHardEventsSurvived++;
-        showEventBanner('✅ ИВЕНТ ПРОЙДЕН!');
-        stopUltraHardEvent();
-        checkUltraAchievements();
-      }
-    }
-    const poop=document.getElementById('poop');
-    poop.classList.add('clicked'); setTimeout(()=>poop.classList.remove('clicked'),150);
-    if(isMega){
-      createExplosion(event.clientX,event.clientY,60,'mega');
-      showFloatingText(event.clientX,event.clientY,`МЕГА! +${formatNumber(points)}`,'mega');
-      soundBank.mega(); triggerScreenEffect('mega');
-    }else if(isCritical){
-      createExplosion(event.clientX,event.clientY,30,'critical');
-      showFloatingText(event.clientX,event.clientY,`КРИТ! +${formatNumber(points)}`,'critical');
-      soundBank.critical(); triggerScreenEffect('critical');
-    }else{
-      createExplosion(event.clientX,event.clientY,gameState.feverActive?20:8);
-      showFloatingText(event.clientX,event.clientY,`+${formatNumber(points)}`);
-      soundBank.click();
-    }
-    checkAchievements(); saveGame(); updateRebirthButton();
-  }
-
-  function triggerScreenEffect(type){
-    const gs=document.getElementById('gameScreen');
-    if(type==='critical'){ gs.classList.add('screen-shake'); setTimeout(()=>gs.classList.remove('screen-shake'),400); }
-    else if(type==='mega'){ gs.classList.add('screen-shake','glitch-effect'); setTimeout(()=>gs.classList.remove('screen-shake','glitch-effect'),500); }
-  }
-
-  function updateFeverBar(){
-    const bar=document.getElementById('feverBar'),fill=document.getElementById('feverFill');
-    if(gameState.feverActive){ bar.classList.add('active'); fill.style.width=(gameState.feverTimer/10)*100+'%'; }
-    else if(gameState.feverEnergy>0){ bar.classList.add('active'); fill.style.width=gameState.feverEnergy+'%'; }
-    else bar.classList.remove('active');
-  }
-
-  function activateFever(){
-    gameState.feverActive=true; gameState.feverTimer=10; gameState.feverEnergy=0;
-    document.getElementById('gameScreen').classList.add('fever-mode');
-    document.getElementById('feverText').classList.add('active');
-    document.getElementById('poop').classList.add('fever-poop');
-    soundBank.fever(); showEventBanner('🔥 РЕЖИМ ЛИХОРАДКИ! 🔥'); saveGame();
-  }
-
-  function deactivateFever(){
-    gameState.feverActive=false; gameState.feverTimer=0;
-    document.getElementById('gameScreen').classList.remove('fever-mode');
-    document.getElementById('feverText').classList.remove('active');
-    document.getElementById('poop').classList.remove('fever-poop');
-    updateFeverBar();
-  }
-
-  function showEventBanner(text){
-    const b=document.createElement('div'); b.className='event-banner'; b.textContent=text;
-    document.body.appendChild(b); setTimeout(()=>b.remove(),2000);
-  }
-
-  function rollLoot(){
-    const roll=Math.random()*100;
-    let rarity='common';
-    if(roll>99.9) rarity='ultra_mythic_plus';
-    else if(roll>99.5) rarity='ultra_mythic';
-    else if(roll>98) rarity='mythic';
-    else if(roll>90) rarity='legendary';
-    else if(roll>75) rarity='epic';
-    else if(roll>40) rarity='rare';
-    const isBg=Math.random()>0.7;
-    const pool=isBg?bgDatabase:skinDatabase;
-    const avail=Object.entries(pool).filter(([id,data])=>data.rarity===rarity && !data.secret);
-    if(avail.length===0) return null;
-    const wonId=avail[Math.floor(Math.random()*avail.length)][0];
-    const isNew=!gameState.unlockedItems.includes(wonId);
-    if(isNew) gameState.unlockedItems.push(wonId);
-    return {id:wonId,rarity,isNew,type:isBg?'bg':'skin'};
-  }
-
-  function openChest(count){
-    if(!gameState.isRunning) return;
-    if (areAllCosmeticsUnlocked()) {
-      showFloatingText(window.innerWidth/2, window.innerHeight/2, 'ВСЯ КОСМЕТИКА СОБРАНА!', 'critical');
-      return;
-    }
-    const cost=10000*count;
-    if(gameState.score>=cost){
-      gameState.score-=cost; soundBank.chestOpen();
-      const results=[]; for(let i=0;i<count;i++) { const loot = rollLoot(); if(loot) results.push(loot); }
-      if(results.length>0) showChestResult(results,count);
-      updateUpgradeUI(); checkAchievements(); updateChestButtons();
-      saveGame();
-    }else showFloatingText(window.innerWidth/2,window.innerHeight/2,'НЕ ХВАТАЕТ!','critical');
-  }
-
-  function buyChestsAll(){
-    if(!gameState.isRunning) return;
-    if (areAllCosmeticsUnlocked()) {
-      showFloatingText(window.innerWidth/2, window.innerHeight/2, 'ВСЯ КОСМЕТИКА СОБРАНА!', 'critical');
-      return;
-    }
-    const count = Math.min(Math.floor(gameState.score / 10000), 99);
-    if(count>0) openChest(count);
-    else showFloatingText(window.innerWidth/2,window.innerHeight/2,'НЕ ХВАТАЕТ!','critical');
-  }
-
-  function showChestResult(results,count){
-    const modal=document.getElementById('chestResultModal'), content=document.getElementById('chestResultContent');
-    let html=`<div class="chest-result-title">${count>1?`🎉 ОТКРЫТО ${count} СУНДУКОВ! 🎉`:'🎉 НОВАЯ НАХОДКА! 🎉'}</div><div class="chest-result-grid">`;
-    results.forEach((res,i)=>{
-      const data=res.type==='skin'?skinDatabase[res.id]:bgDatabase[res.id];
-      html+=`<div class="chest-result-item rarity-${res.rarity} ${!res.isNew?'duplicate':''}" style="animation-delay:${i*0.1}s;">
-        <span class="revealed-icon">${res.type==='bg'?`<div class="bg-preview" style="background:${data.css};width:60px;height:60px;border-radius:10px;margin:0 auto;"></div>`:data.icon}</span>
-        <div class="revealed-name">${res.isNew?data.name:'Дубликат (+1K)'}</div>
-        <div class="revealed-rarity">${rarityDisplay(data.rarity)}</div>
-        ${!res.isNew?'<div class="duplicate-badge">+1K</div>':''}
-      </div>`;
-      if(!res.isNew) gameState.score+=1000;
-    });
-    html+='</div>'; content.innerHTML=html; modal.classList.add('active');
-    updateVisuals();
-  }
-
-  function closeChestResult(){ document.getElementById('chestResultModal').classList.remove('active'); }
-  function openCustomization(){ currentCustomTab='skins'; renderCustomGrid(); document.getElementById('customizationModal').classList.add('active'); }
-  function closeCustomization(){ document.getElementById('customizationModal').classList.remove('active'); }
-  function switchCustomTab(tab,event){ currentCustomTab=tab; document.querySelectorAll('.custom-tab').forEach(t=>t.classList.remove('active')); event.currentTarget.classList.add('active'); renderCustomGrid(); }
-
-  function renderCustomGrid(){
-    const grid=document.getElementById('customGrid'); grid.innerHTML='';
-    const database=currentCustomTab==='skins'?skinDatabase:bgDatabase;
-    const equippedId=currentCustomTab==='skins'?gameState.equippedSkin:gameState.equippedBg;
-    Object.entries(database).forEach(([id,data])=>{
-      const isUnlocked=gameState.unlockedItems.includes(id);
-      const card=document.createElement('div');
-      card.className=`custom-card rarity-${data.rarity} ${isUnlocked?'':'locked'} ${equippedId===id?'equipped':''}`;
-      card.innerHTML=`<div class="custom-icon-wrapper">${isUnlocked?(data.type==='bg'?`<div class="bg-preview" style="background:${data.css};"></div>`:data.icon):'🔒'}</div><div class="custom-name">${isUnlocked?data.name:'???'}</div><div class="custom-rarity">${isUnlocked?rarityDisplay(data.rarity):'???'}</div>`;
-      if(isUnlocked) card.onclick=()=>{ if(currentCustomTab==='skins') gameState.equippedSkin=id; else gameState.equippedBg=id; updateVisuals(); renderCustomGrid(); saveGame(); };
-      grid.appendChild(card);
-    });
-  }
-
-  function spawnGoldenPoop(){
-    if(gameState.bossActive||!gameState.isRunning) return;
-    const poop=document.createElement('div'); poop.className='golden-poop'; poop.textContent='💩';
-    poop.style.left=Math.random()*(window.innerWidth-100)+'px'; poop.style.top=Math.random()*(window.innerHeight-200)+100+'px';
-    const handler=(e)=>{
-      e.stopPropagation();
-      const bonus=Math.floor(gameState.perSecond*60+gameState.clickPower*100);
-      gameState.score+=bonus; gameState.goldenPoopsCollected++;
-      createExplosion(e.clientX,e.clientY,40,'golden');
-      showFloatingText(e.clientX,e.clientY,`ЗОЛОТО! +${formatNumber(bonus)}`,'mega');
-      soundBank.golden(); showEventBanner('💰 ЗОЛОТАЯ КАКАШКА! 💰'); triggerScreenEffect('critical');
-      poop.remove(); checkAchievements(); saveGame(); unlockSecretItems();
+    const soundBank = {
+      click: ()=>{ playTone(400+Math.random()*400,0.08,'square',0.1); playNoise(0.05,0.05); },
+      combo: (l)=>{ const b=500+l*50; playTone(b,0.1,'sawtooth',0.12); playTone(b*1.5,0.1,'sine',0.08,0.05); },
+      critical: ()=>{ playTone(800,0.15,'sawtooth',0.2); playTone(1200,0.15,'sawtooth',0.15,0.05); playTone(1600,0.2,'sawtooth',0.12,0.1); playNoise(0.2,0.15); },
+      mega: ()=>{ [400,600,800,1000,1200].forEach((f,i)=>playTone(f,0.3,'sawtooth',0.15,i*0.05)); playNoise(0.4,0.2); },
+      upgrade: ()=>{ playTone(523,0.1,'sine',0.15); playTone(659,0.1,'sine',0.15,0.08); playTone(784,0.15,'sine',0.15,0.16); playTone(1047,0.2,'triangle',0.12,0.25); },
+      achievement: ()=>{ [523,659,784,1047,1319].forEach((f,i)=>playTone(f,0.2,'triangle',0.15,i*0.08)); },
+      golden: ()=>{ [1000,1200,1400,1600,1800,2000].forEach((f,i)=>playTone(f,0.15,'sine',0.15,i*0.04)); },
+      fever: ()=>{ for(let i=0;i<10;i++) playTone(400+i*100,0.2,'sawtooth',0.1,i*0.03); playNoise(0.5,0.15); },
+      boss: ()=>{ playTone(100,0.5,'sawtooth',0.2); playTone(80,0.5,'sawtooth',0.2,0.1); playNoise(0.6,0.2); },
+      bossHit: ()=>{ playTone(150,0.1,'square',0.15); playNoise(0.08,0.1); },
+      bossDefeat: ()=>{ for(let i=0;i<15;i++) playTone(200+i*80,0.3,'sawtooth',0.15,i*0.05); playNoise(0.8,0.25); },
+      chestOpen: ()=>{ playTone(200,0.5,'sawtooth',0.2); playTone(400,0.5,'sawtooth',0.2,0.1); playTone(800,0.8,'sine',0.3,0.2); playNoise(0.5,0.2); }
     };
-    poop.onclick=handler;
-    document.getElementById('gameScreen').appendChild(poop);
-    setTimeout(()=>{ if(poop.parentNode){ poop.onclick=null; poop.remove(); } },8000);
-  }
 
-  function spawnBoss(){
-    if(gameState.bossActive||!gameState.isRunning) return;
-    gameState.bossActive=true; gameState.bossMaxHP=Math.max(1000,gameState.score*0.5); gameState.bossHP=gameState.bossMaxHP;
-    showEventBanner('⚠️ БОСС ПОЯВИЛСЯ! ⚠️'); soundBank.boss();
-    const container=document.createElement('div'); container.id='bossContainer';
-    container.innerHTML=`<div class="boss-hp-bar"><div class="boss-hp-fill" id="bossHpFill" style="width:100%"></div></div><div class="boss-title">💀 ВЕЛИКИЙ КАКАШЕ-БОСС 💀</div><div class="boss-poop" id="bossPoop">💩</div>`;
-    document.body.appendChild(container);
-    document.getElementById('bossPoop').onclick=(e)=>{
-      e.stopPropagation();
-      const damage=gameState.clickPower*gameState.multiplier*5*(gameState.ultraHardMode?1:1+getUltraBonus());
-      gameState.bossHP-=damage;
-      createExplosion(e.clientX,e.clientY,15,'critical'); soundBank.bossHit();
-      showFloatingText(e.clientX,e.clientY,`-${formatNumber(damage)}`,'critical');
-      document.getElementById('bossHpFill').style.width=Math.max(0,(gameState.bossHP/gameState.bossMaxHP)*100)+'%';
-      if(gameState.bossHP<=0) defeatBoss();
-    };
-  }
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    function resizeCanvas() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
 
-  function defeatBoss(){
-    const reward=Math.floor(gameState.bossMaxHP*2); gameState.score+=reward; gameState.bossActive=false;
-    const bossPoop=document.getElementById('bossPoop'); if(bossPoop) bossPoop.onclick=null;
-    const container=document.getElementById('bossContainer'); if(container) container.remove();
-    createExplosion(window.innerWidth/2,window.innerHeight/2,100,'mega');
-    soundBank.bossDefeat(); showEventBanner(`🏆 ПОБЕДА! +${formatNumber(reward)} 🏆`); triggerScreenEffect('mega');
-    saveGame(); updateRebirthButton();
-  }
-
-  function formatNumber(num){
-    if(num>=1e12) return (num/1e12).toFixed(2)+'T';
-    if(num>=1e9) return (num/1e9).toFixed(2)+'B';
-    if(num>=1e6) return (num/1e6).toFixed(2)+'M';
-    if(num>=1e3) return (num/1e3).toFixed(2)+'K';
-    return Math.floor(num).toLocaleString();
-  }
-
-  const achievementCheckList=[
-    {id:'c10',cond:()=>gameState.totalClicks>=10},{id:'c100',cond:()=>gameState.totalClicks>=100},
-    {id:'c1000',cond:()=>gameState.totalClicks>=1000},{id:'c10000',cond:()=>gameState.totalClicks>=10000},
-    {id:'s1k',cond:()=>gameState.score>=1000},{id:'s10k',cond:()=>gameState.score>=10000},
-    {id:'s100k',cond:()=>gameState.score>=100000},{id:'s1m',cond:()=>gameState.score>=1000000},
-    {id:'s1b',cond:()=>gameState.score>=1000000000},{id:'combo20',cond:()=>gameState.combo>=20},
-    {id:'combo50',cond:()=>gameState.combo>=50},{id:'combo100',cond:()=>gameState.combo>=100},
-    {id:'gold5',cond:()=>gameState.goldenPoopsCollected>=5},{id:'gold20',cond:()=>gameState.goldenPoopsCollected>=20},
-    {id:'fever',cond:()=>gameState.feverActive},{id:'all_skins',cond:()=>Object.keys(skinDatabase).every(id=>gameState.unlockedItems.includes(id))},
-    {id:'all_bgs',cond:()=>Object.keys(bgDatabase).every(id=>gameState.unlockedItems.includes(id))},
-    {id:'game_100',cond:()=>allAchievementsList.filter(a=>a.id!=='game_100').every(a=>gameState.achievements.includes(a.id))}
-  ];
-
-  const ultraAchievementCheckList = [
-    {id:'uh_survive1',cond:()=>gameState.ultraHardEventsSurvived>=1},
-    {id:'uh_survive5',cond:()=>gameState.ultraHardEventsSurvived>=5},
-    {id:'uh_clicks',cond:()=>gameState.totalClicks>=10000},
-    {id:'uh_score',cond:()=>gameState.score>=1000000}
-  ];
-
-  function checkAchievements(){
-    achievementCheckList.forEach(a=>{
-      if(!gameState.achievements.includes(a.id)&&a.cond()){
-        gameState.achievements.push(a.id);
-        showAchievement(allAchievementsList.find(ach=>ach.id===a.id)?.name||a.id);
-        soundBank.achievement(); saveGame(); unlockSecretItems();
-      }
-    });
-  }
-
-  function checkUltraAchievements(){
-    if (!gameState.ultraHardMode) return;
-    ultraAchievementCheckList.forEach(a=>{
-      if(!gameState.ultraAchievements.includes(a.id)&&a.cond()){
-        gameState.ultraAchievements.push(a.id);
-        showAchievement(ultraAchievementsList.find(ach=>ach.id===a.id)?.name||a.id);
-        soundBank.achievement(); saveGame();
-      }
-    });
-  }
-
-  function showAchievement(text){
-    const div=document.createElement('div'); div.className='achievement'; div.textContent=text;
-    document.body.appendChild(div); setTimeout(()=>div.remove(),4000);
-  }
-
-  function createPoopRain(count){
-    for(let i=0;i<count;i++) spawnParticle(Math.random()*canvas.width,-50,{emoji:gameState.equippedSkin,speed:5,angle:Math.PI/2,gravity:0.5,decay:0.005});
-  }
-
-  function openVersionModal(){ document.getElementById('versionModal').classList.add('active'); }
-  function closeVersionModal(){ document.getElementById('versionModal').classList.remove('active'); }
-
-  function gameLoop(timestamp){
-    if(!gameState.isRunning) return;
-    const dt=Math.min((timestamp-lastTime)/1000,0.1); lastTime=timestamp;
-    const ultraMult = gameState.ultraHardMode ? 1 : 1+getUltraBonus();
-    scoreAccumulator+=gameState.perSecond*ultraMult*dt;
-    if(scoreAccumulator>=1){ const add=Math.floor(scoreAccumulator); gameState.score+=add; scoreAccumulator-=add; }
-    if(gameState.feverActive){ gameState.feverTimer-=dt; updateFeverBar(); if(gameState.feverTimer<=0) deactivateFever(); }
-    gameState.goldenSpawnTimer-=dt;
-    if(gameState.goldenSpawnTimer<=0){ if(Math.random()<0.7&&!gameState.bossActive) spawnGoldenPoop(); gameState.goldenSpawnTimer=25+Math.random()*10; }
-    gameState.bossSpawnTimer-=dt;
-    if(gameState.bossSpawnTimer<=0){ if(gameState.score>10000&&!gameState.bossActive&&Math.random()<0.5) spawnBoss(); gameState.bossSpawnTimer=120; }
-    gameState.randomEventTimer-=dt;
-    if(gameState.randomEventTimer<=0){
-      if(gameState.ultraHardMode && !gameState.ultraHardEventType && Math.random()<0.3) startUltraHardEvent();
-      else if(!gameState.ultraHardMode && Math.random()<0.3) triggerRandomEvent();
-      gameState.randomEventTimer=45;
-    }
-    if(gameState.ultraHardEventType) {
-      gameState.ultraHardEventTimer -= dt;
-      updateUltraHardEventDisplay();
-      if(gameState.ultraHardEventTimer <= 0) {
-        ultraHardReset();
-      }
-      if(gameState.ultraHardEventType === 'score' && gameState.score >= gameState.ultraHardEventTarget) {
-        gameState.ultraHardEventsSurvived++;
-        showEventBanner('✅ ИВЕНТ ПРОЙДЕН!');
-        stopUltraHardEvent();
-        checkUltraAchievements();
+    const MAX_PARTICLES = 600;
+    const particles = new Array(MAX_PARTICLES).fill(null).map(()=>({ active:false, x:0,y:0,vx:0,vy:0,life:0,decay:0,size:0,rotation:0,rotationSpeed:0,emoji:'',type:'normal',color:'#FFD700',gravity:0.4 }));
+    function spawnParticle(x,y,opts={}){
+      for(let i=0;i<MAX_PARTICLES;i++) if(!particles[i].active){
+        const p=particles[i]; p.active=true; p.x=x; p.y=y;
+        const angle=opts.angle??Math.random()*Math.PI*2, speed=opts.speed??(Math.random()*10+5);
+        p.vx=Math.cos(angle)*speed; p.vy=Math.sin(angle)*speed;
+        p.life=1; p.decay=opts.decay??0.02; p.size=opts.size??(Math.random()*20+15);
+        p.rotation=Math.random()*Math.PI*2; p.rotationSpeed=(Math.random()-0.5)*0.3;
+        p.emoji=opts.emoji??activeGameState.equippedSkin; p.gravity=opts.gravity??0.4; p.type=opts.type??'normal'; p.color=opts.color??'#FFD700';
+        return;
       }
     }
+    function createExplosion(x,y,count=15,type='normal'){
+      const e=[activeGameState.equippedSkin,'💥','⭐','✨','🔥','💫'];
+      for(let i=0;i<count;i++) spawnParticle(x,y,{emoji:e[Math.floor(Math.random()*e.length)],speed:Math.random()*15+5,size:Math.random()*20+10});
+      if(type==='critical'||type==='golden'||type==='mythic'||type==='ultra_mythic'||type==='ultra_mythic_plus')
+        for(let i=0;i<20;i++) spawnParticle(x,y,{type:'spark',color:['#FF1493','#FFD700','#00FFFF'][Math.floor(Math.random()*3)],speed:Math.random()*20+10,size:Math.random()*15+5,gravity:0.2,decay:0.03});
+    }
 
+    const MAX_TEXTS=40;
+    const textPool=[];
     for(let i=0;i<MAX_TEXTS;i++){
-      const t=textPool[i]; if(!t.active) continue;
-      t.life-=dt;
-      if(t.life<=0){ t.active=false; t.el.style.display='none'; }
-      else{ t.x+=t.vx*dt; t.y+=t.vy*dt; t.rotation+=t.rotSpeed*dt; t.el.style.transform=`translate(${t.x}px,${t.y}px) rotate(${t.rotation}deg) scale(${t.scale*(1-(1-t.life/t.maxLife)*0.5)})`; t.el.style.opacity=Math.min(1,t.life/0.3); }
+      const div=document.createElement('div');
+      div.style.cssText='position:absolute;pointer-events:none;z-index:20;display:none';
+      document.getElementById('gameScreen').appendChild(div);
+      textPool.push({el:div,active:false,life:0,maxLife:0,x:0,y:0,vx:0,vy:0,rotation:0,rotSpeed:0,scale:1});
     }
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    for(let i=0;i<MAX_PARTICLES;i++){
-      const p=particles[i]; if(!p.active) continue;
-      p.life-=p.decay; if(p.life<=0){ p.active=false; continue; }
-      p.x+=p.vx; p.y+=p.vy; p.vy+=p.gravity; p.vx*=0.99; p.rotation+=p.rotationSpeed;
-      ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rotation); ctx.globalAlpha=Math.max(0,p.life);
-      if(p.type==='spark'){ ctx.fillStyle=p.color; ctx.shadowBlur=20; ctx.shadowColor=p.color; ctx.beginPath(); ctx.arc(0,0,p.size*p.life,0,Math.PI*2); ctx.fill(); }
-      else{ ctx.font=`${p.size}px Arial`; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(p.emoji,0,0); }
-      ctx.restore();
+    function showFloatingText(x,y,text,type='normal'){
+      for(let i=0;i<MAX_TEXTS;i++) if(!textPool[i].active){
+        const t=textPool[i]; t.active=true;
+        t.life=type==='mega'?2:type==='critical'?1.5:1.2; t.maxLife=t.life;
+        t.x=x+(Math.random()-0.5)*50; t.y=y;
+        t.vy=-150; t.vx=(Math.random()-0.5)*50; t.rotation=-10;
+        t.rotSpeed=type==='mega'?-45:(Math.random()*40-20);
+        t.scale=type==='mega'?3:type==='critical'?2.5:1.5;
+        t.el.textContent=text;
+        t.el.className=`floating-text ${type==='critical'?'critical-text':type==='mega'?'mega-text':'normal'}`;
+        t.el.style.display='block';
+        return;
+      }
     }
-    const currentFormatted=formatNumber(gameState.score);
-    if(currentFormatted!==document.getElementById('score').textContent){
-      document.getElementById('score').textContent=currentFormatted;
-      document.getElementById('score').style.animation='none';
-      document.getElementById('score').offsetHeight;
-      document.getElementById('score').style.animation='scoreBounce 0.3s ease';
-    }
-    if(timestamp-(updateUpgradeUI.last||0)>500){ updateUpgradeUI(); updateUpgradeUI.last=timestamp; }
-    animationFrameId=requestAnimationFrame(gameLoop);
-  }
-  updateUpgradeUI.last=0;
 
-  function triggerRandomEvent(){
-    const events=[
-      {name:'Дождь какашек!',action:()=>{ createPoopRain(40); gameState.score+=gameState.clickPower*100; }},
-      {name:'x2 МНОЖИТЕЛЬ на 10 сек!',action:()=>{ gameState.multiplier*=2; setTimeout(()=>gameState.multiplier/=2,10000); }},
-      {name:'ЭНЕРГИЯ ЛИХОРАДКИ +50!',action:()=>{ gameState.feverEnergy=Math.min(100,gameState.feverEnergy+50); updateFeverBar(); }},
-      {name:'КРИТ ШАНС +5% на 15 сек!',action:()=>{ gameState.critChance+=0.05; setTimeout(()=>gameState.critChance-=0.05,15000); }},
-      {name:'БОНУС! +1000 какашек!',action:()=>{ gameState.score+=1000*gameState.multiplier; }}
+    function getUltraBonus(){
+      if (activeGameState.ultraHardMode) return 0;
+      let bonus=0;
+      gameState.unlockedItems.forEach(id=>{  // бонусы всегда от основного стейта
+        const item=skinDatabase[id];
+        if(item&&item.rarity==='ultra_mythic_plus'&&item.bonus) bonus+=item.bonus;
+      });
+      return bonus * gameState.rebirthMultiplier;
+    }
+
+    function updateVisuals(){
+      document.getElementById('poop').textContent=activeGameState.equippedSkin;
+      const bg=bgDatabase[activeGameState.equippedBg];
+      if(bg) document.getElementById('gameBg').style.background=bg.css;
+      const skinData = skinDatabase[activeGameState.equippedSkin];
+      if (skinData) {
+        document.getElementById('scoreLabel').innerHTML = skinData.icon + ' ' + skinData.name.toUpperCase();
+      }
+    }
+
+    function startGame(ultraHard){
+      document.getElementById('mainMenu').style.display='none';
+      document.getElementById('gameScreen').style.display='block';
+      audioCtx.resume(); initAudio();
+      if (ultraHard) {
+        // Создаём отдельный стейт для ультра-режима
+        activeGameState = createDefaultGameState();
+        activeGameState.ultraHardMode = true;
+      } else {
+        activeGameState = gameState;
+        gameState.ultraHardMode = false;
+      }
+      activeGameState.isRunning = true;
+      document.getElementById('ultraHardIndicator').style.display = ultraHard ? 'block' : 'none';
+      document.getElementById('chestBtn1').style.display = ultraHard ? 'none' : 'block';
+      document.getElementById('chestBtn10').style.display = ultraHard ? 'none' : 'block';
+      document.getElementById('chestBtnAll').style.display = ultraHard ? 'none' : 'block';
+      document.getElementById('rebirthBtn').style.display = ultraHard ? 'none' : 'block';
+      document.getElementById('feverBar').style.display = 'none'; // скрываем лихорадку в обоих режимах? В ультра она не нужна, в обычном показывается
+      if (!ultraHard) {
+        updateFeverBar();
+      }
+      buildUpgradeList();
+      updateVisuals();
+      if(animationFrameId) cancelAnimationFrame(animationFrameId);
+      animationFrameId=requestAnimationFrame(gameLoop);
+      if (!ultraHard) saveGame();
+    }
+
+    const upgradeElements={};
+    function buildUpgradeList(){
+      const list=document.getElementById('upgradeList'); list.innerHTML='';
+      Object.entries(activeGameState.upgrades).forEach(([key,up])=>{
+        const div=document.createElement('div'); div.className='upgrade-item'; div.dataset.upgradeKey=key;
+        div.innerHTML=`<div class="upgrade-name">${up.name} [<span class="count">0</span>/99]</div><div class="upgrade-info">${up.desc} | +${formatNumber(up.basePerSec)}/сек</div><div class="upgrade-cost">💰 ${formatNumber(up.cost)}</div><div class="upgrade-actions"><button class="upgrade-btn buy-1">КУПИТЬ 1</button><button class="upgrade-btn buy-max">МАКС</button></div>`;
+        const buy1=div.querySelector('.buy-1'), buyMax=div.querySelector('.buy-max');
+        buy1.onclick=()=>buyUpgrade(key,1); buyMax.onclick=()=>buyUpgrade(key,'max');
+        list.appendChild(div);
+        upgradeElements[key]={container:div,nameSpan:div.querySelector('.count'),costSpan:div.querySelector('.upgrade-cost'),buy1,buyMax};
+      });
+      updateUpgradeUI();
+    }
+
+    function updateUpgradeUI(){
+      Object.entries(activeGameState.upgrades).forEach(([key,up])=>{
+        const els=upgradeElements[key]; if(!els) return;
+        els.nameSpan.textContent=up.count;
+        els.costSpan.textContent=`💰 ${formatNumber(up.cost)}`;
+        const canAfford = activeGameState.score>=up.cost && up.count<99;
+        els.container.classList.toggle('cant-afford', !canAfford);
+        els.buy1.disabled = up.count>=99;
+        els.buyMax.disabled = up.count>=99;
+      });
+    }
+
+    function buyUpgrade(key,amount){
+      if(!activeGameState.isRunning) return;
+      const up=activeGameState.upgrades[key];
+      const maxAffordable = 99 - up.count;
+      if (maxAffordable <= 0) return;
+      if(amount===1){
+        if(activeGameState.score<up.cost) return;
+        activeGameState.score-=up.cost; up.count++; up.cost=Math.floor(up.cost*1.4);
+        activeGameState.clickPower+=up.basePower; activeGameState.perSecond+=up.basePerSec;
+        soundBank.upgrade();
+      }else if(amount==='max'){
+        let count=0,cost=up.cost;
+        while(activeGameState.score>=cost && up.count+count<99){
+          activeGameState.score-=cost; count++; cost=Math.floor(cost*1.4);
+        }
+        if(count>0){
+          up.count+=count; up.cost=cost;
+          activeGameState.clickPower+=up.basePower*count; activeGameState.perSecond+=up.basePerSec*count;
+          soundBank.upgrade();
+          showFloatingText(window.innerWidth-170,window.innerHeight/2,`КУПЛЕНО x${count}!`,'normal');
+        }else return;
+      }
+      updateUpgradeUI();
+      if (activeGameState === gameState && !gameState.ultraHardMode) saveGame();
+    }
+
+    function clickPoop(event){
+      if(!activeGameState.isRunning||activeGameState.bossActive) return;
+      const now=Date.now(),diff=now-activeGameState.lastClickTime;
+      if(diff<600){
+        activeGameState.combo++;
+        if(activeGameState.combo>2){
+          document.getElementById('comboDisplay').classList.add('active');
+          document.getElementById('comboValue').textContent=activeGameState.combo;
+          if(activeGameState.combo%10===0) soundBank.combo(Math.min(activeGameState.combo/10,10));
+        }
+      }else{
+        activeGameState.combo=Math.max(0,activeGameState.combo-5);
+        if(activeGameState.combo===0) document.getElementById('comboDisplay').classList.remove('active');
+      }
+      activeGameState.lastClickTime=now;
+      // Лихорадка только в обычном режиме
+      if(!activeGameState.ultraHardMode && !activeGameState.feverActive){
+        activeGameState.feverEnergy=Math.min(100,activeGameState.feverEnergy+1+activeGameState.combo*0.2);
+        updateFeverBar();
+        if(activeGameState.feverEnergy>=100) activateFever();
+      }
+      const critRoll=Math.random();
+      const isCritical=critRoll<activeGameState.critChance, isMega=critRoll<0.001;
+      const comboMult=1+activeGameState.combo*0.05, feverMult=activeGameState.feverActive&&!activeGameState.ultraHardMode?10:1;
+      const critMult=isMega?100:(isCritical?10:1);
+      const ultraMult = activeGameState.ultraHardMode ? 1 : (1+getUltraBonus());
+      const points=Math.floor(activeGameState.clickPower*activeGameState.multiplier*comboMult*feverMult*critMult*ultraMult);
+      activeGameState.score+=points; activeGameState.totalClicks++;
+      if (activeGameState.ultraHardMode && activeGameState.ultraHardEventType === 'clicks') {
+        if (activeGameState.totalClicks >= activeGameState.ultraHardEventTarget) {
+          activeGameState.ultraHardEventsSurvived++;
+          showEventBanner('✅ ИВЕНТ ПРОЙДЕН!');
+          stopUltraHardEvent();
+        }
+      }
+      const poop=document.getElementById('poop');
+      poop.classList.add('clicked'); setTimeout(()=>poop.classList.remove('clicked'),150);
+      if(isMega){
+        createExplosion(event.clientX,event.clientY,60,'mega');
+        showFloatingText(event.clientX,event.clientY,`МЕГА! +${formatNumber(points)}`,'mega');
+        soundBank.mega(); triggerScreenEffect('mega');
+      }else if(isCritical){
+        createExplosion(event.clientX,event.clientY,30,'critical');
+        showFloatingText(event.clientX,event.clientY,`КРИТ! +${formatNumber(points)}`,'critical');
+        soundBank.critical(); triggerScreenEffect('critical');
+      }else{
+        createExplosion(event.clientX,event.clientY,activeGameState.feverActive&&!activeGameState.ultraHardMode?20:8);
+        showFloatingText(event.clientX,event.clientY,`+${formatNumber(points)}`);
+        soundBank.click();
+      }
+      checkAchievements();
+      if (activeGameState === gameState && !gameState.ultraHardMode) saveGame();
+    }
+
+    function triggerScreenEffect(type){
+      const gs=document.getElementById('gameScreen');
+      if(type==='critical'){ gs.classList.add('screen-shake'); setTimeout(()=>gs.classList.remove('screen-shake'),400); }
+      else if(type==='mega'){ gs.classList.add('screen-shake','glitch-effect'); setTimeout(()=>gs.classList.remove('screen-shake','glitch-effect'),500); }
+    }
+
+    function updateFeverBar(){
+      const bar=document.getElementById('feverBar'),fill=document.getElementById('feverFill');
+      if(activeGameState.ultraHardMode) { bar.classList.remove('active'); return; }
+      if(activeGameState.feverActive){ bar.classList.add('active'); fill.style.width=(activeGameState.feverTimer/10)*100+'%'; }
+      else if(activeGameState.feverEnergy>0){ bar.classList.add('active'); fill.style.width=activeGameState.feverEnergy+'%'; }
+      else bar.classList.remove('active');
+    }
+
+    function activateFever(){
+      if(activeGameState.ultraHardMode) return;
+      activeGameState.feverActive=true; activeGameState.feverTimer=10; activeGameState.feverEnergy=0;
+      document.getElementById('gameScreen').classList.add('fever-mode');
+      document.getElementById('feverText').classList.add('active');
+      document.getElementById('poop').classList.add('fever-poop');
+      soundBank.fever(); showEventBanner('🔥 РЕЖИМ ЛИХОРАДКИ! 🔥');
+      if (activeGameState === gameState) saveGame();
+    }
+
+    function deactivateFever(){
+      activeGameState.feverActive=false; activeGameState.feverTimer=0;
+      document.getElementById('gameScreen').classList.remove('fever-mode');
+      document.getElementById('feverText').classList.remove('active');
+      document.getElementById('poop').classList.remove('fever-poop');
+      updateFeverBar();
+    }
+
+    function showEventBanner(text){
+      const b=document.createElement('div'); b.className='event-banner'; b.textContent=text;
+      document.body.appendChild(b); setTimeout(()=>b.remove(),2000);
+    }
+
+    function rollLoot(){
+      const roll=Math.random()*100;
+      let rarity='common';
+      if(roll>99.9) rarity='ultra_mythic_plus';
+      else if(roll>99.5) rarity='ultra_mythic';
+      else if(roll>98) rarity='mythic';
+      else if(roll>90) rarity='legendary';
+      else if(roll>75) rarity='epic';
+      else if(roll>40) rarity='rare';
+      const isBg=Math.random()>0.7;
+      const pool=isBg?bgDatabase:skinDatabase;
+      const avail=Object.entries(pool).filter(([id,data])=>data.rarity===rarity && !data.secret);
+      if(avail.length===0) return null;
+      const wonId=avail[Math.floor(Math.random()*avail.length)][0];
+      const isNew=!gameState.unlockedItems.includes(wonId);  // всегда проверяем основной стейт
+      if(isNew) gameState.unlockedItems.push(wonId);
+      return {id:wonId,rarity,isNew,type:isBg?'bg':'skin'};
+    }
+
+    function openChest(count){
+      if(!activeGameState.isRunning || activeGameState.ultraHardMode) return;
+      if (areAllCosmeticsUnlocked()) {
+        showFloatingText(window.innerWidth/2, window.innerHeight/2, 'ВСЯ КОСМЕТИКА СОБРАНА!', 'critical');
+        return;
+      }
+      const cost=10000*count;
+      if(activeGameState.score>=cost){
+        activeGameState.score-=cost; soundBank.chestOpen();
+        const results=[]; for(let i=0;i<count;i++) { const loot = rollLoot(); if(loot) results.push(loot); }
+        if(results.length>0) showChestResult(results,count);
+        updateUpgradeUI(); checkAchievements(); updateChestButtons();
+        saveGame();
+      }else showFloatingText(window.innerWidth/2,window.innerHeight/2,'НЕ ХВАТАЕТ!','critical');
+    }
+
+    function buyChestsAll(){
+      if(!activeGameState.isRunning || activeGameState.ultraHardMode) return;
+      if (areAllCosmeticsUnlocked()) {
+        showFloatingText(window.innerWidth/2, window.innerHeight/2, 'ВСЯ КОСМЕТИКА СОБРАНА!', 'critical');
+        return;
+      }
+      const count = Math.min(Math.floor(activeGameState.score / 10000), 99);
+      if(count>0) openChest(count);
+      else showFloatingText(window.innerWidth/2,window.innerHeight/2,'НЕ ХВАТАЕТ!','critical');
+    }
+
+    function areAllCosmeticsUnlocked() {
+      return Object.keys(skinDatabase).every(id => gameState.unlockedItems.includes(id)) &&
+             Object.keys(bgDatabase).every(id => gameState.unlockedItems.includes(id));
+    }
+
+    function updateChestButtons() {
+      const allUnlocked = areAllCosmeticsUnlocked();
+      document.getElementById('chestBtn1').disabled = allUnlocked;
+      document.getElementById('chestBtn10').disabled = allUnlocked;
+      document.getElementById('chestBtnAll').disabled = allUnlocked;
+    }
+
+    function showChestResult(results,count){
+      const modal=document.getElementById('chestResultModal'), content=document.getElementById('chestResultContent');
+      let html=`<div class="chest-result-title">${count>1?`🎉 ОТКРЫТО ${count} СУНДУКОВ! 🎉`:'🎉 НОВАЯ НАХОДКА! 🎉'}</div><div class="chest-result-grid">`;
+      results.forEach((res,i)=>{
+        const data=res.type==='skin'?skinDatabase[res.id]:bgDatabase[res.id];
+        html+=`<div class="chest-result-item rarity-${res.rarity} ${!res.isNew?'duplicate':''}" style="animation-delay:${i*0.1}s;">
+          <span class="revealed-icon">${res.type==='bg'?`<div class="bg-preview" style="background:${data.css};width:60px;height:60px;border-radius:10px;margin:0 auto;"></div>`:data.icon}</span>
+          <div class="revealed-name">${res.isNew?data.name:'Дубликат (+1K)'}</div>
+          <div class="revealed-rarity">${rarityDisplay(data.rarity)}</div>
+          ${!res.isNew?'<div class="duplicate-badge">+1K</div>':''}
+        </div>`;
+        if(!res.isNew) gameState.score+=1000;  // награда дубликата идёт в основной стейт
+      });
+      html+='</div>'; content.innerHTML=html; modal.classList.add('active');
+      updateVisuals();
+    }
+
+    function closeChestResult(){ document.getElementById('chestResultModal').classList.remove('active'); }
+    function openCustomization(){ currentCustomTab='skins'; renderCustomGrid(); document.getElementById('customizationModal').classList.add('active'); }
+    function closeCustomization(){ document.getElementById('customizationModal').classList.remove('active'); }
+    function switchCustomTab(tab,event){ currentCustomTab=tab; document.querySelectorAll('.custom-tab').forEach(t=>t.classList.remove('active')); event.currentTarget.classList.add('active'); renderCustomGrid(); }
+
+    function renderCustomGrid(){
+      const grid=document.getElementById('customGrid'); grid.innerHTML='';
+      const database=currentCustomTab==='skins'?skinDatabase:bgDatabase;
+      const equippedId=currentCustomTab==='skins'?activeGameState.equippedSkin:activeGameState.equippedBg;
+      Object.entries(database).forEach(([id,data])=>{
+        const isUnlocked=gameState.unlockedItems.includes(id); // всегда основной стейт
+        const card=document.createElement('div');
+        card.className=`custom-card rarity-${data.rarity} ${isUnlocked?'':'locked'} ${equippedId===id?'equipped':''}`;
+        card.innerHTML=`<div class="custom-icon-wrapper">${isUnlocked?(data.type==='bg'?`<div class="bg-preview" style="background:${data.css};"></div>`:data.icon):'🔒'}</div><div class="custom-name">${isUnlocked?data.name:'???'}</div><div class="custom-rarity">${isUnlocked?rarityDisplay(data.rarity):'???'}</div>`;
+        if(isUnlocked) card.onclick=()=>{ if(currentCustomTab==='skins') activeGameState.equippedSkin=id; else activeGameState.equippedBg=id; updateVisuals(); renderCustomGrid(); if(activeGameState===gameState&&!gameState.ultraHardMode) saveGame(); };
+        grid.appendChild(card);
+      });
+    }
+
+    function spawnGoldenPoop(){
+      if(activeGameState.bossActive||!activeGameState.isRunning) return;
+      const poop=document.createElement('div'); poop.className='golden-poop'; poop.textContent='💩';
+      poop.style.left=Math.random()*(window.innerWidth-100)+'px'; poop.style.top=Math.random()*(window.innerHeight-200)+100+'px';
+      const handler=(e)=>{
+        e.stopPropagation();
+        const bonus=Math.floor(activeGameState.perSecond*60+activeGameState.clickPower*100);
+        activeGameState.score+=bonus;
+        if (activeGameState === gameState) gameState.goldenPoopsCollected++;
+        createExplosion(e.clientX,e.clientY,40,'golden');
+        showFloatingText(e.clientX,e.clientY,`ЗОЛОТО! +${formatNumber(bonus)}`,'mega');
+        soundBank.golden(); showEventBanner('💰 ЗОЛОТАЯ КАКАШКА! 💰'); triggerScreenEffect('critical');
+        poop.remove(); checkAchievements();
+        if (activeGameState === gameState && !gameState.ultraHardMode) { saveGame(); unlockSecretItems(); }
+      };
+      poop.onclick=handler;
+      document.getElementById('gameScreen').appendChild(poop);
+      setTimeout(()=>{ if(poop.parentNode){ poop.onclick=null; poop.remove(); } },8000);
+    }
+
+    function spawnBoss(){
+      if(activeGameState.bossActive||!activeGameState.isRunning) return;
+      activeGameState.bossActive=true; activeGameState.bossMaxHP=Math.max(1000,activeGameState.score*0.5); activeGameState.bossHP=activeGameState.bossMaxHP;
+      showEventBanner('⚠️ БОСС ПОЯВИЛСЯ! ⚠️'); soundBank.boss();
+      const container=document.createElement('div'); container.id='bossContainer';
+      container.innerHTML=`<div class="boss-hp-bar"><div class="boss-hp-fill" id="bossHpFill" style="width:100%"></div></div><div class="boss-title">💀 ВЕЛИКИЙ КАКАШЕ-БОСС 💀</div><div class="boss-poop" id="bossPoop">💩</div>`;
+      document.body.appendChild(container);
+      document.getElementById('bossPoop').onclick=(e)=>{
+        e.stopPropagation();
+        const damage=activeGameState.clickPower*activeGameState.multiplier*5*(activeGameState.ultraHardMode?1:1+getUltraBonus());
+        activeGameState.bossHP-=damage;
+        createExplosion(e.clientX,e.clientY,15,'critical'); soundBank.bossHit();
+        showFloatingText(e.clientX,e.clientY,`-${formatNumber(damage)}`,'critical');
+        document.getElementById('bossHpFill').style.width=Math.max(0,(activeGameState.bossHP/activeGameState.bossMaxHP)*100)+'%';
+        if(activeGameState.bossHP<=0) defeatBoss();
+      };
+    }
+
+    function defeatBoss(){
+      const reward=Math.floor(activeGameState.bossMaxHP*2); activeGameState.score+=reward; activeGameState.bossActive=false;
+      const bossPoop=document.getElementById('bossPoop'); if(bossPoop) bossPoop.onclick=null;
+      const container=document.getElementById('bossContainer'); if(container) container.remove();
+      createExplosion(window.innerWidth/2,window.innerHeight/2,100,'mega');
+      soundBank.bossDefeat(); showEventBanner(`🏆 ПОБЕДА! +${formatNumber(reward)} 🏆`); triggerScreenEffect('mega');
+      if (activeGameState === gameState && !gameState.ultraHardMode) saveGame();
+    }
+
+    function formatNumber(num){
+      if(num>=1e12) return (num/1e12).toFixed(2)+'T';
+      if(num>=1e9) return (num/1e9).toFixed(2)+'B';
+      if(num>=1e6) return (num/1e6).toFixed(2)+'M';
+      if(num>=1e3) return (num/1e3).toFixed(2)+'K';
+      return Math.floor(num).toLocaleString();
+    }
+
+    const achievementCheckList=[
+      {id:'c10',cond:()=>activeGameState.totalClicks>=10},{id:'c100',cond:()=>activeGameState.totalClicks>=100},
+      {id:'c1000',cond:()=>activeGameState.totalClicks>=1000},{id:'c10000',cond:()=>activeGameState.totalClicks>=10000},
+      {id:'s1k',cond:()=>activeGameState.score>=1000},{id:'s10k',cond:()=>activeGameState.score>=10000},
+      {id:'s100k',cond:()=>activeGameState.score>=100000},{id:'s1m',cond:()=>activeGameState.score>=1000000},
+      {id:'s1b',cond:()=>activeGameState.score>=1000000000},{id:'combo20',cond:()=>activeGameState.combo>=20},
+      {id:'combo50',cond:()=>activeGameState.combo>=50},{id:'combo100',cond:()=>activeGameState.combo>=100},
+      {id:'gold5',cond:()=>gameState.goldenPoopsCollected>=5},{id:'gold20',cond:()=>gameState.goldenPoopsCollected>=20},
+      {id:'fever',cond:()=>activeGameState.feverActive},{id:'all_skins',cond:()=>Object.keys(skinDatabase).every(id=>gameState.unlockedItems.includes(id))},
+      {id:'all_bgs',cond:()=>Object.keys(bgDatabase).every(id=>gameState.unlockedItems.includes(id))},
+      {id:'game_100',cond:()=>allAchievementsList.filter(a=>a.id!=='game_100').every(a=>gameState.achievements.includes(a.id))}
     ];
-    const event=events[Math.floor(Math.random()*events.length)];
-    showEventBanner('🎉 '+event.name); soundBank.achievement(); event.action(); saveGame(); updateRebirthButton();
-  }
 
-  window.startGame = startGame;
-  window.returnToMenu = returnToMenu;
-  window.resetProgress = resetProgress;
+    function checkAchievements(){
+      if (activeGameState !== gameState) return; // достижения только в основном режиме
+      achievementCheckList.forEach(a=>{
+        if(!gameState.achievements.includes(a.id)&&a.cond()){
+          gameState.achievements.push(a.id);
+          showAchievement(allAchievementsList.find(ach=>ach.id===a.id)?.name||a.id);
+          soundBank.achievement(); saveGame(); unlockSecretItems();
+        }
+      });
+    }
+
+    function showAchievement(text){
+      const div=document.createElement('div'); div.className='achievement'; div.textContent=text;
+      document.body.appendChild(div); setTimeout(()=>div.remove(),4000);
+    }
+
+    function createPoopRain(count){
+      for(let i=0;i<count;i++) spawnParticle(Math.random()*canvas.width,-50,{emoji:activeGameState.equippedSkin,speed:5,angle:Math.PI/2,gravity:0.5,decay:0.005});
+    }
+
+    function openVersionModal(){ document.getElementById('versionModal').classList.add('active'); }
+    function closeVersionModal(){ document.getElementById('versionModal').classList.remove('active'); }
+
+    function gameLoop(timestamp){
+      if(!activeGameState.isRunning) return;
+      const dt=Math.min((timestamp-lastTime)/1000,0.1); lastTime=timestamp;
+      const ultraMult = activeGameState.ultraHardMode ? 1 : (1+getUltraBonus());
+      scoreAccumulator+=activeGameState.perSecond*ultraMult*dt;
+      if(scoreAccumulator>=1){ const add=Math.floor(scoreAccumulator); activeGameState.score+=add; scoreAccumulator-=add; }
+      if(!activeGameState.ultraHardMode && activeGameState.feverActive){
+        activeGameState.feverTimer-=dt;
+        updateFeverBar();
+        if(activeGameState.feverTimer<=0) deactivateFever();
+      }
+      activeGameState.goldenSpawnTimer-=dt;
+      if(activeGameState.goldenSpawnTimer<=0){
+        if(Math.random()<0.7&&!activeGameState.bossActive) spawnGoldenPoop();
+        activeGameState.goldenSpawnTimer=25+Math.random()*10;
+      }
+      activeGameState.bossSpawnTimer-=dt;
+      if(activeGameState.bossSpawnTimer<=0){
+        if(activeGameState.score>10000&&!activeGameState.bossActive&&Math.random()<0.5) spawnBoss();
+        activeGameState.bossSpawnTimer=120;
+      }
+      activeGameState.randomEventTimer-=dt;
+      if(activeGameState.randomEventTimer<=0){
+        if(activeGameState.ultraHardMode && !activeGameState.ultraHardEventType && Math.random()<0.3) startUltraHardEvent();
+        else if(!activeGameState.ultraHardMode && Math.random()<0.3) triggerRandomEvent();
+        activeGameState.randomEventTimer=45;
+      }
+      if(activeGameState.ultraHardEventType) {
+        activeGameState.ultraHardEventTimer -= dt;
+        updateUltraHardEventDisplay();
+        if(activeGameState.ultraHardEventTimer <= 0) {
+          ultraHardReset();
+        }
+        if(activeGameState.ultraHardEventType === 'score' && activeGameState.score >= activeGameState.ultraHardEventTarget) {
+          activeGameState.ultraHardEventsSurvived++;
+          showEventBanner('✅ ИВЕНТ ПРОЙДЕН!');
+          stopUltraHardEvent();
+        }
+      }
+
+      for(let i=0;i<MAX_TEXTS;i++){
+        const t=textPool[i]; if(!t.active) continue;
+        t.life-=dt;
+        if(t.life<=0){ t.active=false; t.el.style.display='none'; }
+        else{ t.x+=t.vx*dt; t.y+=t.vy*dt; t.rotation+=t.rotSpeed*dt; t.el.style.transform=`translate(${t.x}px,${t.y}px) rotate(${t.rotation}deg) scale(${t.scale*(1-(1-t.life/t.maxLife)*0.5)})`; t.el.style.opacity=Math.min(1,t.life/0.3); }
+      }
+      ctx.clearRect(0,0,canvas.width,canvas.height);
+      for(let i=0;i<MAX_PARTICLES;i++){
+        const p=particles[i]; if(!p.active) continue;
+        p.life-=p.decay; if(p.life<=0){ p.active=false; continue; }
+        p.x+=p.vx; p.y+=p.vy; p.vy+=p.gravity; p.vx*=0.99; p.rotation+=p.rotationSpeed;
+        ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.rotation); ctx.globalAlpha=Math.max(0,p.life);
+        if(p.type==='spark'){ ctx.fillStyle=p.color; ctx.shadowBlur=20; ctx.shadowColor=p.color; ctx.beginPath(); ctx.arc(0,0,p.size*p.life,0,Math.PI*2); ctx.fill(); }
+        else{ ctx.font=`${p.size}px Arial`; ctx.textAlign='center'; ctx.textBaseline='middle'; ctx.fillText(p.emoji,0,0); }
+        ctx.restore();
+      }
+      const currentFormatted=formatNumber(activeGameState.score);
+      if(currentFormatted!==document.getElementById('score').textContent){
+        document.getElementById('score').textContent=currentFormatted;
+        document.getElementById('score').style.animation='none';
+        document.getElementById('score').offsetHeight;
+        document.getElementById('score').style.animation='scoreBounce 0.3s ease';
+      }
+      if(timestamp-(updateUpgradeUI.last||0)>500){ updateUpgradeUI(); updateUpgradeUI.last=timestamp; }
+      animationFrameId=requestAnimationFrame(gameLoop);
+    }
+    updateUpgradeUI.last=0;
+
+    function triggerRandomEvent(){
+      if(activeGameState.ultraHardMode) return;
+      const events=[
+        {name:'Дождь какашек!',action:()=>{ createPoopRain(40); activeGameState.score+=activeGameState.clickPower*100; }},
+        {name:'x2 МНОЖИТЕЛЬ на 10 сек!',action:()=>{ activeGameState.multiplier*=2; setTimeout(()=>activeGameState.multiplier/=2,10000); }},
+        {name:'ЭНЕРГИЯ ЛИХОРАДКИ +50!',action:()=>{ activeGameState.feverEnergy=Math.min(100,activeGameState.feverEnergy+50); updateFeverBar(); }},
+        {name:'КРИТ ШАНС +5% на 15 сек!',action:()=>{ activeGameState.critChance+=0.05; setTimeout(()=>activeGameState.critChance-=0.05,15000); }},
+        {name:'БОНУС! +1000 какашек!',action:()=>{ activeGameState.score+=1000*activeGameState.multiplier; }}
+      ];
+      const event=events[Math.floor(Math.random()*events.length)];
+      showEventBanner('🎉 '+event.name); soundBank.achievement(); event.action();
+      if (activeGameState === gameState) saveGame();
+    }
+
+    window.startGame = startGame;
+    window.returnToMenu = returnToMenu;
+    window.resetProgress = resetProgress;
+  })();
 </script>
 </body>
 </html>
